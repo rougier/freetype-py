@@ -239,7 +239,7 @@ class Face(object):
     def __init__( self, filename, index = 0 ):
         library = get_handle( )
         face = FT_Face( )
-        error = FT_New_Face( library, './arial.ttf', 0, byref(face) )
+        error = FT_New_Face( library, filename, 0, byref(face) )
         if error: raise FT_Exception( error )
         self._filename = filename
         self._index = index
