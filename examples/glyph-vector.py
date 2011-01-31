@@ -5,10 +5,7 @@
 #
 # -----------------------------------------------------------------------------
 '''
-Show how to access gluph outline description.
-
-This is a very crude implementation since bezier control points are not taken into
-account (see tags).
+Show how to access glyph outline description.
 '''
 from freetype import *
 
