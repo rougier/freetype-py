@@ -26,9 +26,10 @@ if __name__ == '__main__':
 
     figure = plt.figure(figsize=(8,10))
     axis = figure.add_subplot(111)
-    axis.scatter(points['x'], points['y'], alpha=.25)
+    #axis.scatter(points['x'], points['y'], alpha=.25)
     start, end = 0, 0
 
+    VERTS, CODES = [], []
     # Iterate over each contour
     for i in range(len(outline.contours)):
         end    = outline.contours[i]
@@ -61,11 +62,24 @@ if __name__ == '__main__':
                     codes.extend([ Path.CURVE3, Path.CURVE3])
                 verts.append(segment[-1])
                 codes.append(Path.CURVE3)
-
-        path = Path(verts, codes)
-        patch = patches.PathPatch(path, facecolor='1', lw=2)
-        axis.add_patch(patch)
+        VERTS.extend(verts)
+        CODES.extend(codes)
         start = end+1
+
+
+    # Draw glyph lines
+    path = Path(VERTS, CODES)
+    glyph = patches.PathPatch(path, facecolor='.75', lw=1)
+
+    # Draw "control" lines
+    for i, code in enumerate(CODES):
+        if code == Path.CURVE3:
+            CODES[i] = Path.LINETO
+    path = Path(VERTS, CODES)
+    patch = patches.PathPatch(path, ec='.5', fill=False, ls='dashed', lw=1 )
+
+    axis.add_patch(patch)
+    axis.add_patch(glyph)
 
     axis.set_xlim(x.min()-100, x.max()+100)
     plt.xticks([])
