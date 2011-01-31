@@ -4,6 +4,10 @@
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
+#
+# Direct translation of example 1 from the freetype tutorial:
+# http://www.freetype.org/freetype2/docs/tutorial/step1.html
+#
 import math
 from freetype import *
 
