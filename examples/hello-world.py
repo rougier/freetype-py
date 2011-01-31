@@ -10,8 +10,8 @@ if __name__ == '__main__':
     import numpy
     import matplotlib.pyplot as plt
 
-    face = Face('./arial.ttf')
-    text = 'Hello World !'
+    face = Face('./Vera.ttf')
+    text = 'AV Hello World !'
     face.set_char_size( 48*64 )
     slot = face.glyph
 
@@ -40,9 +40,10 @@ if __name__ == '__main__':
         left = slot.bitmap_left
         w,h = bitmap.width, bitmap.rows
         y = height-baseline-top
-        Z[y:y+h,x:x+w] |= numpy.array(bitmap.buffer).reshape(h,w)
         kerning = face.get_kerning(previous, c)
-        x += (slot.advance.x >> 6) + (kerning.x >> 6)
+        x += (kerning.x >> 6)
+        Z[y:y+h,x:x+w] |= numpy.array(bitmap.buffer).reshape(h,w)
+        x += (slot.advance.x >> 6) 
         previous = c
 
     plt.figure(figsize=(10, 10*Z.shape[0]/float(Z.shape[1])))
