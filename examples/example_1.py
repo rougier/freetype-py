@@ -34,7 +34,7 @@ if __name__ == '__main__':
     matrix  = FT_Matrix()
     face    = FT_Face()
     pen     = FT_Vector()
-    filename= './arial.ttf'
+    filename= './Vera.ttf'
     text    = 'Hello World !'
     num_chars = len(text)
     angle   = ( 25.0 / 360 ) * 3.14159 * 2

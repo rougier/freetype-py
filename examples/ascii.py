@@ -107,7 +107,7 @@ def imshow (Z, vmin=None, vmax=None, cmap=CM_Hot, show_cmap=False):
 
 
 if __name__ == '__main__':
-    face = Face('./arial.ttf')
+    face = Face('./Vera.ttf')
     face.set_char_size( 32*64 )
     face.load_glyph(face.get_char_index('S'))
     slot = face.glyph

@@ -7,7 +7,7 @@
 from freetype import *
 
 if __name__ == '__main__':
-    face = Face('./arial.ttf')
+    face = Face('./Vera.ttf')
 
     print 'Family name:        ', face.family_name
     print 'Style name:         ', face.style_name

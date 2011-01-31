@@ -18,7 +18,7 @@ if __name__ == '__main__':
     from matplotlib.path import Path
     import matplotlib.patches as patches
 
-    face = Face('./arial.ttf')
+    face = Face('./Vera.ttf')
     face.set_char_size( 48*64 )
     face.load_char('S')
     slot = face.glyph

@@ -20,9 +20,7 @@ if __name__ == '__main__':
     import numpy
     import matplotlib.pyplot as plt
 
-
-
-    face = Face('./arial.ttf')
+    face = Face('./Vera.ttf')
     face.set_char_size( 48*64 )
     face.load_char('S', FT_LOAD_RENDER )
     bitmap = face.glyph.bitmap
