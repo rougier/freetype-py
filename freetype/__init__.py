@@ -80,6 +80,11 @@ def get_handle():
     return __handle__
 
 
+# -----------------------------------------------------------------------------
+#  Direct wrapper (simple renaming)
+# -----------------------------------------------------------------------------
+Vector = FT_Vector
+Matrix = FT_Matrix
 
 # -----------------------------------------------------------------------------
 #  FT_BBox wrapper
@@ -280,8 +285,8 @@ class Face(object):
         return FT_Get_Name_Index( self._FT_Face, name )
 
     def set_transform( self, matrix, delta ):
-        error = FT_Set_Transform( self._FT_Face, matrix, delta )
-        if error: raise FT_Exception(error)
+        FT_Set_Transform( self._FT_Face,
+                          byref(matrix), byref(delta) )
 
     def select_size( self, strike_index ):
         error = FT_Select_Size( self._FT_Face, strike_index )
