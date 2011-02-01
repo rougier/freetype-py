@@ -78,7 +78,6 @@ class FT_Vector(Structure):
     '''
     _fields_ = [('x', FT_Pos),
                 ('y', FT_Pos)]
-FT_Vector_p = POINTER(FT_Vector)
 
 
 
