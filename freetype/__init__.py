@@ -4,18 +4,31 @@
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
+'''
+FreeType high-level python API 
+
+This the bindings for the high-level API of FreeType (that must be installed
+somewhere on your system).
+
+Note:
+----
+C Library will be searched using the ctypes.util.find_library. However, this
+search might fail. In such a case (or for other reasons), you can specify the
+FT_library_filename before importing the freetype library and freetype will use
+the specified one. 
+'''
 from ctypes import *
 from ft_types import *
 from ft_enums import *
 from ft_errors import *
 from ft_structs import *
-
 import ctypes.util
-filename = ctypes.util.find_library('freetype')
-#filename = '/opt/local/lib/libfreetype.6.dylib'
-if not filename:
+
+
+FT_Library_filename = ctypes.util.find_library('freetype')
+if not FT_Library_filename:
     raise RuntimeError, 'Freetype library not found'
-__dll__ = ctypes.CDLL(filename)
+__dll__ = ctypes.CDLL(FT_Library_filename)
 __handle__ = None
 
 
@@ -24,6 +37,9 @@ __handle__ = None
 # -----------------------------------------------------------------------------
 FT_Init_FreeType       = __dll__.FT_Init_FreeType
 FT_Done_FreeType       = __dll__.FT_Done_FreeType
+FT_Library_Version     = __dll__.FT_Library_Version
+FT_Library_SetLcdFilter= __dll__.FT_Library_SetLcdFilter
+FT_Library_SetLcdFilterWeights = __dll__.FT_Library_SetLcdFilterWeights
 FT_New_Face            = __dll__.FT_New_Face
 FT_New_Memory_Face     = __dll__.FT_New_Memory_Face
 FT_Open_Face           = __dll__.FT_Open_Face
@@ -52,6 +68,8 @@ FT_Get_Next_Char       = __dll__.FT_Get_Next_Char
 FT_Get_Name_Index      = __dll__.FT_Get_Name_Index
 FT_Get_SubGlyph_Info   = __dll__.FT_Get_SubGlyph_Info
 FT_Get_FSType_Flags    = __dll__.FT_Get_FSType_Flags
+FT_Get_Sfnt_Name_Count = __dll__.FT_Get_Sfnt_Name_Count
+FT_Get_Sfnt_Name       = __dll__.FT_Get_Sfnt_Name
 
 
 # -----------------------------------------------------------------------------
@@ -74,10 +92,84 @@ def get_handle():
     '''
     global __handle__
     if not __handle__:
-        __handle__ = FT_Library()
-        error = FT_Init_FreeType(byref(__handle__))
+        __handle__ = FT_Library( )
+        error = FT_Init_FreeType( byref(__handle__) )
+        if error: raise FT_Exception(error)
+        try:
+            set_lcd_filter( FT_LCD_FILTER_DEFAULT )
+        except:
+            pass
         if error: raise FT_Exception(error)
     return __handle__
+
+
+# -----------------------------------------------------------------------------
+#  Stand alone functions
+# -----------------------------------------------------------------------------
+def version():
+    '''
+    Return the version of the FreeType library being used as a tuple of
+    ( major version number, minor version number, patch version number )
+    '''
+    amajor = FT_Int()
+    aminor = FT_Int()
+    apatch = FT_Int()
+    library = get_handle()
+    FT_Library_Version(library, byref(amajor), byref(aminor), byref(apatch))
+    return (amajor.value, aminor.value, apatch.value)
+
+
+def set_lcd_filter(filt):
+    '''
+    This function is used to apply color filtering to LCD decimated bitmaps,
+    like the ones used when calling FT_Render_Glyph with FT_RENDER_MODE_LCD or
+    FT_RENDER_MODE_LCD_V.
+
+    Note:
+    -----
+
+    This feature is always disabled by default. Clients must make an explicit
+    call to this function with a ‘filter’ value other than FT_LCD_FILTER_NONE
+    in order to enable it.
+
+    Due to PATENTS covering subpixel rendering, this function doesn't do
+    anything except returning 'FT_Err_Unimplemented_Feature' if the
+    configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not defined in
+    your build of the library, which should correspond to all default builds of
+    FreeType.
+
+    The filter affects glyph bitmaps rendered through FT_Render_Glyph,
+    FT_Outline_Get_Bitmap, FT_Load_Glyph, and FT_Load_Char.
+
+    It does not affect the output of FT_Outline_Render and
+    FT_Outline_Get_Bitmap.
+
+    If this feature is activated, the dimensions of LCD glyph bitmaps are
+    either larger or taller than the dimensions of the corresponding outline
+    with regards to the pixel grid. For example, for FT_RENDER_MODE_LCD, the
+    filter adds up to 3 pixels to the left, and up to 3 pixels to the right.
+
+    The bitmap offset values are adjusted correctly, so clients shouldn't need
+    to modify their layout and glyph positioning code when enabling the filter.
+    '''
+    library = get_handle()
+    error = FT_Library_SetLcdFilter(library, filt)
+    if error: raise FT_Exception(error)
+
+
+
+def set_lcd_filter_weights(a,b,c,d,e):
+    '''
+    Use this function to override the filter weights selected by
+    FT_Library_SetLcdFilter. By default, FreeType uses the quintuple (0x00,
+    0x55, 0x56, 0x55, 0x00) for FT_LCD_FILTER_LIGHT, and (0x10, 0x40, 0x70,
+    0x40, 0x10) for FT_LCD_FILTER_DEFAULT and FT_LCD_FILTER_LEGACY.
+    '''
+    library = get_handle()
+    weights = FT_Char(5)(a,b,c,d,e)
+    error = FT_Library_SetLcdFilterWeights(library, weights)
+    if error: raise FT_Exception(error)
+
 
 
 # -----------------------------------------------------------------------------
@@ -219,11 +311,6 @@ class GlyphSlot( object ):
         return GlyphSlot( self._FT_GlyphSlot.next )
     next = property( _get_next )
 
-    # def _get_advance( self ):
-    #     x = self._FT_GlyphSlot.advance.x
-    #     y = self._FT_GlyphSlot.advance.y
-    #     return x,y
-    # advance = property( _get_advance )
     advance = property( lambda self: self._FT_GlyphSlot.advance)
 
     def _get_outline( self ):
@@ -308,6 +395,19 @@ class Face(object):
                                 left_glyph, right_glyph, mode, byref(kerning) )
         if error: raise FT_Exception( error )
         return kerning
+
+    def _get_sfnt_name_count(self):
+        return FT_Get_Sfnt_Name_Count( self._FT_Face )
+    sfnt_name_count = property(_get_sfnt_name_count)
+
+    def get_sfnt_name( self, index ):
+        '''
+        Retrieve a string of the SFNT 'name' table for a given index
+        '''
+        name = FT_SfntName( )
+        error = FT_Get_Sfnt_Name( self._FT_Face, index, byref(name) )
+        if error: raise FT_Exception( error )
+        return SfntName( name )
 
     def has_horizontal( self ):
         return bool( self.face_flags & FT_FACE_FLAG_HORIZONTAL )
@@ -405,4 +505,26 @@ class Face(object):
 
 
 
+# -----------------------------------------------------------------------------
+#  Sfnt_Name wrapper
+# -----------------------------------------------------------------------------
+class SfntName( object ):
+    ''' '''
+    def __init__(self, name):
+        self._FT_SfntName = name
+
+    platform_id  = property(lambda self: self._FT_SfntName.platform_id)
+    encoding_id = property(lambda self: self._FT_SfntName.encoding_id)
+    language_id = property(lambda self: self._FT_SfntName.language_id)
+    name_id     = property(lambda self: self._FT_SfntName.name_id)
+    def _get_string(self):
+        #s = self._FT_SfntName
+        s = string_at(self._FT_SfntName.string, self._FT_SfntName.string_len)
+        #return s.decode('utf-16be', 'ignore')
+        return s.decode('utf-8', 'ignore')
+        #n = s.string_len
+        #data = [s.string[i] for i in range(n)]
+        #return data
+
+    string = property(_get_string)
 

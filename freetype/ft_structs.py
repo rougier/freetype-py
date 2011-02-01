@@ -843,3 +843,36 @@ class FT_Open_Args(Structure):
         ('num_params',   FT_Int),
         ('params',       FT_Parameter_p) ]
 
+
+
+# -----------------------------------------------------------------------------
+# A structure used to model an SFNT 'name' table entry.
+
+class FT_SfntName(Structure):
+    '''
+    platform_id: The platform ID for 'string'.
+
+    encoding_id: The encoding ID for 'string'.
+
+    language_id: The language ID for 'string'
+
+    name_id: An identifier for 'string'
+
+    string: The 'name' string. Note that its format differs depending on the
+            (platform,encoding) pair. It can be a Pascal String, a UTF-16 one,
+            etc.
+
+            Generally speaking, the string is not zero-terminated. Please refer
+            to the TrueType specification for details.
+
+    string_len: The length of 'string' in bytes.
+    '''
+
+    _fields_ = [
+        ('platform_id', FT_UShort),
+        ('encoding_id', FT_UShort),
+        ('language_id', FT_UShort),
+        ('name_id',     FT_UShort),
+        # this string is *not* null-terminated!
+        ('string',      POINTER(FT_Byte)),
+        ('string_len',  FT_UInt) ]
