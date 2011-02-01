@@ -17,7 +17,7 @@ def on_display( ):
     gl.glClearColor(1,1,1,1)
     gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
     gl.glBindTexture( gl.GL_TEXTURE_2D, texid )
-    gl.glColor(0,0,0)
+    gl.glColor(0,0,0,1)
     gl.glPushMatrix( )
     gl.glTranslate( 10, 100, 0 )
     gl.glPushMatrix( )
@@ -50,18 +50,19 @@ def makefont(filename, size):
     # Determine largest glyph size
     width, height, ascender, descender = 0, 0, 0, 0
     for c in range(32,128):
-        face.load_char(chr(c), FT_LOAD_RENDER )
+        face.load_char( chr(c), FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT )
         bitmap    = face.glyph.bitmap
-        width     = max(width, bitmap.width)
-        ascender  = max(ascender, face.glyph.bitmap_top)
-        descender = max(descender, bitmap.rows-face.glyph.bitmap_top)
+        width     = max( width, bitmap.width )
+        ascender  = max( ascender, face.glyph.bitmap_top )
+        descender = max( descender, bitmap.rows-face.glyph.bitmap_top )
     height = ascender+descender
 
     # Generate texture data
     Z = numpy.zeros((height*6, width*16), dtype=numpy.ubyte)
     for j in range(6):
         for i in range(16):
-            face.load_char(chr(32+j*16+i), FT_LOAD_RENDER )
+            face.load_char(chr(32+j*16+i), FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT )
+            bitmap = face.glyph.bitmap
             x = i*width  + face.glyph.bitmap_left
             y = j*height + ascender - face.glyph.bitmap_top
             Z[y:y+bitmap.rows,x:x+bitmap.width].flat = bitmap.buffer
