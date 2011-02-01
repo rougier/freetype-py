@@ -66,5 +66,5 @@ def render(filename = "Vera.ttf", hinting = (False,False), gamma = 1.5, lcd=Fals
 
 
 if __name__ == '__main__':
-    render('Vera.ttf', (0,1), 2.0, True)
+    render('Vera.ttf', (0,1), 1.25, True)
         
