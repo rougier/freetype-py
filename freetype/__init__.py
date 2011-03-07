@@ -59,9 +59,12 @@ FT_Get_Kerning         = __dll__.FT_Get_Kerning
 FT_Get_Track_Kerning   = __dll__.FT_Get_Track_Kerning
 FT_Get_Glyph_Name      = __dll__.FT_Get_Glyph_Name
 FT_Get_Postscript_Name = __dll__.FT_Get_Postscript_Name
+FT_Get_Postscript_Name.restype = c_char_p
 FT_Select_Charmap      = __dll__.FT_Select_Charmap
 FT_Set_Charmap         = __dll__.FT_Set_Charmap
 FT_Get_Charmap_Index   = __dll__.FT_Get_Charmap_Index
+FT_Get_CMap_Language_ID= __dll__.FT_Get_CMap_Language_ID
+FT_Get_CMap_Format     = __dll__.FT_Get_CMap_Format
 FT_Get_Char_Index      = __dll__.FT_Get_Char_Index
 FT_Get_First_Char      = __dll__.FT_Get_First_Char
 FT_Get_Next_Char       = __dll__.FT_Get_Next_Char
@@ -129,7 +132,7 @@ def set_lcd_filter(filt):
     -----
 
     This feature is always disabled by default. Clients must make an explicit
-    call to this function with a ‘filter’ value other than FT_LCD_FILTER_NONE
+    call to this function with a 'filter' value other than FT_LCD_FILTER_NONE
     in order to enable it.
 
     Due to PATENTS covering subpixel rendering, this function doesn't do
@@ -249,9 +252,9 @@ class Bitmap(object):
 class Charmap( object ):
     def __init__( self, charmap ):
         self._FT_Charmap = charmap
-    encoding    = property( lambda self: self._FT_Charmap.encoding)
-    platform_id = property( lambda self: self._FT_Charmap.platform_id)
-    encoding_id = property( lambda self: self._FT_Charmap.encoding_id)
+    encoding    = property( lambda self: self._FT_Charmap.contents.encoding)
+    platform_id = property( lambda self: self._FT_Charmap.contents.platform_id)
+    encoding_id = property( lambda self: self._FT_Charmap.contents.encoding_id)
     def _get_encoding_name(self):
         encoding = self.encoding
         for key,value in FT_ENCODINGS.items():
@@ -259,7 +262,15 @@ class Charmap( object ):
                 return key
         return 'Unknown encoding'
     encoding_name = property( _get_encoding_name )
-
+    def _get_index( self ):
+        return FT_Get_Charmap_Index( self._FT_Charmap )
+    index = property( _get_index )
+    def _get_cmap_language_id( self ):
+        return FT_Get_CMap_Language_ID( self._FT_Charmap )
+    cmap_language_id = property( _get_cmap_language_id )
+    def _get_cmap_format( self ):
+        return FT_Get_CMap_Format( self._FT_Charmap )
+    cmap_format = property( _get_cmap_format )
 
 
 # -----------------------------------------------------------------------------
@@ -326,7 +337,7 @@ class GlyphSlot( object ):
 # -----------------------------------------------------------------------------
 #  Face wrapper
 # -----------------------------------------------------------------------------
-class Face(object):
+class Face( object ):
     
     def __init__( self, filename, index = 0 ):
         library = get_handle( )
@@ -350,7 +361,7 @@ class Face(object):
         if error: raise FT_Exception(error)
 
     def set_charmap( self, charmap ):
-        error = FT_Set_Charmap( self._FT_Face, charmap )
+        error = FT_Set_Charmap( self._FT_Face, charmap._FT_Charmap )
         if error : raise FT_Exception(error)
 
     def get_char_index( self, charcode ):
@@ -359,14 +370,14 @@ class Face(object):
         return FT_Get_Char_Index( self._FT_Face, charcode )
 
     def get_first_char( self ):
-        agindex = FT_Uint()
-        index = FT_Get_First_Char( self._FT_Face, agindex )
-        return index, agindex.value
+        agindex = FT_UInt()
+        charcode = FT_Get_First_Char( self._FT_Face, agindex )
+        return charcode, agindex.value
 
     def get_next_char( self, charcode, agindex ):
-        agindex = FT_Uint(agindex)
-        index = FT_Get_Next_Char( self._FT_Face, agindex )
-        return index, agindex.value
+        agindex = FT_UInt(agindex)
+        charcode = FT_Get_Next_Char( self._FT_Face, agindex )
+        return charcode, agindex.value
 
     def get_name_index( self, name ):
         return FT_Get_Name_Index( self._FT_Face, name )
@@ -409,38 +420,53 @@ class Face(object):
         if error: raise FT_Exception( error )
         return SfntName( name )
 
-    def has_horizontal( self ):
+    def _get_postscript_name( self ):
+        return FT_Get_Postscript_Name( self._FT_Face )
+    postscript_name = property( _get_postscript_name )
+
+    def _has_horizontal( self ):
         return bool( self.face_flags & FT_FACE_FLAG_HORIZONTAL )
+    has_horizontal = property( _has_horizontal )
 
-    def has_vertical( self ):
+    def _has_vertical( self ):
         return bool( self.face_flags & FT_FACE_FLAG_VERTICAL )
+    has_vertical = property( _has_vertical )
 
-    def has_kerning( self ):
+    def _has_kerning( self ):
         return bool( self.face_flags & FT_FACE_FLAG_KERNING )
+    has_kerning = property( _has_kerning )
 
-    def is_scalable( self ):
+    def _is_scalable( self ):
         return bool( self.face_flags & FT_FACE_FLAG_SCALABLE )
+    is_scalable = property( _is_scalable )
 
-    def is_sfnt( self ):
+    def _is_sfnt( self ):
         return bool( self.face_flags & FT_FACE_FLAG_SFNT )
+    is_sfnt = property( _is_sfnt )
 
-    def is_fixed_width( self ):
+    def _is_fixed_width( self ):
         return bool( self.face_flags & FT_FACE_FLAG_FIXED_WIDTH )
+    is_fixed_width = property( _is_fixed_width )
     
-    def has_fixed_sizes( self ):
+    def _has_fixed_sizes( self ):
         return bool( self.face_flags & FT_FACE_FLAG_FIXED_SIZES )
+    has_fixed_sizes = property( _has_fixed_sizes )
 
-    def has_glyph_names( self ):
+    def _has_glyph_names( self ):
         return bool( self.face_flags & FT_FACE_FLAG_GLYPH_NAMES )
+    has_glyph_names = property( _has_glyph_names )
 
-    def has_multiple_masters( self ):
-        return bool( self.face_flags & FT_FACE_FLAG_MULTIPLES_MASTERS )
+    def _has_multiple_masters( self ):
+        return bool( self.face_flags & FT_FACE_FLAG_MULTIPLE_MASTERS )
+    has_multiple_masters = property( _has_multiple_masters )
 
-    def is_cid_keyed( self ):
+    def _is_cid_keyed( self ):
         return bool( self.face_flags & FT_FACE_FLAG_CID_KEYED )
+    is_cid_keyed = property( _is_cid_keyed )
 
-    def is_tricky( self ):
+    def _is_tricky( self ):
         return bool( self.face_flags & FT_FACE_FLAG_TRICKY )
+    is_tricky = property( _is_tricky )
 
 
     num_faces  = property(lambda self: self._FT_Face.contents.num_faces)
@@ -470,7 +496,7 @@ class Face(object):
         n = self._FT_Face.contents.num_charmaps
         FT_charmaps = self._FT_Face.contents.charmaps
         for i in range(n):
-            charmaps.append( Charmap(FT_charmaps[i].contents) )
+            charmaps.append( Charmap(FT_charmaps[i]) )
         return charmaps
     charmaps = property(_get_charmaps)
 
@@ -500,7 +526,7 @@ class Face(object):
     size = property( _get_size)
 
     def _get_charmap( self ):
-        return Charmap( self._FT_Face.contents.charmap.contents)
+        return Charmap( self._FT_Face.contents.charmap)
     charmap = property( _get_charmap)
 
 
@@ -517,14 +543,16 @@ class SfntName( object ):
     encoding_id = property(lambda self: self._FT_SfntName.encoding_id)
     language_id = property(lambda self: self._FT_SfntName.language_id)
     name_id     = property(lambda self: self._FT_SfntName.name_id)
+    #string      = property(lambda self: self._FT_SfntName.string)
+    string_len  = property(lambda self: self._FT_SfntName.string_len)
     def _get_string(self):
-        #s = self._FT_SfntName
-        s = string_at(self._FT_SfntName.string, self._FT_SfntName.string_len)
-        #return s.decode('utf-16be', 'ignore')
-        return s.decode('utf-8', 'ignore')
-        #n = s.string_len
-        #data = [s.string[i] for i in range(n)]
-        #return data
-
+    #     #s = self._FT_SfntName
+         s = string_at(self._FT_SfntName.string, self._FT_SfntName.string_len)
+         return s
+    #     #return s.decode('utf-16be', 'ignore')
+    #     return s.decode('utf-8', 'ignore')
+    #     #n = s.string_len
+    #     #data = [s.string[i] for i in range(n)]
+    #     #return data
     string = property(_get_string)
 
