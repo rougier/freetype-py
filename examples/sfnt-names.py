@@ -9,7 +9,6 @@ Glyph bitmap monochrome rendring
 '''
 from freetype import *
 
-
 def platform_name(platform_id):
     for key, value in TT_PLATFORMS.items():
         if value == platform_id:
@@ -54,7 +53,9 @@ if __name__ == '__main__':
     print 'language_id:', language_name(name.platform_id,
                                         name.language_id)
     for i in range(face.sfnt_name_count):
-        print i, ':', face.get_sfnt_name(i).string
+        name = face.get_sfnt_name(i).string
+        print(i, name.decode('utf-16be', 'ignore'))
+
 
 
     
