@@ -1,41 +1,27 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-#
 #  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
-#
 # -----------------------------------------------------------------------------
 from __future__ import print_function
 from __future__ import division
 import sys
 from freetype import *
 
-
-comma_flag  = 0
 verbose     = 0
 debug       = 0
-trace_level = 0
 name_tables = 0
 
-def PanicZ( message ):
-    print( "%s\n  error = 0x%04x\n", message, error )
-    sys.exit(1)
-
-def Print_Comma( message ):
-    global comma_flag
-    if comma_flag:
-        print( ", " )
-    print( "%s", message )
-    comma_flag = 1
-
 def usage( execname ):
-    print( "" )
+    print( )
     print( "ftdump: simple font dumper -- part of the FreeType project" )
     print( "----------------------------------------------------------" )
     print( "Usage: %s [options] fontname", execname )
-    print( "" )
+    print( )
     print( "  -n        print SFNT name tables" )
     print( "  -v        be verbose" )
-    print( "" )
+    print( )
     sys.exit()
 
 
@@ -172,7 +158,7 @@ def Print_Sfnt_Names( face ):
 
         name = face.get_sfnt_name(i)
         print( "   %-15s [%s]" % ( get_name_id( name.name_id ),
-                                   get_platform_id( name.platform_id )),end="" )
+                                   get_platform_id( name.platform_id )),end="")
 
         if name.platform_id == TT_PLATFORM_APPLE_UNICODE:
             if name.encoding_id in [TT_APPLE_ID_DEFAULT,
@@ -186,7 +172,7 @@ def Print_Sfnt_Names( face ):
         elif name.platform_id == TT_PLATFORM_MACINTOSH:
             if name.language_id != TT_MAC_LANGID_ENGLISH:
                 print( " (language=%d)" % name.language_id )
-                print ( " : ",end="" )
+            print ( " : " )
             if name.encoding_id == TT_MAC_ID_ROMAN:
                 # FIXME: convert from MacRoman to ASCII/ISO8895-1/whatever
                 # (MacRoman is mostly like ISO8895-1 but there are differences)
@@ -198,7 +184,8 @@ def Print_Sfnt_Names( face ):
             if name.encoding_id in [ TT_ISO_ID_7BIT_ASCII,
                                      TT_ISO_ID_8859_1]:
                 print(name.string)
-            elif name.encoding_id == TT_ISO_ID_10646:
+            print ( " : " )
+            if name.encoding_id == TT_ISO_ID_10646:
                 print(name.string.decode('utf-16be', 'ignore'))
             else:
                 print( "{unsupported encoding %d}" % name.encoding_id )
@@ -206,14 +193,12 @@ def Print_Sfnt_Names( face ):
         elif name.platform_id == TT_PLATFORM_MICROSOFT:
             if name.language_id != TT_MS_LANGID_ENGLISH_UNITED_STATES:
                 print( " (language=0x%04x)" % name.language_id );
-            print( " : ",end="" )
-
+            print( " : " )
             if name.encoding_id in [TT_MS_ID_SYMBOL_CS,
                                     TT_MS_ID_UNICODE_CS]:
                 print(name.string.decode('utf-16be', 'ignore'))
             else:
                 print( "{unsupported encoding %d}" % name.encoding_id )
-            break
         else:
            print( "{unsupported platform}" )
 
@@ -252,11 +237,9 @@ def Print_Charmaps( face ):
         if verbose:
             face.set_charmap( charmap )
             charcode, gindex = face.get_first_char()
-            print(charcode, gindex)
             while ( gindex ):
-                print( "      0x%04lx => %d\n", charcode, gindex )
+                print( "      0x%04lx => %d" % (charcode, gindex) )
                 charcode, gindex = face.get_next_char( charcode, gindex )
-
 
 
 
