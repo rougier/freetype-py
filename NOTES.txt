@@ -1,3 +1,11 @@
+Release notes for 0.3.1
+=======================
+* Fixed first/next char in Face
+
+Release notes for 0.3.0
+=======================
+* Added ftdump.py demo and necessary functions
+
 Release notes for 0.2.0
 =======================
 * Added sfnt functions
