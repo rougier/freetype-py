@@ -371,12 +371,12 @@ class Face( object ):
 
     def get_first_char( self ):
         agindex = FT_UInt()
-        charcode = FT_Get_First_Char( self._FT_Face, agindex )
+        charcode = FT_Get_First_Char( self._FT_Face, byref(agindex) )
         return charcode, agindex.value
 
     def get_next_char( self, charcode, agindex ):
-        agindex = FT_UInt(agindex)
-        charcode = FT_Get_Next_Char( self._FT_Face, agindex )
+        agindex = FT_UInt( agindex )
+        charcode = FT_Get_Next_Char( self._FT_Face, charcode, byref(agindex) )
         return charcode, agindex.value
 
     def get_name_index( self, name ):
