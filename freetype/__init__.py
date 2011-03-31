@@ -11,7 +11,7 @@ This the bindings for the high-level API of FreeType (that must be installed
 somewhere on your system).
 
 Note:
-----
+-----
 C Library will be searched using the ctypes.util.find_library. However, this
 search might fail. In such a case (or for other reasons), you can specify the
 FT_library_filename before importing the freetype library and freetype will use
@@ -47,6 +47,7 @@ FT_Attach_File         = __dll__.FT_Attach_File
 FT_Attach_Stream       = __dll__.FT_Attach_Stream
 FT_Reference_Face      = __dll__.FT_Reference_Face
 FT_Done_Face           = __dll__.FT_Done_Face
+FT_Done_Glyph          = __dll__.FT_Done_Glyph
 FT_Select_Size         = __dll__.FT_Select_Size
 FT_Request_Size        = __dll__.FT_Request_Size
 FT_Set_Char_Size       = __dll__.FT_Set_Char_Size
@@ -58,6 +59,7 @@ FT_Render_Glyph        = __dll__.FT_Render_Glyph
 FT_Get_Kerning         = __dll__.FT_Get_Kerning
 FT_Get_Track_Kerning   = __dll__.FT_Get_Track_Kerning
 FT_Get_Glyph_Name      = __dll__.FT_Get_Glyph_Name
+FT_Get_Glyph           = __dll__.FT_Get_Glyph
 FT_Get_Postscript_Name = __dll__.FT_Get_Postscript_Name
 FT_Get_Postscript_Name.restype = c_char_p
 FT_Select_Charmap      = __dll__.FT_Select_Charmap
@@ -92,6 +94,7 @@ FT_Stroker_Export           = __dll__.FT_Stroker_Export
 FT_Stroker_Done             = __dll__.FT_Stroker_Done
 FT_Glyph_Stroke             = __dll__.FT_Glyph_Stroke
 FT_Glyph_StrokeBorder       = __dll__.FT_Glyph_StrokeBorder
+FT_Glyph_To_Bitmap          = __dll__.FT_Glyph_To_Bitmap
 
 # -----------------------------------------------------------------------------
 # High-level python API 
@@ -349,6 +352,127 @@ class Outline( object ):
 
 
 
+# -----------------------------------------------------------------------------
+#  FT_Glyph wrapper
+# -----------------------------------------------------------------------------
+class Glyph( object ):
+    '''
+    The root glyph structure contains a given glyph image plus its advance
+    width in 16.16 fixed float format.
+    '''
+    def __init__( self, glyph ):
+        '''
+        Create Glyph object from an FT glyph.
+
+        Parameters:
+        -----------
+          glyph: valid FT_Glyph object
+        '''
+        self._FT_Glyph = glyph
+
+    def __del__( self ):
+        '''
+        Destroy glyph.
+        '''
+        FT_Done_Glyph( self._FT_Glyph )
+
+    def _get_format( self ):
+        return self._FT_Glyph.contents.format
+    format = property( _get_format )
+
+
+    def stroke( self, stroker, destroy=False ):
+        '''
+        Stroke a given outline glyph object with a given stroker.
+
+        Parameters:
+        -----------
+          stroker: A stroker handle.
+
+          destroy: A Boolean. If 1, the source glyph object is destroyed on
+                   success.
+        Note:
+        -----
+
+        The source glyph is untouched in case of error.
+        '''
+        error = FT_Glyph_Stroke( byref(self._FT_Glyph),
+                                 stroker._FT_Stroker, destroy )
+        if error: raise FT_Exception( error )
+
+    def to_bitmap( self, mode, origin, destroy=False ):
+        '''
+        Convert a given glyph object to a bitmap glyph object.
+
+        Parameters:
+        -----------
+          mode: An enumeration that describes how the data is rendered.
+
+          origin: A pointer to a vector used to translate the glyph image
+                  before rendering. Can be 0 (if no translation). The origin is
+                  expressed in 26.6 pixels.
+
+          destroy: A boolean that indicates that the original glyph image
+                   should be destroyed by this function. It is never destroyed
+                   in case of error.
+
+          Note:
+          -----
+            This function does nothing if the glyph format isn't scalable.
+
+            The glyph image is translated with the ‘origin’ vector before
+            rendering.
+
+            The first parameter is a pointer to an FT_Glyph handle, that will
+            be replaced by this function (with newly allocated
+            data). Typically, you would use (omitting error handling):
+        '''
+        error = FT_Glyph_To_Bitmap( byref(self._FT_Glyph),
+                                    mode, origin, destroy)
+        if error: raise FT_Exception( error )
+        return BitmapGlyph( self._FT_Glyph )
+
+
+# -----------------------------------------------------------------------------
+#  FT_BitmapGlyph wrapper
+# -----------------------------------------------------------------------------
+class BitmapGlyph( object ):
+    '''
+    A structure used for bitmap glyph images. This really is a 'sub-class' of
+    FT_GlyphRec.
+    '''
+    def __init__( self, glyph ):
+        '''
+        Create Glyph object from an FT glyph.
+
+        Parameters:
+        -----------
+          glyph: valid FT_Glyph object
+        '''
+        self._FT_BitmapGlyph = cast(glyph, FT_BitmapGlyph)
+
+#    def __del__( self ):
+#        '''
+#        Destroy glyph.
+#        '''
+#        FT_Done_Glyph( FT_Glyph(self._FT_BitmapGlyph) )
+
+    def _get_format( self ):
+        return self._FT_BitmapGlyph.contents.format
+    format = property( _get_format )
+
+    def _get_bitmap( self ):
+        return Bitmap( self._FT_BitmapGlyph.contents.bitmap )
+    bitmap = property( _get_bitmap )
+
+    def _get_left( self ):
+        return self._FT_BitmapGlyph.left.value
+    left = property( _get_left )
+
+    def _get_top( self ):
+        return self._FT_BitmapGlyph.top.value
+    top = property( _get_top )
+
 
 # -----------------------------------------------------------------------------
 #  FT_GlyphSlot wrapper
@@ -357,23 +481,36 @@ class GlyphSlot( object ):
     def __init__( self, slot ):
         self._FT_GlyphSlot = slot
 
+    def get_glyph( self ):
+        aglyph = FT_Glyph()
+        error = FT_Get_Glyph( self._FT_GlyphSlot, byref(aglyph) )
+        if error: raise FT_Exception( error )
+        return Glyph( aglyph )
+
     def _get_bitmap( self ):
-        return Bitmap( self._FT_GlyphSlot.bitmap )
+        return Bitmap( self._FT_GlyphSlot.contents.bitmap )
     bitmap = property( _get_bitmap )
 
     def _get_next( self ):
-        return GlyphSlot( self._FT_GlyphSlot.next )
+        return GlyphSlot( self._FT_GlyphSlot.contents.next )
     next = property( _get_next )
 
-    advance = property( lambda self: self._FT_GlyphSlot.advance)
+    advance = property( lambda self: self._FT_GlyphSlot.contents.advance)
 
     def _get_outline( self ):
-        return Outline( self._FT_GlyphSlot.outline )
+        return Outline( self._FT_GlyphSlot.contents.outline )
     outline = property( _get_outline )
-    bitmap_top  = property( lambda self: self._FT_GlyphSlot.bitmap_top )
-    bitmap_left = property( lambda self: self._FT_GlyphSlot.bitmap_left )
-    linearHoriAdvance = property( lambda self: self._FT_GlyphSlot.linearHoriAdvance )
-    linearVertAdvance = property( lambda self: self._FT_GlyphSlot.linearVertAdvance )
+
+    format  = property( lambda self:
+                            self._FT_GlyphSlot.contents.format )
+    bitmap_top  = property( lambda self:
+                                self._FT_GlyphSlot.contents.bitmap_top )
+    bitmap_left = property( lambda self:
+                                self._FT_GlyphSlot.contents.bitmap_left )
+    linearHoriAdvance = property( lambda self:
+                                      self._FT_GlyphSlot.contents.linearHoriAdvance )
+    linearVertAdvance = property( lambda self:
+                                      self._FT_GlyphSlot.contents.linearVertAdvance )
 
 
 
@@ -559,8 +696,8 @@ class Face( object ):
     underline_thickness= property(lambda self: self._FT_Face.contents.underline_thickness)
 
     def _get_glyph( self ):
-        return GlyphSlot( self._FT_Face.contents.glyph.contents )
-    glyph = property( _get_glyph)
+        return GlyphSlot( self._FT_Face.contents.glyph )
+    glyph = property( _get_glyph )
 
     def _get_size( self ):
         size = self._FT_Face.contents.size
@@ -651,7 +788,7 @@ class Stroker( object ):
           The radius is expressed in the same units as the outline
           coordinates.
         '''
-        FT_Stroket_Set( self._FT_Stroker,
+        FT_Stroker_Set( self._FT_Stroker,
                         radius, line_cap, line_join, miter_limit )
 
 

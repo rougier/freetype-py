@@ -26,26 +26,35 @@ FT_Generic: Client applications generic data.
 
 FT_Bitmap_Size: Metrics of a bitmap strike.
 
-FT_CharmapRec: The base charmap structure.
+FT_Charmap: The base charmap structure.
 
 FT_Glyph_Metrics:A structure used to model the metrics of a single glyph.
 
 FT_Outline: This structure is used to describe an outline to the scan-line
             converter.
 
-FT_GlyphSlotRec: FreeType root glyph slot class structure.
+FT_GlyphSlot: FreeType root glyph slot class structure.
+
+FT_Glyph: The root glyph structure contains a given glyph image plus its
+           advance width in 16.16 fixed float format.
 
 FT_Size_Metrics: The size metrics structure gives the metrics of a size object.
 
-FT_SizeRec: FreeType root size class structure.
+FT_Size: FreeType root size class structure.
 
-FT_FaceRec: FreeType root face class structure.
+FT_Face: FreeType root face class structure.
 
 FT_Parameter: A simple structure used to pass more or less generic parameters
               to FT_Open_Face.
 
 FT_Open_Args: A structure used to indicate how to open a new font file or
               stream.
+
+FT_SfntName: A structure used to model an SFNT 'name' table entry.
+
+FT_Stroker: Opaque handler to a path stroker object.
+
+FT_BitmapGlyph: A structure used for bitmap glyph images.
 '''
 from ft_types import *
 
@@ -422,6 +431,32 @@ class FT_Outline(Structure):
         ('contours',   POINTER(c_short)),
         ('flags',      c_int),
     ]
+
+
+# -----------------------------------------------------------------------------
+# The root glyph structure contains a given glyph image plus its advance width
+# in 16.16 fixed float format.
+
+class FT_GlyphRec(Structure):
+    '''
+    The root glyph structure contains a given glyph image plus its advance
+    width in 16.16 fixed float format.
+
+    library:  A handle to the FreeType library object.
+
+    clazz: A pointer to the glyph's class. Private.
+
+    format: The format of the glyph's image.
+
+    advance: A 16.16 vector that gives the glyph's advance width.
+    '''
+    _fields_ = [
+        ('library',    FT_Library),
+        ('clazz',      c_void_p),
+        ('format',     FT_Glyph_Format),
+        ('advance',    FT_Vector)
+    ]
+FT_Glyph = POINTER(FT_GlyphRec)
 
 
 
@@ -888,3 +923,20 @@ class FT_StrokerRec(Structure):
     _fields_ = [ ]
 FT_Stroker = POINTER(FT_StrokerRec)
 
+
+# -----------------------------------------------------------------------------
+# A structure used for bitmap glyph images. This really is a 'sub-class' of
+# FT_GlyphRec.
+#
+class FT_BitmapGlyphRec(Structure):
+    '''
+    A structure used for bitmap glyph images. This really is a 'sub-class' of
+    FT_GlyphRec.
+    '''
+    _fields_ = [ 
+        ('root' , FT_GlyphRec),
+        ('left', FT_Int),
+        ('top', FT_Int),
+        ('bitmap', FT_Bitmap)
+    ]
+FT_BitmapGlyph = POINTER(FT_BitmapGlyphRec)
