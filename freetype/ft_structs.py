@@ -876,3 +876,15 @@ class FT_SfntName(Structure):
         # this string is *not* null-terminated!
         ('string',      POINTER(FT_Byte)),
         ('string_len',  FT_UInt) ]
+
+
+
+# -----------------------------------------------------------------------------
+# Opaque handler to a path stroker object.
+class FT_StrokerRec(Structure):
+    '''
+    Opaque handler to a path stroker object.
+    '''
+    _fields_ = [ ]
+FT_Stroker = POINTER(FT_StrokerRec)
+

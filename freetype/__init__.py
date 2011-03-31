@@ -74,6 +74,24 @@ FT_Get_FSType_Flags    = __dll__.FT_Get_FSType_Flags
 FT_Get_Sfnt_Name_Count = __dll__.FT_Get_Sfnt_Name_Count
 FT_Get_Sfnt_Name       = __dll__.FT_Get_Sfnt_Name
 
+FT_Outline_GetInsideBorder  = __dll__.FT_Outline_GetInsideBorder
+FT_Outline_GetOutsideBorder = __dll__.FT_Outline_GetOutsideBorder
+FT_Stroker_New              = __dll__.FT_Stroker_New
+FT_Stroker_Set              = __dll__.FT_Stroker_Set
+FT_Stroker_Rewind           = __dll__.FT_Stroker_Rewind
+FT_Stroker_ParseOutline     = __dll__.FT_Stroker_ParseOutline
+FT_Stroker_BeginSubPath     = __dll__.FT_Stroker_BeginSubPath
+FT_Stroker_EndSubPath       = __dll__.FT_Stroker_EndSubPath
+FT_Stroker_LineTo           = __dll__.FT_Stroker_LineTo
+FT_Stroker_ConicTo          = __dll__.FT_Stroker_ConicTo
+FT_Stroker_CubicTo          = __dll__.FT_Stroker_CubicTo
+FT_Stroker_GetBorderCounts  = __dll__.FT_Stroker_GetBorderCounts
+FT_Stroker_ExportBorder     = __dll__.FT_Stroker_ExportBorder
+FT_Stroker_GetCounts        = __dll__.FT_Stroker_GetCounts
+FT_Stroker_Export           = __dll__.FT_Stroker_Export
+FT_Stroker_Done             = __dll__.FT_Stroker_Done
+FT_Glyph_Stroke             = __dll__.FT_Glyph_Stroke
+FT_Glyph_StrokeBorder       = __dll__.FT_Glyph_StrokeBorder
 
 # -----------------------------------------------------------------------------
 # High-level python API 
@@ -104,6 +122,7 @@ def get_handle():
             pass
         if error: raise FT_Exception(error)
     return __handle__
+
 
 
 # -----------------------------------------------------------------------------
@@ -304,6 +323,30 @@ class Outline( object ):
     tags = property(_get_tags)
         
     flags = property(lambda self: self._FT_Outline.flags)
+
+
+    def get_inside_border( self ):
+        '''
+        Retrieve the FT_StrokerBorder value corresponding to the 'inside'
+        borders of a given outline.
+
+        Return:
+        The border index. FT_STROKER_BORDER_RIGHT for empty or invalid
+        outlines.
+        '''
+        return FT_Outline_GetInsideBorder( self._FT_Outline )
+
+    def get_outside_border( self ):
+        '''
+        Retrieve the FT_StrokerBorder value corresponding to the 'outside'
+        borders of a given outline.
+
+        Return:
+        The border index. FT_STROKER_BORDER_RIGHT for empty or invalid
+        outlines.
+        '''
+        return FT_Outline_GetInsideBorder( self._FT_Outline )
+
 
 
 
@@ -532,7 +575,7 @@ class Face( object ):
 
 
 # -----------------------------------------------------------------------------
-#  Sfnt_Name wrapper
+#  SfntName wrapper
 # -----------------------------------------------------------------------------
 class SfntName( object ):
     ''' '''
@@ -556,3 +599,269 @@ class SfntName( object ):
     #     #return data
     string = property(_get_string)
 
+
+
+# -----------------------------------------------------------------------------
+#  FT_Stroker wrapper
+# -----------------------------------------------------------------------------
+class Stroker( object ):
+    '''
+    FT_Stroker wrapper
+
+    This component generates stroked outlines of a given vectorial glyph. It
+    also allows you to retrieve the 'outside' and/or the 'inside' borders of
+    the stroke.
+
+    This can be useful to generate 'bordered' glyph, i.e., glyphs displayed
+    with a coloured (and anti-aliased) border around their shape.
+    '''
+
+    def __init__( self ):
+        '''
+        Create a new Stroker object.
+        '''
+        library = get_handle( )
+        stroker = FT_Stroker( )
+        error = FT_Stroker_New( library, byref(stroker) )
+        if error: raise FT_Exception( error )
+        self._FT_Stroker = stroker
+
+
+    def __del__( self ):
+        '''
+        Destroy object.
+        '''
+        FT_Stroker_Done( self._FT_Stroker )
+
+
+    def set( self, radius, line_cap, line_join, miter_limit ):
+        '''
+        Reset a stroker object's attributes.
+
+        Parameters:
+        -----------
+          radius     : The border radius.
+          line_cap   : The line cap style.
+          line_join  : The line join style.
+          miter_limit: The miter limit for the FT_STROKER_LINEJOIN_MITER
+                       style, expressed as 16.16 fixed point value.
+
+        Note:
+        -----
+          The radius is expressed in the same units as the outline
+          coordinates.
+        '''
+        FT_Stroket_Set( self._FT_Stroker,
+                        radius, line_cap, line_join, miter_limit )
+
+
+    def rewind( self ):
+        '''
+        Reset a stroker object without changing its attributes. You should call
+        this function before beginning a new series of calls to
+        FT_Stroker_BeginSubPath or FT_Stroker_EndSubPath.
+        '''
+        FT_Stroker_Rewind( self._FT_Stroker )
+
+
+    def parse_outline( self, outline, opened ):
+        '''
+        A convenience function used to parse a whole outline with the
+        stroker. The resulting outline(s) can be retrieved later by functions
+        like FT_Stroker_GetCounts and FT_Stroker_Export.
+
+        Parameters:
+        -----------
+          outline: The source outline.
+          opened : A boolean. If 1, the outline is treated as an open path
+                   instead of a closed one.
+
+        Note:
+        -----
+          If 'opened' is 0 (the default), the outline is treated as a closed
+          path, and the stroker generates two distinct 'border' outlines.
+
+          If 'opened' is 1, the outline is processed as an open path, and the
+          stroker generates a single 'stroke' outline.
+
+          This function calls 'rewind' automatically.
+        '''
+        error = FT_Stroker_ParseOutline( self._FT_Stroker, outline, opened)
+        if error: raise FT_Exception( error )
+
+
+    def begin_subpath( self, to, open_ ):
+        '''
+        Start a new sub-path in the stroker.
+
+        Parameters:
+        -----------
+          to   : A pointer to the start vector.
+          open_: A boolean. If 1, the sub-path is treated as an open one.
+
+        Note:
+        -----
+          This function is useful when you need to stroke a path that is not
+          stored as an 'Outline' object.
+        '''
+        error = FT_Stroker_BeginSubPath( self._FT_Stroker, to, open_ )
+        if error: raise FT_Exception( error )
+
+    
+    def end_subpath( self ):
+        '''
+        Close the current sub-path in the stroker.
+
+        Note:
+        -----
+          You should call this function after 'begin_subpath'. If the subpath
+          was not 'opened', this function 'draws' a single line segment to the
+          start position when needed.
+        '''
+        error = FT_Stroker_EndSubPath( self._FT_Stroker)
+        if error: raise FT_Exception( error )
+
+    
+    def line_to( self, to ):
+        '''
+        'Draw' a single line segment in the stroker's current sub-path, from
+        the last position.
+
+        Parameters:
+        -----------
+          to: A pointer to the destination point.
+
+        Note:
+        -----
+          You should call this function between 'begin_subpath' and
+          'end_subpath'.
+        '''
+        error = FT_Stroker_LineTo( self._FT_Stroker, to )
+        if error: raise FT_Exception( error )
+
+        
+    def conic_to( self, control, to ):
+        '''
+        'Draw' a single quadratic Bezier in the stroker's current sub-path,
+        from the last position.
+
+        Parameters:
+        -----------
+          control: A pointer to a Bezier control point.
+          to     : A pointer to the destination point.
+
+        Note:
+        -----
+          You should call this function between 'begin_subpath' and
+          'end_subpath'.
+        '''
+        error = FT_Stroker_ConicTo( self._FT_Stroker, control, to )
+        if error: raise FT_Exception( error )
+        
+
+    def cubic_to( self, control1, control2, to ):
+        '''
+        'Draw' a single quadratic Bezier in the stroker's current sub-path,
+        from the last position.
+
+        Parameters:
+        -----------
+          control1: A pointer to the first Bezier control point.
+          control2: A pointer to second Bezier control point.
+          to      : A pointer to the destination point.
+
+        Note:
+        -----
+          You should call this function between 'begin_subpath' and
+          'end_subpath'.
+        '''
+        error = FT_Stroker_CubicTo( self._FT_Stroker, control1, control2, to )
+        if error: raise FT_Exception( error )
+        
+        
+    def get_border_counts( self, border ):
+        '''
+        Call this function once you have finished parsing your paths with the
+        stroker. It returns the number of points and contours necessary to
+        export one of the 'border' or 'stroke' outlines generated by the
+        stroker.
+        
+        Parameters:
+        -----------
+          border: The border index.
+
+        Return:
+        -------
+          number of points, number of contours
+        '''
+        anum_points = FT_UInt()
+        anum_contours = FT_UInt()
+        error = FT_Stroker_GetBorderCounts( self._FT_Stroker, border,
+                                    byref(anum_points), byref(anum_contours) )
+        if error: raise FT_Exception( error )
+        return anum_points.value, anum_contours.value
+                                            
+
+    def export_border( self , border, outline ):
+        '''
+        Call this function after 'get_border_counts' to export the
+        corresponding border to your own 'Outline' structure.
+
+        Note that this function appends the border points and contours to your
+        outline, but does not try to resize its arrays.
+
+        Parameters:
+        -----------
+          border:  The border index.
+          outline: The target outline.
+            
+        Note:
+        -----
+          Always call this function after get_border_counts to get sure that
+          there is enough room in your 'Outline' object to receive all new
+          data.
+
+          When an outline, or a sub-path, is 'closed', the stroker generates
+          two independent 'border' outlines, named 'left' and 'right'
+
+          When the outline, or a sub-path, is 'opened', the stroker merges the
+          'border' outlines with caps. The 'left' border receives all points,
+          while the 'right' border becomes empty.
+
+          Use the function export instead if you want to retrieve all borders
+          at once.
+        '''
+        FT_Stroker_ExportBorder( self._FT_Stroker, border, outline._FT_Outline )
+
+
+    def get_counts( self ):
+        '''
+        Call this function once you have finished parsing your paths with the
+        stroker. It returns the number of points and contours necessary to
+        export all points/borders from the stroked outline/path.
+
+        Return:
+        -------
+          number of points, number of contours
+        '''
+        anum_points = FT_UInt()
+        anum_contours = FT_UInt()
+        error = FT_Stroker_GetCounts( self._FT_Stroker,
+                                      byref(anum_points), byref(anum_contours) )
+        if error: raise FT_Exception( error )
+        return anum_points.value, anum_contours.value
+
+
+    def export( self, outline ):
+        '''
+        Call this function after get_border_counts to export all borders to
+        your own 'Outline' structure.
+
+        Note that this function appends the border points and contours to your
+        outline, but does not try to resize its arrays.
+
+        Parameters:
+        -----------
+        outline: The target outline.
+        '''
+        FT_Stroker_Export( self._FT_Stroker, outline._FT_Outline )

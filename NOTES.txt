@@ -1,5 +1,6 @@
 Release notes for 0.3.1
 =======================
+* Added FT_Stroker bindings (enums, structs and methods)
 * Fixed first/next char in Face
 
 Release notes for 0.3.0

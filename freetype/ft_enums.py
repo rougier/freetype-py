@@ -48,6 +48,15 @@ FT_OPEN_MODES: A list of bit-field constants used within the 'flags' field of
 FT_KERNING_MODES: An enumeration used to specify which kerning values to return
                   in FT_Get_Kerning.
 
+FT_STROKER_LINEJOINS: These values determine how two joining lines are rendered
+                      in a stroker.
+
+FT_STROKER_LINECAPS: These values determine how the end of opened sub-paths are
+                     rendered in a stroke.
+
+FT_STROKER_BORDERS: These values are used to select a given stroke border in
+                    FT_Stroker_GetBorderCounts and FT_Stroker_ExportBorder.
+
 FT_LCD_FILTERS: A list of values to identify various types of LCD filters.
 
 TT_PLATFORMS: A list of valid values for the 'platform_id' identifier code in
@@ -70,13 +79,13 @@ TT_MAC_LANGIDS: Possible values of the language identifier field in the name
                 records of the TTF `name' table if the `platform' identifier
                 code is TT_PLATFORM_MACINTOSH.
 
-TT_MS_LANGIDS : Possible values of the language identifier field in the name
-                records of the TTF `name' table if the `platform' identifier
-                code is TT_PLATFORM_MICROSOFT.
+TT_MS_LANGIDS: Possible values of the language identifier field in the name
+               records of the TTF `name' table if the `platform' identifier
+               code is TT_PLATFORM_MICROSOFT.
 
-TT_NAME_IDS : Possible values of the `name' identifier field in the name
-              records of the TTF `name' table.  These values are platform
-              independent.
+TT_NAME_IDS: Possible values of the `name' identifier field in the name
+             records of the TTF `name' table.  These values are platform
+             independent.
 '''
 
 # -----------------------------------------------------------------------------
@@ -702,6 +711,74 @@ globals().update(FT_KERNING_MODES)
 
 
 # -----------------------------------------------------------------------------
+# These values determine how two joining lines are rendered in a stroker.
+#
+# FT_STROKER_LINEJOIN_ROUND
+# Used to render rounded line joins. Circular arcs are used to join two lines
+# smoothly.
+#
+# FT_STROKER_LINEJOIN_BEVEL
+# Used to render beveled line joins; i.e., the two joining lines are extended
+# until they intersect.
+#
+# FT_STROKER_LINEJOIN_MITER
+# Same as beveled rendering, except that an additional line break is added if
+# the angle between the two joining lines is too closed (this is useful to
+# avoid unpleasant spikes in beveled rendering).
+#
+FT_STROKER_LINEJOINS = { 'FT_STROKER_LINEJOIN_ROUND' : 0,
+                         'FT_STROKER_LINEJOIN_BEVEL' : 1,
+                         'FT_STROKER_LINEJOIN_MITER' : 2}
+globals().update(FT_STROKER_LINEJOINS)
+
+
+
+# -----------------------------------------------------------------------------
+# These values determine how the end of opened sub-paths are rendered in a
+# stroke.
+#
+# FT_STROKER_LINECAP_BUTT
+# The end of lines is rendered as a full stop on the last point itself.
+#
+# FT_STROKER_LINECAP_ROUND
+# The end of lines is rendered as a half-circle around the last point.
+#
+# FT_STROKER_LINECAP_SQUARE
+# The end of lines is rendered as a square around the last point.
+#
+FT_STROKER_LINECAPS = { 'FT_STROKER_LINECAP_BUTT'   : 0,
+                        'FT_STROKER_LINECAP_ROUND'  : 1,
+                        'FT_STROKER_LINECAP_SQUARE' : 2}
+globals().update(FT_STROKER_LINECAPS)
+
+
+
+# -----------------------------------------------------------------------------
+# These values are used to select a given stroke border in
+# FT_Stroker_GetBorderCounts and FT_Stroker_ExportBorder.
+#
+# FT_STROKER_BORDER_LEFT	
+# Select the left border, relative to the drawing direction.
+#
+# FT_STROKER_BORDER_RIGHT
+# Select the right border, relative to the drawing direction.
+#
+# Note
+# Applications are generally interested in the 'inside' and 'outside'
+# borders. However, there is no direct mapping between these and the 'left' and
+# 'right' ones, since this really depends on the glyph's drawing orientation,
+# which varies between font formats.
+#
+# You can however use FT_Outline_GetInsideBorder and
+# FT_Outline_GetOutsideBorder to get these.
+#
+FT_STROKER_BORDERS = { 'FT_STROKER_BORDER_LEFT'  : 0,
+                       'FT_STROKER_BORDER_RIGHT' : 1}
+globals().update(FT_STROKER_BORDERS)
+
+
+
+# -----------------------------------------------------------------------------
 # A list of values to identify various types of LCD filters.
 #
 # FT_LCD_FILTER_NONE	
@@ -741,7 +818,7 @@ globals().update(FT_LCD_FILTERS)
 #
 # TT_PLATFORM_APPLE_UNICODE
 # Used by Apple to indicate a Unicode character map and/or name entry. See
-# TT_APPLE_ID_XXX for corresponding ‘encoding_id’ values. Note that name
+# TT_APPLE_ID_XXX for corresponding 'encoding_id' values. Note that name
 # entries in this format are coded as big-endian UCS-2 character codes only.
 #
 # TT_PLATFORM_MACINTOSH	
@@ -812,7 +889,7 @@ globals().update(TT_APPLE_IDS)
 
 
 # -----------------------------------------------------------------------------
-# A list of valid values for the ‘encoding_id’ for TT_PLATFORM_MACINTOSH
+# A list of valid values for the 'encoding_id' for TT_PLATFORM_MACINTOSH
 # charmaps and name entries.
 TT_MAC_IDS = {
     'TT_MAC_ID_ROMAN'               :  0,
@@ -853,7 +930,7 @@ globals().update(TT_MAC_IDS)
 
 
 # -----------------------------------------------------------------------------
-# A list of valid values for the ‘encoding_id’ for TT_PLATFORM_MICROSOFT
+# A list of valid values for the 'encoding_id' for TT_PLATFORM_MICROSOFT
 # charmaps and name entries.
 #
 # TT_MS_ID_SYMBOL_CS	
