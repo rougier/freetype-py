@@ -13,7 +13,7 @@ setup( name        = 'freetype-py',
        url='http://code.google.com/p/freetype-py/',
        packages=['freetype'],
        classifiers = [
-          'Development Status :: 3 - Alpha',
+          'Development Status :: 4 - Beta',
           'Environment :: X11 Applications',
           'Environment :: MacOS X',
           'Intended Audience :: Developers',

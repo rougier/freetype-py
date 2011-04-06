@@ -1,6 +1,7 @@
 Release notes for 0.3.1
 =======================
 * Added FT_Stroker bindings (enums, structs and methods)
+* Added ft-outline and ft-color examples
 * Fixed first/next char in Face
 * Pythonic interface has been documented
 
