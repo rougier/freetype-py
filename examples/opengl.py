@@ -44,7 +44,7 @@ def makefont(filename, size):
     # Load font  and check it is monotype
     face = Face(filename)
     face.set_char_size( size*64 )
-    if not face.is_fixed_width():
+    if not face.is_fixed_width:
         raise 'Font is not monotype'
 
     # Determine largest glyph size
