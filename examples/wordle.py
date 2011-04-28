@@ -90,7 +90,6 @@ if __name__ == '__main__':
     n_words = 100
     n_tries = 100
     H, W = 600, 800
-
     I = np.zeros((H, W, 3), dtype=np.ubyte)
     S = np.random.normal(0,1,n_words)
     S = (S-S.min())/(S.max()-S.min())
@@ -112,7 +111,7 @@ if __name__ == '__main__':
                     I[y:y+h,x:x+w,1] |= (c * L).astype(int)
                     I[y:y+h,x:x+w,2] |= (c * L).astype(int)
                     break
-            if i == n_tries:
+            if i >= (n_tries - 1):
                 fails += 1
 
     print "Number of fails:", fails
