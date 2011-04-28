@@ -12,6 +12,8 @@ FT_PIXEL_MODES: An enumeration type used to describe the format of pixels in a
                 given bitmap. Note that additional formats may be added in the
                 future.
 
+FT_GLYPH_BBOX_MODES: The mode how the values of FT_Glyph_Get_CBox are returned.
+
 FT_GLYPH_FORMATS: An enumeration type used to describe the format of a given
                   glyph image. Note that this version of FreeType only supports
                   two image formats, even though future font drivers will be
@@ -139,6 +141,32 @@ ft_pixel_mode_mono  = FT_PIXEL_MODE_MONO
 ft_pixel_mode_grays = FT_PIXEL_MODE_GRAY
 ft_pixel_mode_pal2  = FT_PIXEL_MODE_GRAY2
 ft_pixel_mode_pal4  = FT_PIXEL_MODE_GRAY4
+
+
+# -----------------------------------------------------------------------------
+# The mode how the values of FT_Glyph_Get_CBox are returned.
+#
+# FT_GLYPH_BBOX_UNSCALED	
+# Return unscaled font units.
+#
+# FT_GLYPH_BBOX_SUBPIXELS
+# Return unfitted 26.6 coordinates.
+#
+# FT_GLYPH_BBOX_GRIDFIT	
+# Return grid-fitted 26.6 coordinates.
+#
+# FT_GLYPH_BBOX_TRUNCATE	
+# Return coordinates in integer pixels.
+#
+# FT_GLYPH_BBOX_PIXELS	
+# Return grid-fitted pixel coordinates.
+#
+FT_GLYPH_BBOX_MODES = {'FT_GLYPH_BBOX_UNSCALED'  : 0,
+                       'FT_GLYPH_BBOX_SUBPIXELS' : 0,
+                       'FT_GLYPH_BBOX_GRIDFIT'   : 1,
+                       'FT_GLYPH_BBOX_TRUNCATE'  : 2,
+                       'FT_GLYPH_BBOX_PIXELS'    : 3}
+globals().update(FT_GLYPH_BBOX_MODES)
 
 
 

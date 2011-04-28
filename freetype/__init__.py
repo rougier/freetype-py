@@ -60,6 +60,9 @@ FT_Get_Kerning         = __dll__.FT_Get_Kerning
 FT_Get_Track_Kerning   = __dll__.FT_Get_Track_Kerning
 FT_Get_Glyph_Name      = __dll__.FT_Get_Glyph_Name
 FT_Get_Glyph           = __dll__.FT_Get_Glyph
+
+FT_Glyph_Get_CBox      = __dll__.FT_Glyph_Get_CBox
+
 FT_Get_Postscript_Name = __dll__.FT_Get_Postscript_Name
 FT_Get_Postscript_Name.restype = c_char_p
 FT_Select_Charmap      = __dll__.FT_Select_Charmap
