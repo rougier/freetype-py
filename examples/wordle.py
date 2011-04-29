@@ -88,13 +88,21 @@ if __name__ == '__main__':
     import Image
 
     n_words = 100
-    n_tries = 100
     H, W = 600, 800
     I = np.zeros((H, W, 3), dtype=np.ubyte)
     S = np.random.normal(0,1,n_words)
     S = (S-S.min())/(S.max()-S.min())
     S = np.sort(1-np.sqrt(S))[::-1]
-    sizes = (12 + S*96).astype(int).tolist()
+    sizes = (12 + S*48).astype(int).tolist()
+
+    def spiral():
+        eccentricity = 1.5
+        radius = 8
+        step = 0.1
+        t = 0
+        while True:
+            t += step
+            yield eccentricity*radius*t*math.cos(t), radius*t*math.sin(t)
 
     fails = 0
     for size in sizes:
@@ -102,21 +110,24 @@ if __name__ == '__main__':
         L = make_label('Hello', './Vera.ttf', size, angle=angle)
         h,w = L.shape
         if h < H and w < W:
-            for i in range(n_tries):
+            x0 = W//2 + (np.random.uniform()-.1)*50
+            y0 = H//2 + (np.random.uniform()-.1)*50
+            for dx,dy in spiral():
                 c = .25+.75*np.random.random()
-                x = np.random.randint(0,W-w)
-                y = np.random.randint(0,H-h)
-                if (I[y:y+h,x:x+w,0] * L).sum() == 0:
-                    I[y:y+h,x:x+w,0] |= (c * L).astype(int)
-                    I[y:y+h,x:x+w,1] |= (c * L).astype(int)
-                    I[y:y+h,x:x+w,2] |= (c * L).astype(int)
+                x = int(x0+dx)
+                y = int(y0+dy)
+                if x <= w//2 or y <= h//2 or x >= (W-w//2) or y >= (H-h//2):
+                    fails += 1
                     break
-            if i >= (n_tries - 1):
-                fails += 1
+                if (I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,0] * L).sum() == 0:
+                    I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,0] |= (c * L).astype(int)
+                    I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,1] |= (c * L).astype(int)
+                    I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,2] |= (c * L).astype(int)
+                    break
 
     print "Number of fails:", fails
     plt.imshow(I, interpolation='nearest', cmap=plt.cm.gray, origin='lower')
     plt.show()
-    I = Image.fromarray(I, mode='RGB')
+    I = Image.fromarray(I[::-1,::1,::1], mode='RGB')
     I.save('wordle.png')
 
