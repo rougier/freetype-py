@@ -81,6 +81,8 @@ FT_Get_Sfnt_Name       = __dll__.FT_Get_Sfnt_Name
 
 FT_Outline_GetInsideBorder  = __dll__.FT_Outline_GetInsideBorder
 FT_Outline_GetOutsideBorder = __dll__.FT_Outline_GetOutsideBorder
+FT_Outline_Get_BBox         = __dll__.FT_Outline_Get_BBox
+FT_Outline_Get_CBox         = __dll__.FT_Outline_Get_CBox
 FT_Stroker_New              = __dll__.FT_Stroker_New
 FT_Stroker_Set              = __dll__.FT_Stroker_Set
 FT_Stroker_Rewind           = __dll__.FT_Stroker_Rewind
@@ -623,6 +625,37 @@ class Outline( object ):
         '''
         return FT_Outline_GetInsideBorder( self._FT_Outline )
 
+    def get_bbox(self):
+        '''
+        Compute the exact bounding box of an outline. This is slower than
+        computing the control box. However, it uses an advanced algorithm which
+        returns very quickly when the two boxes coincide. Otherwise, the
+        outline Bézier arcs are traversed to extract their extrema.
+        '''
+        bbox = FT_BBox()
+        error = FT_Outline_Get_BBox(byref(self._FT_Outline), byref(bbox))
+        if error: raise FT_Exception(error)
+        return bbox
+
+    def get_cbox(self):
+        '''
+        Return an outline's 'control box'. The control box encloses all the
+        outline's points, including Bézier control points. Though it coincides
+        with the exact bounding box for most glyphs, it can be slightly larger
+        in some situations (like when rotating an outline which contains Bézier
+        outside arcs).
+
+        Computing the control box is very fast, while getting the bounding box
+        can take much more time as it needs to walk over all segments and arcs
+        in the outline. To get the latter, you can use the 'ftbbox' component
+        which is dedicated to this single task.
+        '''
+        bbox = FT_BBox()
+        error = FT_Outline_Get_CBox(byref(self._FT_Outline), byref(bbox))
+        if error: raise FT_Exception(error)
+        return BBox(bbox)
+
+
 
 
 # -----------------------------------------------------------------------------
@@ -704,6 +737,63 @@ class Glyph( object ):
                                     mode, origin, destroy)
         if error: raise FT_Exception( error )
         return BitmapGlyph( self._FT_Glyph )
+
+    def get_cbox(self, bbox_mode):
+        '''
+        Return an outline's 'control box'. The control box encloses all the
+        outline's points, including Bézier control points. Though it coincides
+        with the exact bounding box for most glyphs, it can be slightly larger
+        in some situations (like when rotating an outline which contains Bézier
+        outside arcs).
+
+        Computing the control box is very fast, while getting the bounding box
+        can take much more time as it needs to walk over all segments and arcs
+        in the outline. To get the latter, you can use the 'ftbbox' component
+        which is dedicated to this single task.
+
+        Parameters:
+        -----------
+
+        mode : The mode which indicates how to interpret the returned bounding
+               box values.
+
+        Note:
+        -----
+
+        Coordinates are relative to the glyph origin, using the y upwards
+        convention.
+
+        If the glyph has been loaded with FT_LOAD_NO_SCALE, 'bbox_mode' must be
+        set to FT_GLYPH_BBOX_UNSCALED to get unscaled font units in 26.6 pixel
+        format. The value FT_GLYPH_BBOX_SUBPIXELS is another name for this
+        constant.
+
+        Note that the maximum coordinates are exclusive, which means that one
+        can compute the width and height of the glyph image (be it in integer
+        or 26.6 pixels) as:
+
+        width  = bbox.xMax - bbox.xMin;                                  
+        height = bbox.yMax - bbox.yMin;                                  
+
+        Note also that for 26.6 coordinates, if 'bbox_mode' is set to
+        FT_GLYPH_BBOX_GRIDFIT, the coordinates will also be grid-fitted, which
+        corresponds to:
+
+        bbox.xMin = FLOOR(bbox.xMin);
+        bbox.yMin = FLOOR(bbox.yMin);                                    
+        bbox.xMax = CEILING(bbox.xMax);                                  
+        bbox.yMax = CEILING(bbox.yMax);                                  
+        
+        To get the bbox in pixel coordinates, set 'bbox_mode' to
+        FT_GLYPH_BBOX_TRUNCATE.
+
+        To get the bbox in grid-fitted pixel coordinates, set 'bbox_mode' to
+        FT_GLYPH_BBOX_PIXELS.
+        '''
+        bbox = FT_BBox()
+        error = FT_Glyph_Get_CBox(byref(self._FT_Glyph), bbox_mode,byref(bbox))
+        if error: raise FT_Exception(error)
+        return BBox(bbox)
 
 
 
