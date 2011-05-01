@@ -5,7 +5,7 @@
 #
 # -----------------------------------------------------------------------------
 '''
-Glyph bitmap monochrome rendring
+Glyph outline rendering
 '''
 from freetype import *
 
