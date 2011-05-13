@@ -974,6 +974,12 @@ class Face( object ):
         self._index = index
         self._FT_Face = face
     
+    def __del__( self ):
+        '''
+        Discard  face object, as well as all of its child slots and sizes.
+        '''
+        FT_Done_Face( self._FT_Face )
+
     def set_char_size( self, width=0, height=0, hres=72, vres=72 ):
         '''
         This function calls FT_Request_Size to request the nominal size (in

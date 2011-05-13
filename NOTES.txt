@@ -1,3 +1,10 @@
+Release notes for 0.3.2
+=======================
+* Added wordle.py example
+* Added get_bbox for Outline class
+* Added get_cbox for Outline and Glyph classes
+* Added __del__ method to Face class
+
 Release notes for 0.3.1
 =======================
 * Added FT_Stroker bindings (enums, structs and methods)
