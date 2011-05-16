@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
 #  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier

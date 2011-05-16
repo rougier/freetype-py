@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
 #  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
@@ -630,7 +632,7 @@ class Outline( object ):
         Compute the exact bounding box of an outline. This is slower than
         computing the control box. However, it uses an advanced algorithm which
         returns very quickly when the two boxes coincide. Otherwise, the
-        outline Bézier arcs are traversed to extract their extrema.
+        outline Bezier arcs are traversed to extract their extrema.
         '''
         bbox = FT_BBox()
         error = FT_Outline_Get_BBox(byref(self._FT_Outline), byref(bbox))
@@ -640,9 +642,9 @@ class Outline( object ):
     def get_cbox(self):
         '''
         Return an outline's 'control box'. The control box encloses all the
-        outline's points, including Bézier control points. Though it coincides
+        outline's points, including Bezier control points. Though it coincides
         with the exact bounding box for most glyphs, it can be slightly larger
-        in some situations (like when rotating an outline which contains Bézier
+        in some situations (like when rotating an outline which contains Bezier
         outside arcs).
 
         Computing the control box is very fast, while getting the bounding box
@@ -741,9 +743,9 @@ class Glyph( object ):
     def get_cbox(self, bbox_mode):
         '''
         Return an outline's 'control box'. The control box encloses all the
-        outline's points, including Bézier control points. Though it coincides
+        outline's points, including Bezier control points. Though it coincides
         with the exact bounding box for most glyphs, it can be slightly larger
-        in some situations (like when rotating an outline which contains Bézier
+        in some situations (like when rotating an outline which contains Bezier
         outside arcs).
 
         Computing the control box is very fast, while getting the bounding box
