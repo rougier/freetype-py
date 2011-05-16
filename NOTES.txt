@@ -4,6 +4,7 @@ Release notes for 0.3.2
 * Added get_bbox for Outline class
 * Added get_cbox for Outline and Glyph classes
 * Added __del__ method to Face class
+* Set encoding (utf-8) to all source files and examples.
 
 Release notes for 0.3.1
 =======================
