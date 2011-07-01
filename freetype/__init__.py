@@ -40,8 +40,49 @@ __handle__ = None
 FT_Init_FreeType       = __dll__.FT_Init_FreeType
 FT_Done_FreeType       = __dll__.FT_Done_FreeType
 FT_Library_Version     = __dll__.FT_Library_Version
+
+def __del_library__(self):
+    global __handle__
+    if __handle__:
+        try:
+            FT_Done_FreeType(byref(self))
+            __handle__ = None
+        except:
+            pass
+FT_Library.__del__ = __del_library__
+
+def get_handle():
+    '''
+    Get unique FT_Library handle
+    '''
+    global __handle__
+    if not __handle__:
+        __handle__ = FT_Library( )
+        error = FT_Init_FreeType( byref(__handle__) )
+        if error: raise FT_Exception(error)
+        try:
+            set_lcd_filter( FT_LCD_FILTER_DEFAULT )
+        except:
+            pass
+        if error: raise FT_Exception(error)
+    return __handle__
+
+def version():
+    '''
+    Return the version of the FreeType library being used as a tuple of
+    ( major version number, minor version number, patch version number )
+    '''
+    amajor = FT_Int()
+    aminor = FT_Int()
+    apatch = FT_Int()
+    library = get_handle()
+    FT_Library_Version(library, byref(amajor), byref(aminor), byref(apatch))
+    return (amajor.value, aminor.value, apatch.value)
+
+
 FT_Library_SetLcdFilter= __dll__.FT_Library_SetLcdFilter
-FT_Library_SetLcdFilterWeights = __dll__.FT_Library_SetLcdFilterWeights
+if version()>=(2,4,0):
+    FT_Library_SetLcdFilterWeights = __dll__.FT_Library_SetLcdFilterWeights
 FT_New_Face            = __dll__.FT_New_Face
 FT_New_Memory_Face     = __dll__.FT_New_Memory_Face
 FT_Open_Face           = __dll__.FT_Open_Face
@@ -106,53 +147,8 @@ FT_Glyph_To_Bitmap          = __dll__.FT_Glyph_To_Bitmap
 
 
 # -----------------------------------------------------------------------------
-# High-level python API 
-# -----------------------------------------------------------------------------
-def __del_library__(self):
-    global __handle__
-    if __handle__:
-        try:
-            FT_Done_FreeType(byref(self))
-            __handle__ = None
-        except:
-            pass
-FT_Library.__del__ = __del_library__
-
-
-def get_handle():
-    '''
-    Get unique FT_Library handle
-    '''
-    global __handle__
-    if not __handle__:
-        __handle__ = FT_Library( )
-        error = FT_Init_FreeType( byref(__handle__) )
-        if error: raise FT_Exception(error)
-        try:
-            set_lcd_filter( FT_LCD_FILTER_DEFAULT )
-        except:
-            pass
-        if error: raise FT_Exception(error)
-    return __handle__
-
-
-
-# -----------------------------------------------------------------------------
 #  Stand alone functions
 # -----------------------------------------------------------------------------
-def version():
-    '''
-    Return the version of the FreeType library being used as a tuple of
-    ( major version number, minor version number, patch version number )
-    '''
-    amajor = FT_Int()
-    aminor = FT_Int()
-    apatch = FT_Int()
-    library = get_handle()
-    FT_Library_Version(library, byref(amajor), byref(aminor), byref(apatch))
-    return (amajor.value, aminor.value, apatch.value)
-
-
 def set_lcd_filter(filt):
     '''
     This function is used to apply color filtering to LCD decimated bitmaps,
@@ -197,11 +193,19 @@ def set_lcd_filter_weights(a,b,c,d,e):
     FT_Library_SetLcdFilter. By default, FreeType uses the quintuple (0x00,
     0x55, 0x56, 0x55, 0x00) for FT_LCD_FILTER_LIGHT, and (0x10, 0x40, 0x70,
     0x40, 0x10) for FT_LCD_FILTER_DEFAULT and FT_LCD_FILTER_LEGACY.
+
+    Note:
+    -----
+    Only available if version > 2.4.0
     '''
-    library = get_handle()
-    weights = FT_Char(5)(a,b,c,d,e)
-    error = FT_Library_SetLcdFilterWeights(library, weights)
-    if error: raise FT_Exception(error)
+    if version()>=(2,4,0):
+        library = get_handle()
+        weights = FT_Char(5)(a,b,c,d,e)
+        error = FT_Library_SetLcdFilterWeights(library, weights)
+        if error: raise FT_Exception(error)
+    else:
+        raise RuntimeError, \
+              'set_lcd_filter_weights require freetype > 2.4.0'
 
 
 
