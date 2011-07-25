@@ -27,11 +27,19 @@ from ft_structs import *
 import ctypes.util
 
 
+__dll__    = None
+__handle__ = None
 FT_Library_filename = ctypes.util.find_library('freetype')
 if not FT_Library_filename:
+    try:
+        __dll__ = ctypes.CDLL('libfreetype.so.6')
+    except OSError:
+        __dll__ = None
+if not FT_Library_filename and not __dll__:
     raise RuntimeError, 'Freetype library not found'
-__dll__ = ctypes.CDLL(FT_Library_filename)
-__handle__ = None
+if not __dll__:
+  __dll__ = ctypes.CDLL(FT_Library_filename)
+
 
 
 # -----------------------------------------------------------------------------
@@ -1076,7 +1084,7 @@ class Face( object ):
         correspond to the internal indices used within the file. This is done
         to ensure that value 0 always corresponds to the 'missing glyph'.
         '''
-        if type( charcode ) is str:
+        if type( charcode ) in (str,unicode):
             charcode = ord( charcode )
         return FT_Get_Char_Index( self._FT_Face, charcode )
 

@@ -1,3 +1,11 @@
+Release notes for 0.3.4
+=======================
+* Fixed a bug in get_kerning
+
+Release notes for 0.3.3
+=======================
+* Added test against freetype version for FT_ReferenceFace.
+
 Release notes for 0.3.2
 =======================
 * Added wordle.py example
@@ -5,7 +13,7 @@ Release notes for 0.3.2
 * Added get_cbox for Outline and Glyph classes
 * Added __del__ method to Face class
 * Set encoding (utf-8) to all source files and examples.
-* Added test agains freetype version for FT_Library_SetLcdFilterWeights.
+* Added test against freetype version for FT_Library_SetLcdFilterWeights.
 
 Release notes for 0.3.1
 =======================

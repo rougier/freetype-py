@@ -6,7 +6,7 @@
 from distutils.core import setup
 
 setup( name        = 'freetype-py',
-       version     = '0.3.2',
+       version     = '0.3.3',
        description = 'Freetype python bindings',
        author      = 'Nicolas P. Rougier',
        author_email='Nicolas.Rougier@inria.fr',
