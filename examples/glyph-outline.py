@@ -7,7 +7,7 @@
 #
 # -----------------------------------------------------------------------------
 '''
-Glyph bitmap monochrome rendring
+Glyph outline rendering
 '''
 from freetype import *
 
@@ -16,19 +16,24 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
 
     face = Face('./Vera.ttf')
-    face.set_char_size( 48*64 )
-    face.load_char('S', FT_LOAD_RENDER )
-    bitmap = face.glyph.bitmap
-    width  = face.glyph.bitmap.width
-    rows   = face.glyph.bitmap.rows
-    pitch  = face.glyph.bitmap.pitch
-    
+    face.set_char_size( 4*48*64 )
+    flags = FT_LOAD_DEFAULT | FT_LOAD_NO_BITMAP
+    face.load_char('S', flags )
+    slot = face.glyph
+    glyph = slot.get_glyph()
+    stroker = Stroker( )
+    stroker.set(64, FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0 )
+    glyph.stroke( stroker )
+    blyph = glyph.to_bitmap(FT_RENDER_MODE_NORMAL, Vector(0,0)) 
+    bitmap = blyph.bitmap
+    width, rows, pitch = bitmap.width, bitmap.rows, bitmap.pitch
+    top, left = blyph.top, blyph.left
     data = []
     for i in range(rows):
         data.extend(bitmap.buffer[i*pitch:i*pitch+width])
     Z = numpy.array(data,dtype=numpy.ubyte).reshape(rows, width)
-    plt.imshow(Z, interpolation='nearest', cmap=plt.cm.gray)
+    plt.figure(figsize=(6,8))
+    plt.imshow(Z, interpolation='nearest', cmap=plt.cm.gray_r)
     plt.show()
-
     
 
