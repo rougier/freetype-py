@@ -127,7 +127,8 @@ FT_Get_First_Char      = __dll__.FT_Get_First_Char
 FT_Get_Next_Char       = __dll__.FT_Get_Next_Char
 FT_Get_Name_Index      = __dll__.FT_Get_Name_Index
 FT_Get_SubGlyph_Info   = __dll__.FT_Get_SubGlyph_Info
-FT_Get_FSType_Flags    = __dll__.FT_Get_FSType_Flags
+if version()>=(2,3,8):
+    FT_Get_FSType_Flags    = __dll__.FT_Get_FSType_Flags
 FT_Get_Sfnt_Name_Count = __dll__.FT_Get_Sfnt_Name_Count
 FT_Get_Sfnt_Name       = __dll__.FT_Get_Sfnt_Name
 
@@ -983,6 +984,7 @@ class Face( object ):
         '''
         library = get_handle( )
         face = FT_Face( )
+        self._FT_Face = None
         error = FT_New_Face( library, filename, 0, byref(face) )
         if error: raise FT_Exception( error )
         self._filename = filename
@@ -993,7 +995,8 @@ class Face( object ):
         '''
         Discard  face object, as well as all of its child slots and sizes.
         '''
-        FT_Done_Face( self._FT_Face )
+        if self._FT_Face is not None:
+            FT_Done_Face( self._FT_Face )
 
     def set_char_size( self, width=0, height=0, hres=72, vres=72 ):
         '''
