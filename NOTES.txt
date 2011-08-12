@@ -1,10 +1,7 @@
-Release notes for 0.3.4
-=======================
-* Fixed a bug in get_kerning
-
 Release notes for 0.3.3
 =======================
-* Added test against freetype version for FT_ReferenceFace.
+* Fixed a bug in get_kerning
+* Added test against freetype version for FT_ReferenceFace and FT_Get_FSType_Flags
 
 Release notes for 0.3.2
 =======================
