@@ -303,11 +303,11 @@ class TextureFont:
         pen = Vector(0,0)
         hres = 16*72
         hscale = 1.0/16
-        face.set_char_size( int(self.size * 64), 0, hres, 72 )
-        matrix = Matrix( int((hscale) * 0x10000L), int((0.0) * 0x10000L),
-                         int((0.0)    * 0x10000L), int((1.0) * 0x10000L) )
 
         for charcode in charcodes:
+            face.set_char_size( int(self.size * 64), 0, hres, 72 )
+            matrix = Matrix( int((hscale) * 0x10000L), int((0.0) * 0x10000L),
+                             int((0.0)    * 0x10000L), int((1.0) * 0x10000L) )
             face.set_transform( matrix, pen )
             if charcode in self.glyphs.keys():
                 continue
@@ -361,6 +361,10 @@ class TextureFont:
                 if kerning.x != 0:
                     g.kerning[charcode] = kerning.x
 
+            # High resolution advance.x calculation
+            gindex = face.get_char_index( charcode )
+            a = face.get_advance(gindex, FT_LOAD_RENDER | FT_LOAD_TARGET_LCD)/(64*72)
+            glyph.advance = a, glyph.advance[1]
 
 
 class TextureGlyph:

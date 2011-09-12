@@ -131,6 +131,8 @@ if version()>=(2,3,8):
     FT_Get_FSType_Flags    = __dll__.FT_Get_FSType_Flags
 FT_Get_Sfnt_Name_Count = __dll__.FT_Get_Sfnt_Name_Count
 FT_Get_Sfnt_Name       = __dll__.FT_Get_Sfnt_Name
+FT_Get_Advance         = __dll__.FT_Get_Advance
+
 
 FT_Outline_GetInsideBorder  = __dll__.FT_Outline_GetInsideBorder
 FT_Outline_GetOutsideBorder = __dll__.FT_Outline_GetOutsideBorder
@@ -1237,8 +1239,37 @@ class Face( object ):
         -----
         This function simply calls FT_Get_Char_Index and FT_Load_Glyph.
         '''
-        error = FT_Load_Char( self._FT_Face, ord(char), flags )
+        error = FT_Load_Char( self._FT_Face, char, flags )
         if error: raise FT_Exception( error )
+
+    def get_advance( self, gindex, flags ):
+        '''
+        Retrieve the advance value of a given glyph outline in an FT_Face. By
+        default, the unhinted advance is returned in font units.
+
+        Parameters:
+        -----------
+        gindex: The glyph index.
+
+        flags: A set of bit flags similar to those used when calling
+               FT_Load_Glyph, used to determine what kind of advances you
+               need.
+                    
+        Return:
+        -------
+        The advance value, in either font units or 16.16 format.
+
+        If FT_LOAD_VERTICAL_LAYOUT is set, this is the vertical advance
+        corresponding to a vertical layout. Otherwise, it is the horizontal
+        advance in a horizontal layout.
+        '''
+
+        padvance = FT_Fixed(0)
+        error = FT_Get_Advance( self._FT_Face, gindex, flags, byref(padvance) )
+        if error: raise FT_Exception( error )
+        return padvance.value
+        
+
 
     def get_kerning( self, left, right, mode = FT_KERNING_DEFAULT ):
         '''
@@ -1283,7 +1314,6 @@ class Face( object ):
 
         Note:
         -----
-
         The 'string' array returned in the 'aname' structure is not
         null-terminated. The application should deallocate it if it is no
         longer in use.
