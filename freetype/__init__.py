@@ -129,6 +129,11 @@ FT_Get_Name_Index      = __dll__.FT_Get_Name_Index
 FT_Get_SubGlyph_Info   = __dll__.FT_Get_SubGlyph_Info
 if version()>=(2,3,8):
     FT_Get_FSType_Flags    = __dll__.FT_Get_FSType_Flags
+    FT_Get_FSType_Flags.restype  = c_ushort
+
+FT_Get_X11_Font_Format = __dll__.FT_Get_X11_Font_Format
+FT_Get_X11_Font_Format.restype = c_char_p
+
 FT_Get_Sfnt_Name_Count = __dll__.FT_Get_Sfnt_Name_Count
 FT_Get_Sfnt_Name       = __dll__.FT_Get_Sfnt_Name
 FT_Get_Advance         = __dll__.FT_Get_Advance
@@ -1239,8 +1244,12 @@ class Face( object ):
         -----
         This function simply calls FT_Get_Char_Index and FT_Load_Glyph.
         '''
+
+        if len(char) == 1:
+            char = ord(char)
         error = FT_Load_Char( self._FT_Face, char, flags )
         if error: raise FT_Exception( error )
+
 
     def get_advance( self, gindex, flags ):
         '''
@@ -1298,6 +1307,31 @@ class Face( object ):
                                 left_glyph, right_glyph, mode, byref(kerning) )
         if error: raise FT_Exception( error )
         return kerning
+
+    def get_format(self):
+        '''
+        Return a string describing the format of a given face, using values
+        which can be used as an X11 FONT_PROPERTY. Possible values are
+        ‘TrueType’, ‘Type 1’, ‘BDF’, ‘PCF’, ‘Type 42’, ‘CID Type 1’, ‘CFF’,
+        ‘PFR’, and ‘Windows FNT’.
+        '''
+        
+        return FT_Get_X11_Font_Format( self._FT_Face )
+
+
+    def get_fstype(self):
+        '''
+        Return the fsType flags for a font (embedding permissions).
+
+        The return value is a tuple containing the freetype enum name
+        as a string and the actual flag as an int
+        '''
+
+        flag = FT_Get_FSType_Flags( self._FT_Face )
+        for k, v in FT_FSTYPE_XXX.items():
+            if v == flag:
+                return k, v
+
 
     def _get_sfnt_name_count(self):
         return FT_Get_Sfnt_Name_Count( self._FT_Face )
