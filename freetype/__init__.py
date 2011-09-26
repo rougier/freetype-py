@@ -993,6 +993,8 @@ class Face( object ):
         face = FT_Face( )
         self._FT_Face = None
         error = FT_New_Face( library, filename, 0, byref(face) )
+        u_filename = c_char_p(filename)
+        error = FT_New_Face( library, u_filename, 0, byref(face) )
         if error: raise FT_Exception( error )
         self._filename = filename
         self._index = index
@@ -1124,7 +1126,7 @@ class Face( object ):
     def get_next_char( self, charcode, agindex ):
         '''
         This function is used to return the next character code in the current
-        charmap of a given face following the value 'char_code', as well as the
+        charmap of a given face following the value 'charcode', as well as the
         corresponding glyph index.
 
         Parameters:
@@ -1142,7 +1144,7 @@ class Face( object ):
         Note that 'agindex' is set to 0 when there are no more
         codes in the charmap.
         '''
-        agindex = FT_UInt( agindex )
+        agindex = FT_UInt( 0 ) #agindex )
         charcode = FT_Get_Next_Char( self._FT_Face, charcode, byref(agindex) )
         return charcode, agindex.value
 
