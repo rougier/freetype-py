@@ -7,4 +7,4 @@
 
 Contributors:
 
-* titusz.pan
+* Titusz Pan
