@@ -625,7 +625,10 @@ FT_FACE_FLAGS = { 'FT_FACE_FLAG_SCALABLE'          : 1 <<  0,
                   'FT_FACE_FLAG_MULTIPLE_MASTERS'  : 1 <<  8,
                   'FT_FACE_FLAG_GLYPH_NAMES'       : 1 <<  9,
                   'FT_FACE_FLAG_EXTERNAL_STREAM'   : 1 << 10,
-                  'FT_FACE_FLAG_HINTER'            : 1 << 11 }
+                  'FT_FACE_FLAG_HINTER'            : 1 << 11,
+                  'FT_FACE_FLAGS_CID_KEYED'        : 1 << 12,
+                  'FT_FACE_FLAGS_CID_TRICKY'       : 1 << 13
+ }
 globals().update(FT_FACE_FLAGS)
 
 
