@@ -172,8 +172,8 @@ def set_lcd_filter(filt):
     like the ones used when calling FT_Render_Glyph with FT_RENDER_MODE_LCD or
     FT_RENDER_MODE_LCD_V.
 
-    Note:
-    -----
+    **Note**
+
     This feature is always disabled by default. Clients must make an explicit
     call to this function with a 'filter' value other than FT_LCD_FILTER_NONE
     in order to enable it.
@@ -211,8 +211,8 @@ def set_lcd_filter_weights(a,b,c,d,e):
     0x55, 0x56, 0x55, 0x00) for FT_LCD_FILTER_LIGHT, and (0x10, 0x40, 0x70,
     0x40, 0x10) for FT_LCD_FILTER_DEFAULT and FT_LCD_FILTER_LEGACY.
 
-    Note:
-    -----
+    **Note**
+
     Only available if version > 2.4.0
     '''
     if version()>=(2,4,0):
@@ -242,8 +242,8 @@ class BBox( object ):
     A structure used to hold an outline's bounding box, i.e., the coordinates
     of its extrema in the horizontal and vertical directions.
 
-    Note:
-    -----
+    **Note**
+
     The bounding box is specified with the coordinates of the lower left and
     the upper right corner. In PostScript, those values are often called
     (llx,lly) and (urx,ury), respectively.
@@ -289,8 +289,8 @@ class SizeMetrics( object ):
     '''
     The size metrics structure gives the metrics of a size object.
 
-    Note:
-    -----
+    **Note**
+
     The scaling values, if relevant, are determined first during a size
     changing operation. The remaining fields are then set by the driver. For
     scalable formats, they are usually set to scaled values of the
@@ -363,8 +363,8 @@ class BitmapSize( object ):
     for a given point size and resolution) in a bitmap font. It is used for the
     'available_sizes' field of Face.
 
-    Note:
-    -----
+    **Note**
+
     Windows FNT: The nominal size given in a FNT font is not reliable. Thus
     when the driver finds it incorrect, it sets 'size' to some calculated
     values and sets 'x_ppem' and 'y_ppem' to the pixel width and height given
@@ -982,11 +982,10 @@ class Face( object ):
         '''
         Build a new Face
 
-        Parameters:
-        -----------
-        filename: A path to the font file.
-
-        index: The index of the face within the font.
+        :param str filename:
+            A path to the font file.
+        :param int index:
+               The index of the face within the font.
                The first face has index 0.
         '''
         library = get_handle( )
@@ -1012,18 +1011,13 @@ class Face( object ):
         This function calls FT_Request_Size to request the nominal size (in
         points).
         
-        Parameters:
-        -----------
-        width: The nominal width, in 26.6 fractional points.
+        :param float width: The nominal width, in 26.6 fractional points.
+        :param float height: The nominal height, in 26.6 fractional points.
+        :param float hres: The horizontal resolution in dpi.
+        :param float vres: The vertical resolution in dpi.
 
-        height: The nominal height, in 26.6 fractional points.
+        **Note**
 
-        hres: The horizontal resolution in dpi.
-
-        vres: The vertical resolution in dpi.
-
-        Note:
-        -----
         If either the character width or height is zero, it is set equal to the
         other value.
 
