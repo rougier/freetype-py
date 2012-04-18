@@ -991,9 +991,9 @@ class Face( object ):
         library = get_handle( )
         face = FT_Face( )
         self._FT_Face = None
-        error = FT_New_Face( library, filename, 0, byref(face) )
+        #error = FT_New_Face( library, filename, 0, byref(face) )
         u_filename = c_char_p(filename)
-        error = FT_New_Face( library, u_filename, 0, byref(face) )
+        error = FT_New_Face( library, u_filename, index, byref(face) )
         if error: raise FT_Exception( error )
         self._filename = filename
         self._index = index
