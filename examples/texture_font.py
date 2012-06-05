@@ -362,9 +362,9 @@ class TextureFont:
                     g.kerning[charcode] = kerning.x
 
             # High resolution advance.x calculation
-            gindex = face.get_char_index( charcode )
-            a = face.get_advance(gindex, FT_LOAD_RENDER | FT_LOAD_TARGET_LCD)/(64*72)
-            glyph.advance = a, glyph.advance[1]
+            # gindex = face.get_char_index( charcode )
+            # a = face.get_advance(gindex, FT_LOAD_RENDER | FT_LOAD_TARGET_LCD)/(64*72)
+            # glyph.advance = a, glyph.advance[1]
 
 
 class TextureGlyph:
