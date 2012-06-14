@@ -354,12 +354,14 @@ class TextureFont:
 
             # Generate kerning
             for g in self.glyphs.values():
-                kerning = face.get_kerning(g.charcode, charcode, mode=FT_KERNING_UNSCALED)
+                # 64 * 64 because of 26.6 encoding AND the transform matrix used
+                # in texture_font_load_face (hres = 64)
+                kerning = face.get_kerning(g.charcode, charcode, mode=FT_KERNING_UNFITTED)
                 if kerning.x != 0:
-                    glyph.kerning[g.charcode] = kerning.x
-                kerning = face.get_kerning(charcode, g.charcode, mode=FT_KERNING_UNSCALED)
+                    glyph.kerning[g.charcode] = kerning.x/(64.0*64.0)
+                kerning = face.get_kerning(charcode, g.charcode, mode=FT_KERNING_UNFITTED)
                 if kerning.x != 0:
-                    g.kerning[charcode] = kerning.x
+                    g.kerning[charcode] = kerning.x/(64.0*64.0)
 
             # High resolution advance.x calculation
             # gindex = face.get_char_index( charcode )

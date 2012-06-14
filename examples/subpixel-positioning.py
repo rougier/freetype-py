@@ -85,7 +85,7 @@ class Label:
 
         for i,charcode in enumerate(text):
             glyph = font[charcode]
-            kerning = glyph.get_kerning(prev)/64.0
+            kerning = glyph.get_kerning(prev)
             x0 = pen[0] + glyph.offset[0] + kerning
             dx = x0-int(x0)
             x0 = int(x0)
