@@ -90,7 +90,7 @@ if __name__ == '__main__':
     import Image
 
     n_words = 100
-    H, W = 600, 800
+    H, W, dpi = 600, 800, 72.0
     I = np.zeros((H, W, 3), dtype=np.ubyte)
     S = np.random.normal(0,1,n_words)
     S = (S-S.min())/(S.max()-S.min())
@@ -128,7 +128,10 @@ if __name__ == '__main__':
                     break
 
     print "Number of fails:", fails
-    plt.imshow(I, interpolation='nearest', cmap=plt.cm.gray, origin='lower')
+    fig = plt.figure(figsize=(W/dpi,H/dpi), dpi=dpi)
+    ax = fig.add_axes([0,0,1,1], frameon=False)
+    ax.imshow(I, interpolation='nearest', cmap=plt.cm.gray, origin='lower')
+    #plt.axis('off')
     plt.show()
     I = Image.fromarray(I[::-1,::1,::1], mode='RGB')
     I.save('wordle.png')

@@ -13,11 +13,10 @@ This the bindings for the high-level API of FreeType (that must be installed
 somewhere on your system).
 
 Note:
------
-C Library will be searched using the ctypes.util.find_library. However, this
-search might fail. In such a case (or for other reasons), you can specify the
-FT_library_filename before importing the freetype library and freetype will use
-the specified one. 
+  C Library will be searched using the ctypes.util.find_library. However, this
+  search might fail. In such a case (or for other reasons), you can specify the
+  FT_library_filename before importing the freetype library and freetype will use
+  the specified one. 
 '''
 from ctypes import *
 from ft_types import *
@@ -261,9 +260,7 @@ class BBox( object ):
         '''
         Create a new BBox object.
 
-        Parameters:
-        -----------
-        bbox : a FT_BBox or a tuple of 4 values
+        :param bbox: a FT_BBox or a tuple of 4 values
         '''
         if type(bbox) is FT_BBox:
             self._FT_BBox = bbox
@@ -311,9 +308,7 @@ class SizeMetrics( object ):
         '''
         Create a new SizeMetrics object.
 
-        Parameters:
-        -----------
-          metrics : a FT_SizeMetrics
+        :param metrics: a FT_SizeMetrics
         '''
         self._FT_Size_Metrics = metrics
 
@@ -378,9 +373,7 @@ class BitmapSize( object ):
         '''
         Create a new SizeMetrics object.
 
-        Parameters:
-        -----------
-        size : a FT_Bitmap_Size
+        :param size: a FT_Bitmap_Size
         '''
         self._FT_Bitmap_Size = size
 
@@ -412,19 +405,17 @@ class Bitmap(object):
     A structure used to describe a bitmap or pixmap to the raster. Note that we
     now manage pixmaps of various depths through the 'pixel_mode' field.
 
-    Note:
-    -----
-    For now, the only pixel modes supported by FreeType are mono and
-    grays. However, drivers might be added in the future to support more
-    'colorful' options.
+    *Note*:
+
+      For now, the only pixel modes supported by FreeType are mono and
+      grays. However, drivers might be added in the future to support more
+      'colorful' options.
     '''
     def __init__(self, bitmap):
         '''
         Create a new Bitmap object.
 
-        Parameters:
-        -----------
-        bitmap : a FT_Bitmap
+        :param bitmap: a FT_Bitmap
         '''
         self._FT_Bitmap = bitmap
 
@@ -496,16 +487,16 @@ class Charmap( object ):
     The currently active charmap is available as 'face.charmap'. You should
     call FT_Set_Charmap to change it.
 
-    Note:
-    -----
-    When a new face is created (either through FT_New_Face or FT_Open_Face),
-    the library looks for a Unicode charmap within the list and automatically
-    activates it.
+    **Note**:
 
-    See also:
-    ---------
-    See FT_CharMapRec for the publicly accessible fields of a given character
-    map.
+      When a new face is created (either through FT_New_Face or FT_Open_Face),
+      the library looks for a Unicode charmap within the list and automatically
+      activates it.
+
+    **See also**:
+
+      See FT_CharMapRec for the publicly accessible fields of a given character
+      map.
     '''
 
     def __init__( self, charmap ):
@@ -576,9 +567,7 @@ class Outline( object ):
         '''
         Create a new Outline object.
 
-        Parameters:
-        -----------
-        charmap : a FT_Outline
+        :param charmap: a FT_Outline
         '''
         self._FT_Outline = outline
         
@@ -631,9 +620,8 @@ class Outline( object ):
         Retrieve the FT_StrokerBorder value corresponding to the 'inside'
         borders of a given outline.
 
-        Return:
-        The border index. FT_STROKER_BORDER_RIGHT for empty or invalid
-        outlines.
+        :return: The border index. FT_STROKER_BORDER_RIGHT for empty or invalid
+                 outlines.
         '''
         return FT_Outline_GetInsideBorder( self._FT_Outline )
 
@@ -642,9 +630,8 @@ class Outline( object ):
         Retrieve the FT_StrokerBorder value corresponding to the 'outside'
         borders of a given outline.
 
-        Return:
-        The border index. FT_STROKER_BORDER_RIGHT for empty or invalid
-        outlines.
+        :return: The border index. FT_STROKER_BORDER_RIGHT for empty or invalid
+                 outlines.
         '''
         return FT_Outline_GetInsideBorder( self._FT_Outline )
 
@@ -693,9 +680,7 @@ class Glyph( object ):
         '''
         Create Glyph object from an FT glyph.
 
-        Parameters:
-        -----------
-          glyph: valid FT_Glyph object
+        :param glyph: valid FT_Glyph object
         '''
         self._FT_Glyph = glyph
 
@@ -715,15 +700,14 @@ class Glyph( object ):
         '''
         Stroke a given outline glyph object with a given stroker.
 
-        Parameters:
-        -----------
-          stroker: A stroker handle.
+        :param stroker: A stroker handle.
 
-          destroy: A Boolean. If 1, the source glyph object is destroyed on
-                   success.
-        Note:
-        -----
-        The source glyph is untouched in case of error.
+        :param destroy: A Boolean. If 1, the source glyph object is destroyed on
+                        success.
+
+        **Note**:
+
+          The source glyph is untouched in case of error.
         '''
         error = FT_Glyph_Stroke( byref(self._FT_Glyph),
                                  stroker._FT_Stroker, destroy )
@@ -733,28 +717,26 @@ class Glyph( object ):
         '''
         Convert a given glyph object to a bitmap glyph object.
 
-        Parameters:
-        -----------
-        mode: An enumeration that describes how the data is rendered.
+        :param mode: An enumeration that describes how the data is rendered.
 
-        origin: A pointer to a vector used to translate the glyph image
-                before rendering. Can be 0 (if no translation). The origin is
-                expressed in 26.6 pixels.
+        :param origin: A pointer to a vector used to translate the glyph image
+                       before rendering. Can be 0 (if no translation). The origin is
+                       expressed in 26.6 pixels.
 
-        destroy: A boolean that indicates that the original glyph image
-                 should be destroyed by this function. It is never destroyed
-                 in case of error.
+        :param destroy: A boolean that indicates that the original glyph image
+                        should be destroyed by this function. It is never destroyed
+                        in case of error.
 
-        Note:
-        -----
-        This function does nothing if the glyph format isn't scalable.
+        **Note**:
 
-        The glyph image is translated with the 'origin' vector before
-        rendering.
+          This function does nothing if the glyph format isn't scalable.
 
-        The first parameter is a pointer to an FT_Glyph handle, that will be
-        replaced by this function (with newly allocated data). Typically, you
-        would use (omitting error handling):
+          The glyph image is translated with the 'origin' vector before
+          rendering.
+
+          The first parameter is a pointer to an FT_Glyph handle, that will be
+          replaced by this function (with newly allocated data). Typically, you
+          would use (omitting error handling):
         '''
         error = FT_Glyph_To_Bitmap( byref(self._FT_Glyph),
                                     mode, origin, destroy)
@@ -774,44 +756,40 @@ class Glyph( object ):
         in the outline. To get the latter, you can use the 'ftbbox' component
         which is dedicated to this single task.
 
-        Parameters:
-        -----------
+        :param mode: The mode which indicates how to interpret the returned
+                     bounding box values.
 
-        mode : The mode which indicates how to interpret the returned bounding
-               box values.
+        **Note**:
 
-        Note:
-        -----
+          Coordinates are relative to the glyph origin, using the y upwards
+          convention.
 
-        Coordinates are relative to the glyph origin, using the y upwards
-        convention.
+          If the glyph has been loaded with FT_LOAD_NO_SCALE, 'bbox_mode' must be
+          set to FT_GLYPH_BBOX_UNSCALED to get unscaled font units in 26.6 pixel
+          format. The value FT_GLYPH_BBOX_SUBPIXELS is another name for this
+          constant.
 
-        If the glyph has been loaded with FT_LOAD_NO_SCALE, 'bbox_mode' must be
-        set to FT_GLYPH_BBOX_UNSCALED to get unscaled font units in 26.6 pixel
-        format. The value FT_GLYPH_BBOX_SUBPIXELS is another name for this
-        constant.
+          Note that the maximum coordinates are exclusive, which means that one
+          can compute the width and height of the glyph image (be it in integer
+          or 26.6 pixels) as:
 
-        Note that the maximum coordinates are exclusive, which means that one
-        can compute the width and height of the glyph image (be it in integer
-        or 26.6 pixels) as:
+          width  = bbox.xMax - bbox.xMin;                                  
+          height = bbox.yMax - bbox.yMin;                                  
 
-        width  = bbox.xMax - bbox.xMin;                                  
-        height = bbox.yMax - bbox.yMin;                                  
+          Note also that for 26.6 coordinates, if 'bbox_mode' is set to
+          FT_GLYPH_BBOX_GRIDFIT, the coordinates will also be grid-fitted, which
+          corresponds to:
 
-        Note also that for 26.6 coordinates, if 'bbox_mode' is set to
-        FT_GLYPH_BBOX_GRIDFIT, the coordinates will also be grid-fitted, which
-        corresponds to:
-
-        bbox.xMin = FLOOR(bbox.xMin);
-        bbox.yMin = FLOOR(bbox.yMin);                                    
-        bbox.xMax = CEILING(bbox.xMax);                                  
-        bbox.yMax = CEILING(bbox.yMax);                                  
+          bbox.xMin = FLOOR(bbox.xMin);
+          bbox.yMin = FLOOR(bbox.yMin);                                    
+          bbox.xMax = CEILING(bbox.xMax);                                  
+          bbox.yMax = CEILING(bbox.yMax);                                  
         
-        To get the bbox in pixel coordinates, set 'bbox_mode' to
-        FT_GLYPH_BBOX_TRUNCATE.
+          To get the bbox in pixel coordinates, set 'bbox_mode' to
+          FT_GLYPH_BBOX_TRUNCATE.
 
-        To get the bbox in grid-fitted pixel coordinates, set 'bbox_mode' to
-        FT_GLYPH_BBOX_PIXELS.
+          To get the bbox in grid-fitted pixel coordinates, set 'bbox_mode' to
+          FT_GLYPH_BBOX_PIXELS.
         '''
         bbox = FT_BBox()
         error = FT_Glyph_Get_CBox(byref(self._FT_Glyph), bbox_mode,byref(bbox))
@@ -984,6 +962,7 @@ class Face( object ):
 
         :param str filename:
             A path to the font file.
+
         :param int index:
                The index of the face within the font.
                The first face has index 0.
@@ -1012,8 +991,11 @@ class Face( object ):
         points).
         
         :param float width: The nominal width, in 26.6 fractional points.
+
         :param float height: The nominal height, in 26.6 fractional points.
+
         :param float hres: The horizontal resolution in dpi.
+
         :param float vres: The vertical resolution in dpi.
 
         **Note**
@@ -1037,11 +1019,9 @@ class Face( object ):
         This function calls FT_Request_Size to request the nominal size (in
         pixels).
 
-        Parameters:
-        -----------
-        width: The nominal width, in pixels.
+        :param width: The nominal width, in pixels.
 
-        height: The nominal height, in pixels.
+        :param height: The nominal height, in pixels.
         '''
         error = FT_Set_Pixel_Sizes( self._FT_Face, width, height )
         if error: raise FT_Exception(error)
@@ -1050,15 +1030,15 @@ class Face( object ):
         '''
         Select a given charmap by its encoding tag (as listed in 'freetype.h').
 
-        Note:
-        -----
-        This function returns an error if no charmap in the face corresponds to
-        the encoding queried here.
+        **Note**:
 
-        Because many fonts contain more than a single cmap for Unicode
-        encoding, this function has some special code to select the one which
-        covers Unicode best ('best' in the sense that a UCS-4 cmap is preferred
-        to a UCS-2 cmap). It is thus preferable to FT_Set_Charmap in this case.
+          This function returns an error if no charmap in the face corresponds to
+          the encoding queried here.
+
+          Because many fonts contain more than a single cmap for Unicode
+          encoding, this function has some special code to select the one which
+          covers Unicode best ('best' in the sense that a UCS-4 cmap is preferred
+          to a UCS-2 cmap). It is thus preferable to FT_Set_Charmap in this case.
         '''
         error = FT_Select_Charmap( self._FT_Face, encoding )
         if error: raise FT_Exception(error)
@@ -1067,9 +1047,7 @@ class Face( object ):
         '''
         Select a given charmap for character code to glyph index mapping.
 
-        Parameters:
-        -----------
-        charmap: A handle to the selected charmap.
+        :param charmap: A handle to the selected charmap.
         '''
         error = FT_Set_Charmap( self._FT_Face, charmap._FT_Charmap )
         if error : raise FT_Exception(error)
@@ -1079,16 +1057,14 @@ class Face( object ):
         Return the glyph index of a given character code. This function uses a
         charmap object to do the mapping.
 
-        Parameters:
-        -----------
-        charcode: The character code.
+        :param charcode: The character code.
 
-        Note:
-        -----
-        If you use FreeType to manipulate the contents of font files directly,
-        be aware that the glyph index returned by this function doesn't always
-        correspond to the internal indices used within the file. This is done
-        to ensure that value 0 always corresponds to the 'missing glyph'.
+        **Note**:
+
+          If you use FreeType to manipulate the contents of font files directly,
+          be aware that the glyph index returned by this function doesn't always
+          correspond to the internal indices used within the file. This is done
+          to ensure that value 0 always corresponds to the 'missing glyph'.
         '''
         if type( charcode ) in (str,unicode):
             charcode = ord( charcode )
@@ -1099,19 +1075,17 @@ class Face( object ):
         This function is used to return the first character code in the current
         charmap of a given face. It also returns the corresponding glyph index.
 
-        Return:
-        -------
-        Glyph index of first character code. 0 if charmap is empty.
+        :return: Glyph index of first character code. 0 if charmap is empty.
 
-        Note:
-        -----
-        You should use this function with get_next_char to be able to parse
-        all character codes available in a given charmap. The code should look
-        like this:
+        **Note**:
 
-        Note that 'agindex' is set to 0 if the charmap is empty. The result
-        itself can be 0 in two cases: if the charmap is empty or if the value 0
-        is the first valid character code.
+          You should use this function with get_next_char to be able to parse
+          all character codes available in a given charmap. The code should look
+          like this:
+
+          Note that 'agindex' is set to 0 if the charmap is empty. The result
+          itself can be 0 in two cases: if the charmap is empty or if the value 0
+          is the first valid character code.
         '''
         agindex = FT_UInt()
         charcode = FT_Get_First_Char( self._FT_Face, byref(agindex) )
@@ -1123,20 +1097,18 @@ class Face( object ):
         charmap of a given face following the value 'charcode', as well as the
         corresponding glyph index.
 
-        Parameters:
-        -----------
-        charcode: The starting character code.
+        :param charcode: The starting character code.
 
-        agindex: Glyph index of next character code. 0 if charmap is empty.
+        :param agindex: Glyph index of next character code. 0 if charmap is empty.
 
-        Note:
-        -----
-        You should use this function with FT_Get_First_Char to walk over all
-        character codes available in a given charmap. See the note for this
-        function for a simple code example.
+        **Note**:
+  
+          You should use this function with FT_Get_First_Char to walk over all
+          character codes available in a given charmap. See the note for this
+          function for a simple code example.
 
-        Note that 'agindex' is set to 0 when there are no more
-        codes in the charmap.
+          Note that 'agindex' is set to 0 when there are no more codes in the
+          charmap.
         '''
         agindex = FT_UInt( 0 ) #agindex )
         charcode = FT_Get_Next_Char( self._FT_Face, charcode, byref(agindex) )
@@ -1147,9 +1119,7 @@ class Face( object ):
         Return the glyph index of a given glyph name. This function uses driver
         specific objects to do the translation.
 
-        Parameters:
-        -----------
-        glyph_name: The glyph name.
+        :param name: The glyph name.
         '''
         return FT_Get_Name_Index( self._FT_Face, name )
 
@@ -1158,23 +1128,21 @@ class Face( object ):
         A function used to set the transformation that is applied to glyph
         images when they are loaded into a glyph slot through FT_Load_Glyph.
 
-        Parameters:
-        -----------
-        matrix: A pointer to the transformation's 2x2 matrix.
-                Use 0 for the identity matrix.
+        :param matrix: A pointer to the transformation's 2x2 matrix.
+                       Use 0 for the identity matrix.
 
-        delta: A pointer to the translation vector.
-               Use 0 for the null vector.
+        :parm delta: A pointer to the translation vector.
+                     Use 0 for the null vector.
 
-        Note:
-        -----
-        The transformation is only applied to scalable image formats after the
-        glyph has been loaded. It means that hinting is unaltered by the
-        transformation and is performed on the character size given in the last
-        call to FT_Set_Char_Size or FT_Set_Pixel_Sizes.
+        **Note**:
 
-        Note that this also transforms the 'face.glyph.advance'
-        field, but not the values in 'face.glyph.metrics'.
+          The transformation is only applied to scalable image formats after the
+          glyph has been loaded. It means that hinting is unaltered by the
+          transformation and is performed on the character size given in the last
+          call to FT_Set_Char_Size or FT_Set_Pixel_Sizes.
+
+          Note that this also transforms the 'face.glyph.advance' field, but
+          not the values in 'face.glyph.metrics'.
         '''
         FT_Set_Transform( self._FT_Face,
                           byref(matrix), byref(delta) )
@@ -1183,11 +1151,8 @@ class Face( object ):
         '''
         Select a bitmap strike.
 
-        Parameters:
-        -----------
-
-        strike_index: The index of the bitmap strike in the
-                      'available_sizes' field of Face object.
+        :param strike_index: The index of the bitmap strike in the
+                             'available_sizes' field of Face object.
         '''
         error = FT_Select_Size( self._FT_Face, strike_index )
         if error: raise FT_Exception( error )
@@ -1197,26 +1162,24 @@ class Face( object ):
         A function used to load a single glyph into the glyph slot of a face
         object.
 
-        Parameters:
-        -----------
-        index: The index of the glyph in the font file. For CID-keyed fonts
-               (either in PS or in CFF format) this argument specifies the CID
-               value.
+        :param index: The index of the glyph in the font file. For CID-keyed
+                      fonts (either in PS or in CFF format) this argument
+                      specifies the CID value.
 
-        flags: A flag indicating what to load for this glyph. The FT_LOAD_XXX
-               constants can be used to control the glyph loading process
-               (e.g., whether the outline should be scaled, whether to load
-               bitmaps or not, whether to hint the outline, etc).
+        :param flags: A flag indicating what to load for this glyph. The FT_LOAD_XXX
+                      constants can be used to control the glyph loading process
+                      (e.g., whether the outline should be scaled, whether to load
+                      bitmaps or not, whether to hint the outline, etc).
 
-        Note:
-        -----
-        The loaded glyph may be transformed. See FT_Set_Transform for the
-        details.
+        **Note**:
 
-        For subsetted CID-keyed fonts, 'FT_Err_Invalid_Argument' is returned
-        for invalid CID values (this is, for CID values which don't have a
-        corresponding glyph in the font). See the discussion of the
-        FT_FACE_FLAG_CID_KEYED flag for more details.
+          The loaded glyph may be transformed. See FT_Set_Transform for the
+          details.
+
+          For subsetted CID-keyed fonts, 'FT_Err_Invalid_Argument' is returned
+          for invalid CID values (this is, for CID values which don't have a
+          corresponding glyph in the font). See the discussion of the
+          FT_FACE_FLAG_CID_KEYED flag for more details.
         '''
         error = FT_Load_Glyph( self._FT_Face, index, flags )
         if error: raise FT_Exception( error )
@@ -1226,19 +1189,18 @@ class Face( object ):
         A function used to load a single glyph into the glyph slot of a face
         object, according to its character code.
 
-        Parameters:
-        -----------
-        char: The glyph's character code, according to the current charmap used
-              in the face.
+        :param char: The glyph's character code, according to the current
+                     charmap used in the face.
 
-        flags: A flag indicating what to load for this glyph. The FT_LOAD_XXX
-               constants can be used to control the glyph loading process
-               (e.g., whether the outline should be scaled, whether to load
-               bitmaps or not, whether to hint the outline, etc).
+        :param flags: A flag indicating what to load for this glyph. The
+                      FT_LOAD_XXX constants can be used to control the glyph
+                      loading process (e.g., whether the outline should be
+                      scaled, whether to load bitmaps or not, whether to hint
+                      the outline, etc).
 
-        Note:
-        -----
-        This function simply calls FT_Get_Char_Index and FT_Load_Glyph.
+        **Note**:
+
+          This function simply calls FT_Get_Char_Index and FT_Load_Glyph.
         '''
 
         if len(char) == 1:
@@ -1252,21 +1214,17 @@ class Face( object ):
         Retrieve the advance value of a given glyph outline in an FT_Face. By
         default, the unhinted advance is returned in font units.
 
-        Parameters:
-        -----------
-        gindex: The glyph index.
+        :param gindex: The glyph index.
 
-        flags: A set of bit flags similar to those used when calling
-               FT_Load_Glyph, used to determine what kind of advances you
-               need.
+        :param flags: A set of bit flags similar to those used when calling
+                      FT_Load_Glyph, used to determine what kind of advances
+                      you need.
                     
-        Return:
-        -------
-        The advance value, in either font units or 16.16 format.
+        :return: The advance value, in either font units or 16.16 format.
 
-        If FT_LOAD_VERTICAL_LAYOUT is set, this is the vertical advance
-        corresponding to a vertical layout. Otherwise, it is the horizontal
-        advance in a horizontal layout.
+                 If FT_LOAD_VERTICAL_LAYOUT is set, this is the vertical
+                 advance corresponding to a vertical layout. Otherwise, it is
+                 the horizontal advance in a horizontal layout.
         '''
 
         padvance = FT_Fixed(0)
@@ -1280,21 +1238,19 @@ class Face( object ):
         '''
         Return the kerning vector between two glyphs of a same face.
 
-        Parameters:
-        -----------
-        left: The index of the left glyph in the kern pair.
+        :param left: The index of the left glyph in the kern pair.
         
-        right: The index of the right glyph in the kern pair.
+        :param right: The index of the right glyph in the kern pair.
 
-        mode: See FT_Kerning_Mode for more information. Determines the scale
-              and dimension of the returned kerning vector.
+        :param mode: See FT_Kerning_Mode for more information. Determines the scale
+                     and dimension of the returned kerning vector.
 
-        Note:
-        -----
-        Only horizontal layouts (left-to-right & right-to-left) are supported
-        by this method. Other layouts, or more sophisticated kernings, are out
-        of the scope of this API function -- they can be implemented through
-        format-specific interfaces.
+        **Note**:
+
+          Only horizontal layouts (left-to-right & right-to-left) are supported
+          by this method. Other layouts, or more sophisticated kernings, are out
+          of the scope of this API function -- they can be implemented through
+          format-specific interfaces.
         '''
         left_glyph = self.get_char_index( left )
         right_glyph = self.get_char_index( right )
@@ -1308,8 +1264,8 @@ class Face( object ):
         '''
         Return a string describing the format of a given face, using values
         which can be used as an X11 FONT_PROPERTY. Possible values are
-        ‘TrueType’, ‘Type 1’, ‘BDF’, ‘PCF’, ‘Type 42’, ‘CID Type 1’, ‘CFF’,
-        ‘PFR’, and ‘Windows FNT’.
+        'TrueType', 'Type 1', 'BDF', ‘PCF', ‘Type 42', ‘CID Type 1', ‘CFF',
+        'PFR', and ‘Windows FNT'.
         '''
         
         return FT_Get_X11_Font_Format( self._FT_Face )
@@ -1338,19 +1294,17 @@ class Face( object ):
         '''
         Retrieve a string of the SFNT 'name' table for a given index
 
-        Parameters:
-        -----------
-        index: The index of the 'name' string.
+        :param index: The index of the 'name' string.
 
-        Note:
-        -----
-        The 'string' array returned in the 'aname' structure is not
-        null-terminated. The application should deallocate it if it is no
-        longer in use.
+        **Note**:
 
-        Use FT_Get_Sfnt_Name_Count to get the total number of available 'name'
-        table entries, then do a loop until you get the right platform,
-        encoding, and name ID.
+          The 'string' array returned in the 'aname' structure is not
+          null-terminated. The application should deallocate it if it is no
+          longer in use.
+
+          Use FT_Get_Sfnt_Name_Count to get the total number of available
+          'name' table entries, then do a loop until you get the right
+          platform, encoding, and name ID.
         '''
         name = FT_SfntName( )
         error = FT_Get_Sfnt_Name( self._FT_Face, index, byref(name) )
@@ -1603,9 +1557,7 @@ class SfntName( object ):
         '''
         Create a new SfntName object.
 
-        Parameters:
-        -----------
-        name : SFNT 'name' table entry.
+        :param name : SFNT 'name' table entry.
 
         '''
         self._FT_SfntName = name
@@ -1681,21 +1633,18 @@ class Stroker( object ):
         '''
         Reset a stroker object's attributes.
 
-        Parameters:
-        -----------
-        radius     : The border radius.
+        :param radius: The border radius.
 
-        line_cap   : The line cap style.
+        :param line_cap: The line cap style.
 
-        line_join  : The line join style.
+        :param line_join: The line join style.
 
-        miter_limit: The miter limit for the FT_STROKER_LINEJOIN_MITER
-                     style, expressed as 16.16 fixed point value.
+        :param miter_limit: The miter limit for the FT_STROKER_LINEJOIN_MITER
+                            style, expressed as 16.16 fixed point value.
 
-        Note:
-        -----
-        The radius is expressed in the same units as the outline
-        coordinates.
+        **Note**:
+
+          The radius is expressed in the same units as the outline coordinates.
         '''
         FT_Stroker_Set( self._FT_Stroker,
                         radius, line_cap, line_join, miter_limit )
@@ -1716,43 +1665,39 @@ class Stroker( object ):
         stroker. The resulting outline(s) can be retrieved later by functions
         like FT_Stroker_GetCounts and FT_Stroker_Export.
 
-        Parameters:
-        -----------
-        outline: The source outline.
+        :param outline: The source outline.
 
-        opened : A boolean. If 1, the outline is treated as an open path
-                 instead of a closed one.
+        :pram opened: A boolean. If 1, the outline is treated as an open path
+                      instead of a closed one.
 
-        Note:
-        -----
-        If 'opened' is 0 (the default), the outline is treated as a closed
-        path, and the stroker generates two distinct 'border' outlines.
+        **Note**:
 
-        If 'opened' is 1, the outline is processed as an open path, and the
-        stroker generates a single 'stroke' outline.
+          If 'opened' is 0 (the default), the outline is treated as a closed
+          path, and the stroker generates two distinct 'border' outlines.
 
-        This function calls 'rewind' automatically.
+          If 'opened' is 1, the outline is processed as an open path, and the
+          stroker generates a single 'stroke' outline.
+
+          This function calls 'rewind' automatically.
         '''
         error = FT_Stroker_ParseOutline( self._FT_Stroker, outline, opened)
         if error: raise FT_Exception( error )
 
 
-    def begin_subpath( self, to, open_ ):
+    def begin_subpath( self, to, _open ):
         '''
         Start a new sub-path in the stroker.
 
-        Parameters:
-        -----------
-        to   : A pointer to the start vector.
+        :param to A pointer to the start vector.
 
-        open_: A boolean. If 1, the sub-path is treated as an open one.
+        :param _open: A boolean. If 1, the sub-path is treated as an open one.
 
-        Note:
-        -----
-        This function is useful when you need to stroke a path that is not
-        stored as an 'Outline' object.
+        **Note**:
+
+          This function is useful when you need to stroke a path that is not
+          stored as an 'Outline' object.
         '''
-        error = FT_Stroker_BeginSubPath( self._FT_Stroker, to, open_ )
+        error = FT_Stroker_BeginSubPath( self._FT_Stroker, to, _open )
         if error: raise FT_Exception( error )
 
     
@@ -1760,11 +1705,11 @@ class Stroker( object ):
         '''
         Close the current sub-path in the stroker.
 
-        Note:
-        -----
-        You should call this function after 'begin_subpath'. If the subpath
-        was not 'opened', this function 'draws' a single line segment to the
-        start position when needed.
+        **Note**:
+
+          You should call this function after 'begin_subpath'. If the subpath
+          was not 'opened', this function 'draws' a single line segment to the
+          start position when needed.
         '''
         error = FT_Stroker_EndSubPath( self._FT_Stroker)
         if error: raise FT_Exception( error )
@@ -1775,14 +1720,12 @@ class Stroker( object ):
         'Draw' a single line segment in the stroker's current sub-path, from
         the last position.
 
-        Parameters:
-        -----------
-        to: A pointer to the destination point.
+        :param to: A pointer to the destination point.
 
-        Note:
-        -----
-        You should call this function between 'begin_subpath' and
-        'end_subpath'.
+        **Note**:
+
+          You should call this function between 'begin_subpath' and
+          'end_subpath'.
         '''
         error = FT_Stroker_LineTo( self._FT_Stroker, to )
         if error: raise FT_Exception( error )
@@ -1793,15 +1736,14 @@ class Stroker( object ):
         'Draw' a single quadratic Bezier in the stroker's current sub-path,
         from the last position.
 
-        Parameters:
-        -----------
-        control: A pointer to a Bezier control point.
-        to     : A pointer to the destination point.
+        :param control: A pointer to a Bezier control point.
 
-        Note:
-        -----
-        You should call this function between 'begin_subpath' and
-        'end_subpath'.
+        :param to: A pointer to the destination point.
+
+        **Note**:
+
+          You should call this function between 'begin_subpath' and
+          'end_subpath'.
         '''
         error = FT_Stroker_ConicTo( self._FT_Stroker, control, to )
         if error: raise FT_Exception( error )
@@ -1812,19 +1754,16 @@ class Stroker( object ):
         'Draw' a single quadratic Bezier in the stroker's current sub-path,
         from the last position.
 
-        Parameters:
-        -----------
-        control1: A pointer to the first Bezier control point.
+        :param control1: A pointer to the first Bezier control point.
 
-        control2: A pointer to second Bezier control point.
+        :param control2: A pointer to second Bezier control point.
 
-        to      : A pointer to the destination point.
+        :param to: A pointer to the destination point.
 
-        Note:
-        -----
+        **Note**:
 
-        You should call this function between 'begin_subpath' and
-        'end_subpath'.
+          You should call this function between 'begin_subpath' and
+          'end_subpath'.
         '''
         error = FT_Stroker_CubicTo( self._FT_Stroker, control1, control2, to )
         if error: raise FT_Exception( error )
@@ -1837,13 +1776,9 @@ class Stroker( object ):
         export one of the 'border' or 'stroke' outlines generated by the
         stroker.
         
-        Parameters:
-        -----------
-        border: The border index.
+        :param border: The border index.
 
-        Return:
-        -------
-        number of points, number of contours
+        :return: number of points, number of contours
         '''
         anum_points = FT_UInt()
         anum_contours = FT_UInt()
@@ -1861,27 +1796,25 @@ class Stroker( object ):
         Note that this function appends the border points and contours to your
         outline, but does not try to resize its arrays.
 
-        Parameters:
-        -----------
-        border:  The border index.
+        :param border:  The border index.
 
-        outline: The target outline.
+        :param outline: The target outline.
             
-        Note:
-        -----
-        Always call this function after get_border_counts to get sure that
-        there is enough room in your 'Outline' object to receive all new
-        data.
+        **Note**:
 
-        When an outline, or a sub-path, is 'closed', the stroker generates two
-        independent 'border' outlines, named 'left' and 'right'
+          Always call this function after get_border_counts to get sure that
+          there is enough room in your 'Outline' object to receive all new
+          data.
 
-        When the outline, or a sub-path, is 'opened', the stroker merges the
-        'border' outlines with caps. The 'left' border receives all points,
-        while the 'right' border becomes empty.
+          When an outline, or a sub-path, is 'closed', the stroker generates two
+          independent 'border' outlines, named 'left' and 'right'
 
-        Use the function export instead if you want to retrieve all borders
-        at once.
+          When the outline, or a sub-path, is 'opened', the stroker merges the
+          'border' outlines with caps. The 'left' border receives all points,
+          while the 'right' border becomes empty.
+
+          Use the function export instead if you want to retrieve all borders
+          at once.
         '''
         FT_Stroker_ExportBorder( self._FT_Stroker, border, outline._FT_Outline )
 
@@ -1892,9 +1825,7 @@ class Stroker( object ):
         stroker. It returns the number of points and contours necessary to
         export all points/borders from the stroked outline/path.
 
-        Return:
-        -------
-        number of points, number of contours
+        :return: number of points, number of contours
         '''
 
         anum_points = FT_UInt()
@@ -1913,8 +1844,6 @@ class Stroker( object ):
         Note that this function appends the border points and contours to your
         outline, but does not try to resize its arrays.
 
-        Parameters:
-        -----------
-        outline: The target outline.
+        :param outline: The target outline.
         '''
         FT_Stroker_Export( self._FT_Stroker, outline._FT_Outline )
