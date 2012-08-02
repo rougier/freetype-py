@@ -52,7 +52,7 @@ def __del_library__(self):
     global __handle__
     if __handle__:
         try:
-            FT_Done_FreeType(byref(self))
+            FT_Done_FreeType(self)
             __handle__ = None
         except:
             pass
