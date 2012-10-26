@@ -281,6 +281,62 @@ class BBox( object ):
 
 
 
+
+
+# -----------------------------------------------------------------------------
+class GlyphMetrics( object ):
+    '''
+
+    A structure used to model the metrics of a single glyph. The values are
+    expressed in 26.6 fractional pixel format; if the flag FT_LOAD_NO_SCALE has
+    been used while loading the glyph, values are expressed in font units
+    instead.
+
+    **Note**
+
+    If not disabled with FT_LOAD_NO_HINTING, the values represent dimensions of
+    the hinted glyph (in case hinting is applicable).
+
+    Stroking a glyph with an outside border does not increase ‘horiAdvance’ or
+    ‘vertAdvance’; you have to manually adjust these values to account for the
+    added width and height.
+    '''
+
+    def __init__(self, metrics ):
+        '''
+        Create a new GlyphMetrics object.
+
+        :param metrics: a FT_Glyph_Metrics
+        '''
+        self._FT_Glyph_Metrics = metrics
+
+    width = property( lambda self: self._FT_Glyph_Metrics.width,
+       doc = '''The glyph's width.''' )
+    
+    height = property( lambda self: self._FT_Glyph_Metrics.heigth,
+       doc = '''The glyph's height.''' )
+
+    horiBearingX = property( lambda self: self._FT_Glyph_Metrics.horiBearingX,
+       doc = '''Left side bearing for horizontal layout.''' )
+
+    horiBearingY = property( lambda self: self._FT_Glyph_Metrics.horiBearingY,
+       doc = '''Top side bearing for horizontal layout.''' )
+
+    horiAdvance = property( lambda self: self._FT_Glyph_Metrics.horiAdvance,
+       doc = '''Advance width for horizontal layout.''' )
+
+    vertBearingX = property( lambda self: self._FT_Glyph_Metrics.vertBearingX,
+       doc = '''Left side bearing for vertical layout.''' )
+
+    vertBearingY = property( lambda self: self._FT_Glyph_Metrics.vertBearingY,
+       doc = '''Top side bearing for vertical layout. Larger positive values
+                mean further below the vertical glyph origin.''' )
+
+    vertAdvance = property( lambda self: self._FT_Glyph_Metrics.vertAdvance,
+       doc = '''Advance height for vertical layout. Positive values mean the
+                glyph has a positive advance downward.''' )
+
+
 # -----------------------------------------------------------------------------
 class SizeMetrics( object ):
     '''
@@ -886,6 +942,15 @@ class GlyphSlot( object ):
                 is FT_GLYPH_FORMAT_BITMAP. Note that the address and content of
                 the bitmap buffer can change between calls of FT_Load_Glyph and
                 a few other functions.''')
+
+    def _get_metrics( self ):
+        return GlyphMetrics( self._FT_GlyphSlot.contents.metrics )
+    metrics = property( _get_metrics,
+       doc = '''The metrics of the last loaded glyph in the slot. The returned
+       values depend on the last load flags (see the FT_Load_Glyph API
+       function) and can be expressed either in 26.6 fractional pixels or font
+       units. Note that even when the glyph image is transformed, the metrics
+       are not.''')
 
     def _get_next( self ):
         return GlyphSlot( self._FT_GlyphSlot.contents.next )
