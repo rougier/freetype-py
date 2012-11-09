@@ -7,7 +7,13 @@
 from freetype import *
 
 if __name__ == '__main__':
-    face = Face('./Vera.ttf')
+    import sys
+
+    if len(sys.argv) < 2:
+        print("Usage: %s font_filename" % sys.argv[0])
+        sys.exit()
+
+    face = Face(sys.argv[1])
 
     print 'Family name:        ', face.family_name
     print 'Style name:         ', face.style_name
@@ -28,9 +34,9 @@ if __name__ == '__main__':
     print 'underline_position: ', face.underline_position
     print 'underline_thickness:', face.underline_thickness
     print
-    print 'Has horizontal:     ', face.has_horizontal()
-    print 'Has vertical:       ', face.has_vertical()
-    print 'Has kerning:        ', face.has_kerning()
-    print 'Is fixed width:     ', face.is_fixed_width()
-    print 'Is scalable:        ', face.is_scalable()
+    print 'Has horizontal:     ', face.has_horizontal
+    print 'Has vertical:       ', face.has_vertical
+    print 'Has kerning:        ', face.has_kerning
+    print 'Is fixed width:     ', face.is_fixed_width
+    print 'Is scalable:        ', face.is_scalable
     print

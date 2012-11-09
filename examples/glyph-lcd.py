@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
 #  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
@@ -8,13 +10,6 @@
 Glyph bitmap monochrome rendring
 '''
 from freetype import *
-
-def bits(x):
-    data = []
-    for i in range(8):
-        data.insert(0, int((x & 1) == 1))
-        x = x >> 1
-    return data
 
 if __name__ == '__main__':
     import numpy

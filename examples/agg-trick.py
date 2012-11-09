@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
 #  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
@@ -25,6 +27,7 @@ def render(filename = "Vera.ttf", hinting = (False,False), gamma = 1.5, lcd=Fals
     if lcd:
         flags |= FT_LOAD_TARGET_LCD
         Z = np.zeros( (H,W,3), dtype=np.ubyte )
+        set_lcd_filter( FT_LCD_FILTER_DEFAULT )
 
 
     for size in range(9,23):

@@ -1,14 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-#
 #  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
-#
 # -----------------------------------------------------------------------------
-'''
-Glyph bitmap monochrome rendring
-'''
+from __future__ import print_function
+from __future__ import division
 from freetype import *
-
 
 def platform_name(platform_id):
     for key, value in TT_PLATFORMS.items():
@@ -46,15 +44,22 @@ def language_name(platform_id, language_id):
 
 
 if __name__ == '__main__':
-    face = Face('./Verdana.ttf')
+    import os, sys
+
+    if len(sys.argv) < 2:
+        print("Usage: %s font_filename" % sys.argv[0])
+        sys.exit()
+    face = Face(sys.argv[1])
+
     name = face.get_sfnt_name(0)
-    print 'platform_id:', platform_name(name.platform_id)
-    print 'encoding_id:', encoding_name(name.platform_id,
-                                        name.encoding_id)
-    print 'language_id:', language_name(name.platform_id,
-                                        name.language_id)
+    print( 'platform_id:', platform_name(name.platform_id) )
+    print( 'encoding_id:', encoding_name(name.platform_id,
+                                        name.encoding_id) )
+    print( 'language_id:', language_name(name.platform_id,
+                                        name.language_id) )
     for i in range(face.sfnt_name_count):
-        print i, ':', face.get_sfnt_name(i).string
+        name = face.get_sfnt_name(i).string
+        print(i, name.decode('utf-8', 'ignore'))
 
 
     
