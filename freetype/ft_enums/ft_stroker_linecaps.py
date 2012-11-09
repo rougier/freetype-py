@@ -26,9 +26,9 @@ FT_STROKER_LINECAP_SQUARE
   The end of lines is rendered as a square around the last point.
 """
 
-_FT_STROKER_LINECAPS = { 'FT_STROKER_LINECAP_BUTT'   : 0,
-                         'FT_STROKER_LINECAP_ROUND'  : 1,
-                         'FT_STROKER_LINECAP_SQUARE' : 2}
-globals().update(_FT_STROKER_LINECAPS)
+FT_STROKER_LINECAPS = { 'FT_STROKER_LINECAP_BUTT'   : 0,
+                        'FT_STROKER_LINECAP_ROUND'  : 1,
+                        'FT_STROKER_LINECAP_SQUARE' : 2}
+globals().update(FT_STROKER_LINECAPS)
 
 

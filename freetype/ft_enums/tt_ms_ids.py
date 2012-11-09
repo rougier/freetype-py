@@ -54,7 +54,7 @@ TT_MS_ID_UCS_4
   specification version 1.4 (mid-2001.)
 """
 
-_TT_MS_IDS = {
+TT_MS_IDS = {
     'TT_MS_ID_SYMBOL_CS'  :  0,
     'TT_MS_ID_UNICODE_CS' :  1,
     'TT_MS_ID_SJIS'       :  2,
@@ -63,6 +63,6 @@ _TT_MS_IDS = {
     'TT_MS_ID_WANSUNG'    :  5,
     'TT_MS_ID_JOHAB'      :  6,
     'TT_MS_ID_UCS_4'      : 10 }
-globals().update(_TT_MS_IDS)
+globals().update(TT_MS_IDS)
 
 

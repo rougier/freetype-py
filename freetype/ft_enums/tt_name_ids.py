@@ -57,7 +57,7 @@ TT_NAME_ID_WWS_SUBFAMILY
 """
 
 
-_TT_NAME_IDS = {                                                                       
+TT_NAME_IDS = {                                                                       
     'TT_NAME_ID_COPYRIGHT'            :  0,
     'TT_NAME_ID_FONT_FAMILY'          :  1,
     'TT_NAME_ID_FONT_SUBFAMILY'       :  2,
@@ -89,5 +89,5 @@ _TT_NAME_IDS = {
     # This is new in OpenType 1.5 
     'TT_NAME_ID_WWS_FAMILY'           : 21,
     'TT_NAME_ID_WWS_SUBFAMILY'        : 22 }
-globals().update(_TT_NAME_IDS)
+globals().update(TT_NAME_IDS)
 

@@ -52,12 +52,12 @@ TT_PLATFORM_ADOBE
   TT_ADOBE_ID_XXX.
 """
 
-_TT_PLATFORMS = {
+TT_PLATFORMS = {
     'TT_PLATFORM_APPLE_UNICODE' : 0,
     'TT_PLATFORM_MACINTOSH'     : 1,
     'TT_PLATFORM_ISO'           : 2, # deprecated
     'TT_PLATFORM_MICROSOFT'     : 3,
     'TT_PLATFORM_CUSTOM'        : 4,
     'TT_PLATFORM_ADOBE'         : 7} # artificial
-globals().update(_TT_PLATFORMS)
+globals().update(TT_PLATFORMS)
 

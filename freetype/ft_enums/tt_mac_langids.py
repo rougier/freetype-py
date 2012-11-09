@@ -250,7 +250,7 @@ TT_MAC_LANGID_TURKMEN
 
 TT_MAC_LANGID_MALAYALAM
 """
-_TT_MAC_LANGIDS = {
+TT_MAC_LANGIDS = {
     'TT_MAC_LANGID_ENGLISH'                    :   0,
     'TT_MAC_LANGID_FRENCH'                     :   1,
     'TT_MAC_LANGID_GERMAN'                     :   2,
@@ -371,6 +371,6 @@ _TT_MAC_LANGIDS = {
     'TT_MAC_LANGID_GREEK_POLYTONIC'            : 148,
     'TT_MAC_LANGID_GREELANDIC'                 : 149,
     'TT_MAC_LANGID_AZERBAIJANI_ROMAN_SCRIPT'   : 150 }
-globals().update(_TT_MAC_LANGIDS)
+globals().update(TT_MAC_LANGIDS)
 
 

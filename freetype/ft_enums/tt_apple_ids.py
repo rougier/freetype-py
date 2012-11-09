@@ -41,13 +41,13 @@ TT_APPLE_ID_VARIANT_SELECTOR
   From Adobe, not Apple. Not a normal cmap. Specifies variations on a real
   cmap.
 """
-_TT_APPLE_IDS = {
+TT_APPLE_IDS = {
     'TT_APPLE_ID_DEFAULT'          : 0,
     'TT_APPLE_ID_UNICODE_1_1'      : 1,
     'TT_APPLE_ID_ISO_10646'        : 2,
     'TT_APPLE_ID_UNICODE_2_0'      : 3,
     'TT_APPLE_ID_UNICODE_32'       : 4,
     'TT_APPLE_ID_VARIANT_SELECTOR' : 5 }
-globals().update(_TT_APPLE_IDS)
+globals().update(TT_APPLE_IDS)
 
 

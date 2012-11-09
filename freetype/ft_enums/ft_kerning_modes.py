@@ -25,7 +25,7 @@ FT_KERNING_UNSCALED
 
   Return the kerning vector in original font units.
 """
-_FT_KERNING_MODES = { 'FT_KERNING_DEFAULT'  : 0,
-                      'FT_KERNING_UNFITTED' : 1,
-                      'FT_KERNING_UNSCALED' : 2 }
-globals().update(_FT_KERNING_MODES)
+FT_KERNING_MODES = { 'FT_KERNING_DEFAULT'  : 0,
+                     'FT_KERNING_UNFITTED' : 1,
+                     'FT_KERNING_UNSCALED' : 2 }
+globals().update(FT_KERNING_MODES)

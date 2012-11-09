@@ -35,11 +35,11 @@ FT_OPEN_PARAMS
 
   Use the 'num_params' and 'params' fields.
 """
-_FT_OPEN_MODES = {'FT_OPEN_MEMORY':   0x1,
-                  'FT_OPEN_STREAM':   0x2,
-                  'FT_OPEN_PATHNAME': 0x4,
-                  'FT_OPEN_DRIVER':   0x8,
-                  'FT_OPEN_PARAMS':   0x10 }
-globals().update(_FT_OPEN_MODES)
+FT_OPEN_MODES = {'FT_OPEN_MEMORY':   0x1,
+                 'FT_OPEN_STREAM':   0x2,
+                 'FT_OPEN_PATHNAME': 0x4,
+                 'FT_OPEN_DRIVER':   0x8,
+                 'FT_OPEN_PARAMS':   0x10 }
+globals().update(FT_OPEN_MODES)
 
 

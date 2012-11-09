@@ -31,8 +31,8 @@ Note
   You can however use FT_Outline_GetInsideBorder and
   FT_Outline_GetOutsideBorder to get these.
 """
-_FT_STROKER_BORDERS = { 'FT_STROKER_BORDER_LEFT'  : 0,
-                        'FT_STROKER_BORDER_RIGHT' : 1}
-globals().update(_FT_STROKER_BORDERS)
+FT_STROKER_BORDERS = { 'FT_STROKER_BORDER_LEFT'  : 0,
+                       'FT_STROKER_BORDER_RIGHT' : 1}
+globals().update(FT_STROKER_BORDERS)
 
 

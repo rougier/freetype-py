@@ -49,9 +49,9 @@ FT_RENDER_MODE_LCD_V
   times the height of the original glyph outline in pixels and use the
   FT_PIXEL_MODE_LCD_V mode.
 """
-_FT_RENDER_MODES = { 'FT_RENDER_MODE_NORMAL' : 0,
-                     'FT_RENDER_MODE_LIGHT'  : 1,
-                     'FT_RENDER_MODE_MONO'   : 2,
-                     'FT_RENDER_MODE_LCD'    : 3,
-                     'FT_RENDER_MODE_LCD_V'  : 4 }
-globals().update(_FT_RENDER_MODES)
+FT_RENDER_MODES = { 'FT_RENDER_MODE_NORMAL' : 0,
+                    'FT_RENDER_MODE_LIGHT'  : 1,
+                    'FT_RENDER_MODE_MONO'   : 2,
+                    'FT_RENDER_MODE_LCD'    : 3,
+                    'FT_RENDER_MODE_LCD_V'  : 4 }
+globals().update(FT_RENDER_MODES)

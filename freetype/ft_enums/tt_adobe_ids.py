@@ -30,9 +30,9 @@ TT_ADOBE_ID_LATIN_1
   Adobe Latin 1 encoding.
 """
 
-_TT_ADOBE_IDS = {
+TT_ADOBE_IDS = {
     'TT_ADOBE_ID_STANDARD' : 0,
     'TT_ADOBE_ID_EXPERT'   : 1,
     'TT_ADOBE_ID_CUSTOM'   : 2,
     'TT_ADOBE_ID_LATIN_1'  : 3 }
-globals().update(_TT_ADOBE_IDS)
+globals().update(TT_ADOBE_IDS)

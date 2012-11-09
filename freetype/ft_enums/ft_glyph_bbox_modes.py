@@ -29,9 +29,9 @@ FT_GLYPH_BBOX_PIXELS
 
   Return grid-fitted pixel coordinates.
 """
-_FT_GLYPH_BBOX_MODES = {'FT_GLYPH_BBOX_UNSCALED'  : 0,
-                        'FT_GLYPH_BBOX_SUBPIXELS' : 0,
-                        'FT_GLYPH_BBOX_GRIDFIT'   : 1,
-                        'FT_GLYPH_BBOX_TRUNCATE'  : 2,
-                        'FT_GLYPH_BBOX_PIXELS'    : 3}
-globals().update(_FT_GLYPH_BBOX_MODES)
+FT_GLYPH_BBOX_MODES = {'FT_GLYPH_BBOX_UNSCALED'  : 0,
+                       'FT_GLYPH_BBOX_SUBPIXELS' : 0,
+                       'FT_GLYPH_BBOX_GRIDFIT'   : 1,
+                       'FT_GLYPH_BBOX_TRUNCATE'  : 2,
+                       'FT_GLYPH_BBOX_PIXELS'    : 3}
+globals().update(FT_GLYPH_BBOX_MODES)

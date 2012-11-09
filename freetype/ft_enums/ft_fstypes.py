@@ -50,13 +50,13 @@ FT_FSTYPE_BITMAP_EMBEDDING_ONLY
   then the font is unembeddable.
 """
 
-_FT_FSTYPE_XXX = {'FT_FSTYPE_INSTALLABLE_EMBEDDING'        : 0x0000,
-                  'FT_FSTYPE_RESTRICTED_LICENSE_EMBEDDING' : 0x0002,
-                  'FT_FSTYPE_PREVIEW_AND_PRINT_EMBEDDING'  : 0x0004,
-                  'FT_FSTYPE_EDITABLE_EMBEDDING'           : 0x0008,
-                  'FT_FSTYPE_NO_SUBSETTING'                : 0x0100,
-                  'FT_FSTYPE_BITMAP_EMBEDDING_ONLY'        : 0x0200,}
-globals().update(_FT_FSTYPE_XXX)
+FT_FSTYPES = {'FT_FSTYPE_INSTALLABLE_EMBEDDING'        : 0x0000,
+              'FT_FSTYPE_RESTRICTED_LICENSE_EMBEDDING' : 0x0002,
+              'FT_FSTYPE_PREVIEW_AND_PRINT_EMBEDDING'  : 0x0004,
+              'FT_FSTYPE_EDITABLE_EMBEDDING'           : 0x0008,
+              'FT_FSTYPE_NO_SUBSETTING'                : 0x0100,
+              'FT_FSTYPE_BITMAP_EMBEDDING_ONLY'        : 0x0200,}
+globals().update(FT_FSTYPES)
 ft_fstype_installable_embedding  = FT_FSTYPE_INSTALLABLE_EMBEDDING
 ft_fstype_restricted_license_embedding = FT_FSTYPE_RESTRICTED_LICENSE_EMBEDDING
 ft_fstype_preview_and_print_embedding = FT_FSTYPE_PREVIEW_AND_PRINT_EMBEDDING

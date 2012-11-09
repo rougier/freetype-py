@@ -20,9 +20,9 @@ FT_STYLE_FLAG_BOLD
 
   Indicates that a given face is bold.
 """
-_FT_STYLE_FLAGS = {'FT_STYLE_FLAG_ITALIC' : 1,
+FT_STYLE_FLAGS = {'FT_STYLE_FLAG_ITALIC' : 1,
                    'FT_STYLE_FLAG_BOLD'   : 2 }
-globals().update(_FT_STYLE_FLAGS)
+globals().update(FT_STYLE_FLAGS)
 
 
 

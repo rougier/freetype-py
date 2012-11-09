@@ -79,7 +79,7 @@ TT_MAC_ID_ARMENIAN
 TT_MAC_ID_SLAVIC
 """
 
-_TT_MAC_IDS = {
+TT_MAC_IDS = {
     'TT_MAC_ID_ROMAN'               :  0,
     'TT_MAC_ID_JAPANESE'            :  1,
     'TT_MAC_ID_TRADITIONAL_CHINESE' :  2,
@@ -114,4 +114,4 @@ _TT_MAC_IDS = {
     'TT_MAC_ID_VIETNAMESE'          : 30,
     'TT_MAC_ID_SINDHI'              : 31,
     'TT_MAC_ID_UNINTERP'            : 32}
-globals().update(_TT_MAC_IDS)
+globals().update(TT_MAC_IDS)

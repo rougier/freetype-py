@@ -44,13 +44,13 @@ FT_GLYPH_FORMAT_PLOTTER
 def _FT_IMAGE_TAG(a,b,c,d):
     return ( ord(a) << 24 | ord(b) << 16 | ord(c) << 8 | ord(d) )
 
-_FT_GLYPH_FORMATS = {
+FT_GLYPH_FORMATS = {
     'FT_GLYPH_FORMAT_NONE'      : _FT_IMAGE_TAG( '\0','\0','\0','\0' ),
     'FT_GLYPH_FORMAT_COMPOSITE' : _FT_IMAGE_TAG( 'c','o','m','p' ),
     'FT_GLYPH_FORMAT_BITMAP'    : _FT_IMAGE_TAG( 'b','i','t','s' ),
     'FT_GLYPH_FORMAT_OUTLINE'   : _FT_IMAGE_TAG( 'o','u','t','l' ),
     'FT_GLYPH_FORMAT_PLOTTER'   : _FT_IMAGE_TAG( 'p','l','o','t' )}
-globals().update(_FT_GLYPH_FORMATS)
+globals().update(FT_GLYPH_FORMATS)
 ft_glyph_format_none      = FT_GLYPH_FORMAT_NONE
 ft_glyph_format_composite = FT_GLYPH_FORMAT_COMPOSITE
 ft_glyph_format_bitmap    = FT_GLYPH_FORMAT_BITMAP

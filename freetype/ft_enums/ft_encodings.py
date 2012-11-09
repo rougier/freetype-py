@@ -91,18 +91,18 @@ FT_ENCODING_OLD_LATIN_2
 def _FT_ENC_TAG(a,b,c,d):
     return ( ord(a) << 24 | ord(b) << 16 | ord(c) << 8 | ord(d) )
 
-_FT_ENCODINGS = {'FT_ENCODING_NONE'           : _FT_ENC_TAG('\0','\0','\0','\0'),
-                 'FT_ENCODING_MS_SYMBOL'      : _FT_ENC_TAG( 's','y','m','b' ),
-                 'FT_ENCODING_UNICODE'        : _FT_ENC_TAG( 'u','n','i','c' ),
-                 'FT_ENCODING_SJIS'           : _FT_ENC_TAG( 's','j','i','s' ),
-                 'FT_ENCODING_GB2312'         : _FT_ENC_TAG( 'g','b',' ',' ' ),
-                 'FT_ENCODING_BIG5'           : _FT_ENC_TAG( 'b','i','g','5' ),
-                 'FT_ENCODING_WANSUNG'        : _FT_ENC_TAG( 'w','a','n','s' ),
-                 'FT_ENCODING_JOHAB'          : _FT_ENC_TAG( 'j','o','h','a' ),
-                 'FT_ENCODING_ADOBE_STANDARD' : _FT_ENC_TAG( 'A','D','O','B' ),
-                 'FT_ENCODING_ADOBE_EXPERT'   : _FT_ENC_TAG( 'A','D','B','E' ),
-                 'FT_ENCODING_ADOBE_CUSTOM'   : _FT_ENC_TAG( 'A','D','B','C' ),
-                 'FT_ENCODING_ADOBE_LATIN1'   : _FT_ENC_TAG( 'l','a','t','1' ),
-                 'FT_ENCODING_OLD_LATIN2'     : _FT_ENC_TAG( 'l','a','t','2' ),
-                 'FT_ENCODING_APPLE_ROMAN'    : _FT_ENC_TAG( 'a','r','m','n' ) }
-globals().update(_FT_ENCODINGS)
+FT_ENCODINGS = {'FT_ENCODING_NONE'           : _FT_ENC_TAG('\0','\0','\0','\0'),
+                'FT_ENCODING_MS_SYMBOL'      : _FT_ENC_TAG( 's','y','m','b' ),
+                'FT_ENCODING_UNICODE'        : _FT_ENC_TAG( 'u','n','i','c' ),
+                'FT_ENCODING_SJIS'           : _FT_ENC_TAG( 's','j','i','s' ),
+                'FT_ENCODING_GB2312'         : _FT_ENC_TAG( 'g','b',' ',' ' ),
+                'FT_ENCODING_BIG5'           : _FT_ENC_TAG( 'b','i','g','5' ),
+                'FT_ENCODING_WANSUNG'        : _FT_ENC_TAG( 'w','a','n','s' ),
+                'FT_ENCODING_JOHAB'          : _FT_ENC_TAG( 'j','o','h','a' ),
+                'FT_ENCODING_ADOBE_STANDARD' : _FT_ENC_TAG( 'A','D','O','B' ),
+                'FT_ENCODING_ADOBE_EXPERT'   : _FT_ENC_TAG( 'A','D','B','E' ),
+                'FT_ENCODING_ADOBE_CUSTOM'   : _FT_ENC_TAG( 'A','D','B','C' ),
+                'FT_ENCODING_ADOBE_LATIN1'   : _FT_ENC_TAG( 'l','a','t','1' ),
+                'FT_ENCODING_OLD_LATIN2'     : _FT_ENC_TAG( 'l','a','t','2' ),
+                'FT_ENCODING_APPLE_ROMAN'    : _FT_ENC_TAG( 'a','r','m','n' ) }
+globals().update(FT_ENCODINGS)

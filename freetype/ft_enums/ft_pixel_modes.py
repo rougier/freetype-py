@@ -60,15 +60,15 @@ FT_PIXEL_MODE_LCD_V
 
 """
 
-_FT_PIXEL_MODES = {'FT_PIXEL_MODE_NONE' : 0,
-                   'FT_PIXEL_MODE_MONO' : 1,
-                   'FT_PIXEL_MODE_GRAY' : 2,
-                   'FT_PIXEL_MODE_GRAY2': 3,
-                   'FT_PIXEL_MODE_GRAY4': 4,
-                   'FT_PIXEL_MODE_LCD'  : 5,
-                   'FT_PIXEL_MODE_LCD_V': 6,
-                   'FT_PIXEL_MODE_MAX'  : 7}
-globals().update(_FT_PIXEL_MODES)
+FT_PIXEL_MODES = {'FT_PIXEL_MODE_NONE' : 0,
+                  'FT_PIXEL_MODE_MONO' : 1,
+                  'FT_PIXEL_MODE_GRAY' : 2,
+                  'FT_PIXEL_MODE_GRAY2': 3,
+                  'FT_PIXEL_MODE_GRAY4': 4,
+                  'FT_PIXEL_MODE_LCD'  : 5,
+                  'FT_PIXEL_MODE_LCD_V': 6,
+                  'FT_PIXEL_MODE_MAX'  : 7}
+globals().update(FT_PIXEL_MODES)
 ft_pixel_mode_none  = FT_PIXEL_MODE_NONE
 ft_pixel_mode_mono  = FT_PIXEL_MODE_MONO
 ft_pixel_mode_grays = FT_PIXEL_MODE_GRAY

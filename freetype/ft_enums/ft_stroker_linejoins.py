@@ -28,9 +28,9 @@ FT_STROKER_LINEJOIN_MITER
   the angle between the two joining lines is too closed (this is useful to
   avoid unpleasant spikes in beveled rendering).
 """
-_FT_STROKER_LINEJOINS = { 'FT_STROKER_LINEJOIN_ROUND' : 0,
-                          'FT_STROKER_LINEJOIN_BEVEL' : 1,
-                          'FT_STROKER_LINEJOIN_MITER' : 2}
-globals().update(_FT_STROKER_LINEJOINS)
+FT_STROKER_LINEJOINS = { 'FT_STROKER_LINEJOIN_ROUND' : 0,
+                         'FT_STROKER_LINEJOIN_BEVEL' : 1,
+                         'FT_STROKER_LINEJOIN_MITER' : 2}
+globals().update(FT_STROKER_LINEJOINS)
 
 

@@ -42,10 +42,10 @@ FT_LCD_FILTER_LEGACY
   or stay unsupported in the future.
 """
 
-_FT_LCD_FILTERS = {'FT_LCD_FILTER_NONE'    : 0,
-                   'FT_LCD_FILTER_DEFAULT' : 1,
-                   'FT_LCD_FILTER_LIGHT'   : 2,
-                   'FT_LCD_FILTER_LEGACY'  : 16}
-globals().update(_FT_LCD_FILTERS)
+FT_LCD_FILTERS = {'FT_LCD_FILTER_NONE'    : 0,
+                  'FT_LCD_FILTER_DEFAULT' : 1,
+                  'FT_LCD_FILTER_LIGHT'   : 2,
+                  'FT_LCD_FILTER_LEGACY'  : 16}
+globals().update(FT_LCD_FILTERS)
 
 

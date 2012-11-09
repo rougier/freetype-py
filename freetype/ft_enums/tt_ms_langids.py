@@ -501,7 +501,7 @@ TT_MS_LANGID_GEORGIAN_GEORGIA
 TT_MS_LANGID_SWEDISH_FINLAND
 """
 
-_TT_MS_LANGIDS = {
+TT_MS_LANGIDS = {
     'TT_MS_LANGID_ARABIC_GENERAL'                    : 0x0001,
     'TT_MS_LANGID_ARABIC_SAUDI_ARABIA'               : 0x0401,
     'TT_MS_LANGID_ARABIC_IRAQ'                       : 0x0801,
@@ -747,5 +747,5 @@ _TT_MS_LANGIDS = {
     'TT_MS_LANGID_PAPIAMENTU_NETHERLANDS_ANTILLES'   : 0x0479,
     'TT_MS_LANGID_UIGHUR_CHINA'                      : 0x0480,
     'TT_MS_LANGID_MAORI_NEW_ZEALAND'                 : 0x0481 }
-globals().update(_TT_MS_LANGIDS)
+globals().update(TT_MS_LANGIDS)
 

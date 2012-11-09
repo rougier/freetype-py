@@ -73,15 +73,15 @@ FT_OUTLINE_SINGLE_PASS
   large character sizes. It is only a hint that might be completely ignored by
   a given scan-converter.
 """
-_FT_OUTLINE_FLAGS = { 'FT_OUTLINE_NONE'            : 0x0,
-                      'FT_OUTLINE_OWNER'           : 0x1,
-                      'FT_OUTLINE_EVEN_ODD_FILL'   : 0x2,
-                      'FT_OUTLINE_REVERSE_FILL'    : 0x4,
-                      'FT_OUTLINE_IGNORE_DROPOUTS' : 0x8,
-                      'FT_OUTLINE_SMART_DROPOUTS'  : 0x10,
-                      'FT_OUTLINE_INCLUDE_STUBS'   : 0x20,
-                      'FT_OUTLINE_HIGH_PRECISION'  : 0x100,
-                      'FT_OUTLINE_SINGLE_PASS'     : 0x200 }
-globals().update(_FT_OUTLINE_FLAGS)
+FT_OUTLINE_FLAGS = { 'FT_OUTLINE_NONE'            : 0x0,
+                     'FT_OUTLINE_OWNER'           : 0x1,
+                     'FT_OUTLINE_EVEN_ODD_FILL'   : 0x2,
+                     'FT_OUTLINE_REVERSE_FILL'    : 0x4,
+                     'FT_OUTLINE_IGNORE_DROPOUTS' : 0x8,
+                     'FT_OUTLINE_SMART_DROPOUTS'  : 0x10,
+                     'FT_OUTLINE_INCLUDE_STUBS'   : 0x20,
+                     'FT_OUTLINE_HIGH_PRECISION'  : 0x100,
+                     'FT_OUTLINE_SINGLE_PASS'     : 0x200 }
+globals().update(FT_OUTLINE_FLAGS)
 
 
