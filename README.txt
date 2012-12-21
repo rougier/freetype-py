@@ -7,4 +7,5 @@
 
 Contributors:
 
-* Titusz Pan
+* Titusz Pan (bug report)
+* Ekkehard.Blanz (bug report)
