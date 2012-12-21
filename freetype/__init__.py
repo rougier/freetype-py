@@ -87,7 +87,11 @@ def version():
     return (amajor.value, aminor.value, apatch.value)
 
 
-FT_Library_SetLcdFilter= __dll__.FT_Library_SetLcdFilter
+try:
+    FT_Library_SetLcdFilter= __dll__.FT_Library_SetLcdFilter
+except:
+    def FT_Library_SetLcdFilter (*args, **kwargs):
+        return 0
 if version()>=(2,4,0):
     FT_Library_SetLcdFilterWeights = __dll__.FT_Library_SetLcdFilterWeights
 FT_New_Face            = __dll__.FT_New_Face
