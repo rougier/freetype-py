@@ -44,7 +44,7 @@ if __name__ == '__main__':
         y = height-baseline-top
         kerning = face.get_kerning(previous, c)
         x += (kerning.x >> 6)
-        Z[y:y+h,x:x+w] |= numpy.array(bitmap.buffer).reshape(h,w)
+        Z[y:y+h,x:x+w] += numpy.array(bitmap.buffer).reshape(h,w)
         x += (slot.advance.x >> 6) 
         previous = c
 
