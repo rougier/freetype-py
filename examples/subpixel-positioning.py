@@ -35,9 +35,15 @@ uniform sampler2D texture;
 uniform vec2 pixel;
 varying float m;
 void main() {
-    vec2 uv    = gl_TexCoord[0].xy;
+    float gamma = 1.0;
+
+    vec2 uv      = gl_TexCoord[0].xy;
     vec4 current = texture2D(texture, uv);
     vec4 previous= texture2D(texture, uv+vec2(-1,0)*pixel);
+
+    current  = pow(current,  vec4(1.0/gamma));
+    previous = pow(previous, vec4(1.0/gamma));
+
     float r = current.r;
     float g = current.g;
     float b = current.b;
@@ -63,7 +69,11 @@ void main() {
         g = mix(previous.b, previous.g, z);
         b = mix(current.r,  previous.b, z);
     }
-    gl_FragColor = vec4(r,g,b,a);
+
+   float t = max(max(r,g),b);
+   vec4 color = vec4(0.,0.,0., (r+g+b)/2.);
+   color = t*color + (1.-t)*vec4(r,g,b, min(min(r,g),b));
+   gl_FragColor = vec4( color.rgb, color.a);
 }
 '''
 
@@ -145,13 +155,14 @@ class Label:
         gl.glColorPointer(4, gl.GL_FLOAT, 0, self.colors)
         gl.glTexCoordPointer(2, gl.GL_FLOAT, 0, self.texcoords)
 
-        alpha = 1
-        gl.glEnable( gl.GL_COLOR_MATERIAL )
-        gl.glBlendFunc( gl.GL_CONSTANT_COLOR_EXT,
-                        gl.GL_ONE_MINUS_SRC_COLOR )
+        r,g,b = 0,0,0
+        gl.glColor( 1, 1, 1, 1 )
         gl.glEnable( gl.GL_BLEND )
-        gl.glColor3f( alpha, alpha, alpha )
-        gl.glBlendColor( 1-alpha, 1-alpha, 1-alpha, 1 )
+        #gl.glBlendFunc( gl.GL_CONSTANT_COLOR_EXT,  gl.GL_ONE_MINUS_SRC_COLOR )
+        #gl.glBlendColor(r,g,b,1)
+        gl.glBlendFunc( gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA )
+        gl.glBlendColor( 1, 1, 1, 1 )
+
         gl.glEnableVertexAttribArray( 1 );
         gl.glVertexAttribPointer( 1, 1, gl.GL_FLOAT, gl.GL_FALSE, 0, self.attrib)
         shader.bind()
@@ -176,10 +187,13 @@ if __name__ == '__main__':
     atlas = TextureAtlas(512,512,3)
 
     def on_display( ):
+        #gl.glClearColor(0,0,0,1)
         gl.glClearColor(1,1,1,1)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         gl.glBindTexture( gl.GL_TEXTURE_2D, atlas.texid )
-        for label in labels: label.draw()
+        for label in labels:
+            label.draw()
+
         gl.glColor(0,0,0,1)
         gl.glBegin(gl.GL_LINES)
         gl.glVertex2i(15,0)

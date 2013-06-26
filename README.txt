@@ -10,4 +10,3 @@ Contributors:
 * Titusz Pan (bug report)
 * Ekkehard.Blanz (bug report)
 * Jānis Lībeks (bug report)
-
