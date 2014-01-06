@@ -7,7 +7,7 @@
 #
 # -----------------------------------------------------------------------------
 '''
-Glyph bitmap monochrome rendring
+Glyph bitmap monochrome rendering
 '''
 from freetype import *
 
