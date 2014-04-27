@@ -1,29 +1,20 @@
-.. Freetype/Python documentation master file, created by
-   sphinx-quickstart on Wed Nov  9 16:29:54 2011.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+=============================
+Freetype python documentation
+=============================
 
-Welcome to Freetype/Python's documentation!
-===========================================
+Freetype python provides bindings for the FreeType library. Only the high-level API is bound.
 
-Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   face.rst
-   bbox.rst
-   size_metrics.rst
-   bitmap_size.rst
-   bitmap.rst
-   charmap.rst
-   outline.rst
-   glyph.rst
-   bitmap_glyph.rst
-   glyph_slot.rst
-   sfnt_name.rst
-   stroker.rst
-   constants.rst
+   introduction.rst
+   usage.rst
+   screenshots.rst
+   api.rst
+   notes.rst
+
+
 
 Indices and tables
 ==================
@@ -31,4 +22,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
