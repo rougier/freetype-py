@@ -5,6 +5,7 @@ Introduction
 To be able to use freetype python, you need the freetype library version 2
 installed on your system.
 
+
 Pre-requisites
 ==============
 
