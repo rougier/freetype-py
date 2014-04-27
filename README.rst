@@ -3,6 +3,8 @@ FreeType high-level python API
 
 Freetype python provides bindings for the FreeType library. Only the high-level API is bound.
 
+Documentation available at: http://freetype-py.readthedocs.org/en/latest/
+
 Installation
 ============
 
