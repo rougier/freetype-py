@@ -2,7 +2,7 @@
 Release notes
 =============
 
-0.3.4
+0.4.1
 =====
 * Fixed a bug in Face.load_char
 * Added get_format and get_fstype in Face (titusz.pan)
