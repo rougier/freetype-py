@@ -1055,7 +1055,7 @@ class Face( object ):
             FT_Done_Face( self._FT_Face )
 
 
-    def attach_file( filename ):
+    def attach_file( self, filename ):
         '''
         Attach data to a face object. Normally, this is used to read
         additional information for the face object. For example, you can attach
