@@ -1160,7 +1160,7 @@ class Face( object ):
           correspond to the internal indices used within the file. This is done
           to ensure that value 0 always corresponds to the 'missing glyph'.
         '''
-        if type( charcode ) in (str,unicode):
+        if type( charcode ) is str:
             charcode = ord( charcode )
         return FT_Get_Char_Index( self._FT_Face, charcode )
 
