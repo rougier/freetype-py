@@ -18,12 +18,17 @@ Note:
   FT_library_filename before importing the freetype library and freetype will use
   the specified one.
 '''
+import sys
 from ctypes import *
 from freetype.ft_types import *
 from freetype.ft_enums import *
 from freetype.ft_errors import *
 from freetype.ft_structs import *
 import ctypes.util
+
+# Hack to get unicode class in python3
+PY3 = sys.version_info[0] == 3
+if PY3: unicode = str
 
 
 __dll__    = None
@@ -1160,8 +1165,8 @@ class Face( object ):
           correspond to the internal indices used within the file. This is done
           to ensure that value 0 always corresponds to the 'missing glyph'.
         '''
-        if type( charcode ) is str:
-            charcode = ord( charcode )
+        if isinstance(charcode, (str,unicode)):
+            charcode = ord(charcode)
         return FT_Get_Char_Index( self._FT_Face, charcode )
 
     def get_first_char( self ):
