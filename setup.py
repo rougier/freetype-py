@@ -12,7 +12,6 @@ setup( name        = 'freetype-py',
        author_email= 'Nicolas.Rougier@inria.fr',
        url         = 'https://github.com/rougier/freetype-py',
        packages    = ['freetype', 'freetype.ft_enums'],
-       data_files  = ['examples/Vera.ttf',],
        classifiers = [
           'Development Status :: 5 - Production/Stable',
           'Environment :: X11 Applications',
