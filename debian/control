@@ -1,0 +1,12 @@
+Source: freetype-py
+Maintainer: Nicolas P. Rougier <Nicolas.Rougier@inria.fr>
+Section: python
+Priority: optional
+Build-Depends: python-all (>= 2.6.6-3), debhelper (>= 9)
+Standards-Version: 3.9.1
+
+Package: python-freetype-py
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+Description: Freetype python bindings
+
