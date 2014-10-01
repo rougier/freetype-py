@@ -233,6 +233,15 @@ def set_lcd_filter_weights(a,b,c,d,e):
               'set_lcd_filter_weights require freetype > 2.4.0')
 
 
+def _encode_filename(filename):
+    encoded = filename.encode(sys.getfilesystemencoding())
+    if "?" not in filename and b"?" in encoded:
+        # A bug, decoding mbcs always ignore exception, still isn't fixed in Python 2,
+        # view http://bugs.python.org/issue850997 for detail
+        raise UnicodeError()
+    return encoded
+
+
 
 # -----------------------------------------------------------------------------
 #  Direct wrapper (simple renaming)
@@ -1045,8 +1054,16 @@ class Face( object ):
         face = FT_Face( )
         self._FT_Face = None
         #error = FT_New_Face( library, filename, 0, byref(face) )
-        u_filename = c_char_p(filename.encode())
-        error = FT_New_Face( library, u_filename, index, byref(face) )
+        self._filebodys = []
+        try:
+            u_filename = c_char_p(_encode_filename(filename))
+            error = FT_New_Face( library, u_filename, index, byref(face) )
+        except UnicodeError:
+            with open(filename, mode='rb') as f:
+                filebody = f.read()
+            error = FT_New_Memory_Face( library, filebody, len(filebody),
+                                        index, byref(face) )
+            self._filebodys.append(filebody)  # prevent gc
         if error: raise FT_Exception( error )
         self._filename = filename
         self._index = index
@@ -1080,7 +1097,19 @@ class Face( object ):
         attachments.
         '''
 
-        error = FT_Attach_File( self._FT_Face, filename)
+        try:
+            u_filename = c_char_p(_encode_filename(filename))
+            error = FT_Attach_File( self._FT_Face, u_filename )
+        except UnicodeError:
+            with open(filename, mode='rb') as f:
+                filebody = f.read()
+            parameters = FT_Open_Args()
+            parameters.flags = FT_OPEN_MEMORY
+            parameters.memory_base = filebody
+            parameters.memory_size = len(filebody)
+            parameters.stream = None
+            error = FT_Attach_Stream( self._FT_Face, parameters )
+            self._filebodys.append(filebody)  # prevent gc
         if error: raise FT_Exception( error)
 
 

@@ -4,15 +4,21 @@
 #  Distributed under the terms of the new BSD license.
 # -----------------------------------------------------------------------------
 from distutils.core import setup
+from os import path
+from codecs import open
+
+here = path.abspath(path.dirname(__file__))
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
+  long_description = f.read()
 
 setup( name        = 'freetype-py',
        version     = '0.4.2',
        description = 'Freetype python bindings',
+       long_description = long_description,
        author      = 'Nicolas P. Rougier',
        author_email= 'Nicolas.Rougier@inria.fr',
        url         = 'https://github.com/rougier/freetype-py',
        packages    = ['freetype', 'freetype.ft_enums'],
-       data_files  = ['examples/Vera.ttf',],
        classifiers = [
           'Development Status :: 5 - Production/Stable',
           'Environment :: X11 Applications',
@@ -23,7 +29,8 @@ setup( name        = 'freetype-py',
           'Operating System :: Microsoft :: Windows',
           'Operating System :: POSIX',
           'Operating System :: Unix',
-          'Programming Language :: Python',
+          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 3',
           'Topic :: Multimedia :: Graphics',
           ],
      )
