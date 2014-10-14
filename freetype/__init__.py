@@ -48,7 +48,7 @@ else:  # Check current working directory for dll as ctypes fails to do so
 
 try:
     dll = ctypes.CDLL(libName)
-except OSError, TypeError:
+except (OSError, TypeError):
     raise RuntimeError('Freetype library not found')
 
 __dll__ = dll
