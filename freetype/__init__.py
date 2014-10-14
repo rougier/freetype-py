@@ -41,14 +41,20 @@ __handle__ = None
 # within any entry in PATH.
 libName = ctypes.util.find_library('freetype')
 
-if libName is None and platform.system() != 'Windows':
-    libName = 'libfreetype.so.6'
-else:  # Check current working directory for dll as ctypes fails to do so
-    libName = os.path.realpath('.') + os.sep + 'freetype.dll'
+if libName is None:
+    if platform.system() == 'Windows':
+          # Check current working directory for dll as ctypes fails to do so
+        libName = os.path.realpath('.') + os.sep + 'freetype.dll'
+    else:
+        libName = 'libfreetype.so.6'
 
 try:
     dll = ctypes.CDLL(libName)
+    _dllFound = True
 except (OSError, TypeError):
+    _dllFound = False
+
+if not _dllFound:
     raise RuntimeError('Freetype library not found')
 
 __dll__ = dll
