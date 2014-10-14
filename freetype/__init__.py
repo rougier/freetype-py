@@ -18,7 +18,9 @@ Note:
   FT_library_filename before importing the freetype library and freetype will use
   the specified one.
 '''
+import platform
 import sys
+import os
 from ctypes import *
 from freetype.ft_types import *
 from freetype.ft_enums import *
@@ -33,18 +35,23 @@ if PY3: unicode = str
 
 __dll__    = None
 __handle__ = None
-FT_Library_filename = ctypes.util.find_library('freetype')
-if not FT_Library_filename:
-    try:
-        __dll__ = ctypes.CDLL('libfreetype.so.6')
-    except OSError:
-        __dll__ = None
-if not FT_Library_filename and not __dll__:
+
+# on windows all ctypes does when checking for the library
+# is to append .dll to the end and look for an exact match
+# within any entry in PATH.
+libName = ctypes.util.find_library('freetype')
+
+if libName is None and platform.system() != 'Windows':
+    libName = 'libfreetype.so.6'
+else:  # Check current working directory for dll as ctypes fails to do so
+    libName = os.path.realpath('.') + os.sep + 'freetype.dll'
+
+try:
+    dll = ctypes.CDLL(libName)
+except OSError, TypeError:
     raise RuntimeError('Freetype library not found')
-if not __dll__:
-  __dll__ = ctypes.CDLL(FT_Library_filename)
 
-
+__dll__ = dll
 
 # -----------------------------------------------------------------------------
 # High-level API of FreeType 2
