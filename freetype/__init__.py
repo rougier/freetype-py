@@ -43,8 +43,8 @@ libName = ctypes.util.find_library('freetype')
 
 if libName is None:
     if platform.system() == 'Windows':
-          # Check current working directory for dll as ctypes fails to do so
-        libName = os.path.realpath('.') + os.sep + 'freetype.dll'
+        # Check current working directory for dll as ctypes fails to do so
+        libName = os.path.join(os.path.realpath('.'), 'freetype.dll')
     else:
         libName = 'libfreetype.so.6'
 
