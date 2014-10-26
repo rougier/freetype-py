@@ -58,7 +58,7 @@ if not _dllFound:
     raise RuntimeError('Freetype library not found')
 
 __dll__ = dll
-FT_library_filename = libName
+FT_Library_filename = libName
 
 # -----------------------------------------------------------------------------
 # High-level API of FreeType 2
