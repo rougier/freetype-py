@@ -87,3 +87,4 @@ Contributors
 * Ekkehard.Blanz (bug report)
 * Jānis Lībeks (bug report)
 * Frantisek Malina (typo)
+* Tillmann Karras (bug report & fix)
