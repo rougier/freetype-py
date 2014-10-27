@@ -47,7 +47,7 @@ if filename is None:
         filename = 'libfreetype.so.6'
 
 try:
-    dll = ctypes.CDLL(libName)
+    dll = ctypes.CDLL(filename)
     _found = True
 except (OSError, TypeError):
     _found = False
