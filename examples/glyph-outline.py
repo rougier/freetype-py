@@ -24,7 +24,7 @@ if __name__ == '__main__':
     stroker = Stroker( )
     stroker.set(64, FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0 )
     glyph.stroke( stroker )
-    blyph = glyph.to_bitmap(FT_RENDER_MODE_NORMAL, Vector(0,0)) 
+    blyph = glyph.to_bitmap(FT_RENDER_MODE_NORMAL, Vector(0,0))
     bitmap = blyph.bitmap
     width, rows, pitch = bitmap.width, bitmap.rows, bitmap.pitch
     top, left = blyph.top, blyph.left
@@ -33,7 +33,5 @@ if __name__ == '__main__':
         data.extend(bitmap.buffer[i*pitch:i*pitch+width])
     Z = numpy.array(data,dtype=numpy.ubyte).reshape(rows, width)
     plt.figure(figsize=(6,8))
-    plt.imshow(Z, interpolation='nearest', cmap=plt.cm.gray_r)
+    plt.imshow(Z, interpolation='nearest', cmap=plt.cm.gray_r, origin='lower')
     plt.show()
-    
-

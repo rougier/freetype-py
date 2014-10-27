@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2014 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -15,10 +15,10 @@ from freetype import *
 
 
 if __name__ == '__main__':
-    import Image
+    from PIL import Image
     from freetype import *
 
-    WIDTH, HEIGHT = 640, 480    
+    WIDTH, HEIGHT = 640, 480
     image = Image.new('L', (WIDTH,HEIGHT))
     def draw_bitmap( bitmap, x, y):
         x_max = x + bitmap.width
@@ -41,8 +41,8 @@ if __name__ == '__main__':
     num_chars = len(text)
     angle   = ( 25.0 / 360 ) * 3.14159 * 2
 
-    # initialize library, error handling omitted 
-    error = FT_Init_FreeType( byref(library) ) 
+    # initialize library, error handling omitted
+    error = FT_Init_FreeType( byref(library) )
 
     # create face object, error handling omitted
     error = FT_New_Face( library, filename, 0, byref(face) )
@@ -84,6 +84,6 @@ if __name__ == '__main__':
     FT_Done_FreeType(library)
 
     import matplotlib.pyplot as plt
-    plt.imshow(image, origin='lower', 
+    plt.imshow(image, origin='lower',
                interpolation='nearest', cmap=plt.cm.gray)
     plt.show()

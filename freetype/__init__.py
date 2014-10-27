@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2014 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -12,15 +12,13 @@ FreeType high-level python API
 This the bindings for the high-level API of FreeType (that must be installed
 somewhere on your system).
 
-Note:
-  C Library will be searched using the ctypes.util.find_library. However, this
-  search might fail. In such a case (or for other reasons), you can specify the
-  FT_library_filename before importing the freetype library and freetype will use
-  the specified one.
+Note: C Library will be searched using the ctypes.util.find_library. However,
+      this search might fail. In such a case (or for other reasons), you may
+      have to specify an explicit path below.
 '''
-import platform
-import sys
 import os
+import sys
+import platform
 from ctypes import *
 from freetype.ft_types import *
 from freetype.ft_enums import *
@@ -39,26 +37,26 @@ __handle__ = None
 # on windows all ctypes does when checking for the library
 # is to append .dll to the end and look for an exact match
 # within any entry in PATH.
-libName = ctypes.util.find_library('freetype')
+filename = ctypes.util.find_library('freetype')
 
-if libName is None:
+if filename is None:
     if platform.system() == 'Windows':
         # Check current working directory for dll as ctypes fails to do so
-        libName = os.path.join(os.path.realpath('.'), 'freetype.dll')
+        filename = os.path.join(os.path.realpath('.'), 'freetype.dll')
     else:
-        libName = 'libfreetype.so.6'
+        filename = 'libfreetype.so.6'
 
 try:
     dll = ctypes.CDLL(libName)
-    _dllFound = True
+    _found = True
 except (OSError, TypeError):
-    _dllFound = False
+    _found = False
 
-if not _dllFound:
+if not _found:
     raise RuntimeError('Freetype library not found')
 
 __dll__ = dll
-FT_Library_filename = libName
+FT_Library_filename = filename
 
 # -----------------------------------------------------------------------------
 # High-level API of FreeType 2

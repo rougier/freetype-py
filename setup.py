@@ -12,7 +12,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
   long_description = f.read()
 
 setup( name        = 'freetype-py',
-       version     = '0.5.0',
+       version     = '0.5.1',
        description = 'Freetype python bindings',
        long_description = long_description,
        author      = 'Nicolas P. Rougier',

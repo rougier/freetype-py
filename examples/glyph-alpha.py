@@ -22,13 +22,10 @@ if __name__ == '__main__':
     width  = face.glyph.bitmap.width
     rows   = face.glyph.bitmap.rows
     pitch  = face.glyph.bitmap.pitch
-    
+
     data = []
     for i in range(rows):
         data.extend(bitmap.buffer[i*pitch:i*pitch+width])
     Z = numpy.array(data,dtype=numpy.ubyte).reshape(rows, width)
-    plt.imshow(Z, interpolation='nearest', cmap=plt.cm.gray)
+    plt.imshow(Z, interpolation='nearest', cmap=plt.cm.gray, origin='lower')
     plt.show()
-
-    
-

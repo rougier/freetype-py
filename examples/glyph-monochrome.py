@@ -39,8 +39,5 @@ if __name__ == '__main__':
             row.extend(bits(bitmap.buffer[i*bitmap.pitch+j]))
         data.extend(row[:bitmap.width])
     Z = numpy.array(data).reshape(bitmap.rows, bitmap.width)
-    plt.imshow(Z, interpolation='nearest', cmap=plt.cm.gray)
+    plt.imshow(Z, interpolation='nearest', cmap=plt.cm.gray, origin='lower')
     plt.show()
-
-    
-

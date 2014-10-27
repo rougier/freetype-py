@@ -26,7 +26,7 @@ if __name__ == '__main__':
     width  = face.glyph.bitmap.width
     rows   = face.glyph.bitmap.rows
     pitch  = face.glyph.bitmap.pitch
-    
+
     data = []
     for i in range(rows):
         data.extend(bitmap.buffer[i*pitch:i*pitch+width])
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     # Iterate over each contour
     for i in range(len(outline.contours)):
         end    = outline.contours[i]
-        points = outline.points[start:end+1] 
+        points = outline.points[start:end+1]
         points.append(points[0])
         tags   = outline.tags[start:end+1]
         tags.append(tags[0])
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     glyph = patches.PathPatch(path, fill = True, facecolor=(0.8,0.5,0.8), alpha=.25, lw=0)
     glyph_outline = patches.PathPatch(path, fill = False, edgecolor='black', lw=3)
 
-    plt.imshow(Z, extent=[x.min(), x.max(),y.min(), y.max()],
+    plt.imshow(Z, extent=[x.min(), x.max(),y.min(), y.max()], origin='lower',
                interpolation='nearest', cmap = plt.cm.gray_r, vmin=0, vmax=400)
     plt.xticks(numpy.linspace(x.min(), x.max(), Z.shape[1]+1), ())
     plt.yticks(numpy.linspace(y.min(), y.max(), Z.shape[0]+1), ())
@@ -96,6 +96,3 @@ if __name__ == '__main__':
 
     plt.savefig('test.svg')
     plt.show()
-
-    
-

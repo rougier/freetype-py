@@ -27,7 +27,7 @@ if __name__ == '__main__':
     stroker = Stroker( )
     stroker.set(64, FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0 )
     glyph.stroke( stroker )
-    blyph = glyph.to_bitmap(FT_RENDER_MODE_NORMAL, Vector(0,0)) 
+    blyph = glyph.to_bitmap(FT_RENDER_MODE_NORMAL, Vector(0,0))
     bitmap = blyph.bitmap
     width, rows, pitch = bitmap.width, bitmap.rows, bitmap.pitch
     top, left = blyph.top, blyph.left
@@ -77,19 +77,18 @@ if __name__ == '__main__':
     plt.title('Plain')
     plt.xticks([]), plt.yticks([])
     I = F.view(dtype=float).reshape(O.shape[0],O.shape[1],4)
-    plt.imshow(I, interpolation='nearest')
+    plt.imshow(I, interpolation='nearest', origin='lower')
 
     plt.subplot(1,3,2)
     plt.title('Outline')
     plt.xticks([]), plt.yticks([])
     I = O.view(dtype=float).reshape(O.shape[0],O.shape[1],4)
-    plt.imshow(I, interpolation='nearest')
+    plt.imshow(I, interpolation='nearest', origin='lower')
 
     plt.subplot(1,3,3)
     plt.title('Outline + Plain')
     plt.xticks([]), plt.yticks([])
     I = Z.view(dtype=float).reshape(O.shape[0],O.shape[1],4)
-    plt.imshow(I, interpolation='nearest')
+    plt.imshow(I, interpolation='nearest', origin='lower')
 
     plt.show()
-

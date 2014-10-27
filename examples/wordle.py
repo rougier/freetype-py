@@ -87,7 +87,7 @@ def make_label(text, filename, size=12, angle=0):
 
 
 if __name__ == '__main__':
-    import Image
+    from PIL import Image
 
     n_words = 100
     H, W, dpi = 600, 800, 72.0
@@ -130,9 +130,8 @@ if __name__ == '__main__':
     print "Number of fails:", fails
     fig = plt.figure(figsize=(W/dpi,H/dpi), dpi=dpi)
     ax = fig.add_axes([0,0,1,1], frameon=False)
-    ax.imshow(I, interpolation='nearest', cmap=plt.cm.gray, origin='lower')
+    ax.imshow(I, interpolation='nearest', cmap=plt.cm.gray, origin='upper')
     #plt.axis('off')
     plt.show()
     I = Image.fromarray(I[::-1,::1,::1], mode='RGB')
     I.save('wordle.png')
-
