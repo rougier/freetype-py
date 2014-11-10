@@ -89,3 +89,4 @@ Contributors
 * Frantisek Malina (typo)
 * Tillmann Karras (bug report & fix)
 * Matthew Sitton (bug report & fix)
+* Tao Gong (bug report)
