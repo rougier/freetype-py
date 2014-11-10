@@ -88,3 +88,4 @@ Contributors
 * Jānis Lībeks (bug report)
 * Frantisek Malina (typo)
 * Tillmann Karras (bug report & fix)
+* Matthew Sitton (bug report & fix)
