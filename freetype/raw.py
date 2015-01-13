@@ -33,98 +33,98 @@ if filename is None:
         filename = 'libfreetype.so.6'
 
 try:
-    _dll = ctypes.CDLL(filename)
+    _lib = ctypes.CDLL(filename)
 except (OSError, TypeError):
-    _dll = None
+    _lib = None
     raise RuntimeError('Freetype library not found')
 
-FT_Init_FreeType       = _dll.FT_Init_FreeType
-FT_Done_FreeType       = _dll.FT_Done_FreeType
-FT_Library_Version     = _dll.FT_Library_Version
+FT_Init_FreeType       = _lib.FT_Init_FreeType
+FT_Done_FreeType       = _lib.FT_Done_FreeType
+FT_Library_Version     = _lib.FT_Library_Version
 
 try:
-    FT_Library_SetLcdFilter= _dll.FT_Library_SetLcdFilter
+    FT_Library_SetLcdFilter= _lib.FT_Library_SetLcdFilter
 except AttributeError:
     def FT_Library_SetLcdFilter (*args, **kwargs):
         return 0
 try:
-    FT_Library_SetLcdFilterWeights = _dll.FT_Library_SetLcdFilterWeights
+    FT_Library_SetLcdFilterWeights = _lib.FT_Library_SetLcdFilterWeights
 except AttributeError:
     pass
 
-FT_New_Face            = _dll.FT_New_Face
-FT_New_Memory_Face     = _dll.FT_New_Memory_Face
-FT_Open_Face           = _dll.FT_Open_Face
-FT_Attach_File         = _dll.FT_Attach_File
-FT_Attach_Stream       = _dll.FT_Attach_Stream
+FT_New_Face            = _lib.FT_New_Face
+FT_New_Memory_Face     = _lib.FT_New_Memory_Face
+FT_Open_Face           = _lib.FT_Open_Face
+FT_Attach_File         = _lib.FT_Attach_File
+FT_Attach_Stream       = _lib.FT_Attach_Stream
 
 try:
-    FT_Reference_Face      = _dll.FT_Reference_Face
+    FT_Reference_Face      = _lib.FT_Reference_Face
 except AttributeError:
 	pass
 
-FT_Done_Face           = _dll.FT_Done_Face
-FT_Done_Glyph          = _dll.FT_Done_Glyph
-FT_Select_Size         = _dll.FT_Select_Size
-FT_Request_Size        = _dll.FT_Request_Size
-FT_Set_Char_Size       = _dll.FT_Set_Char_Size
-FT_Set_Pixel_Sizes     = _dll.FT_Set_Pixel_Sizes
-FT_Load_Glyph          = _dll.FT_Load_Glyph
-FT_Load_Char           = _dll.FT_Load_Char
-FT_Set_Transform       = _dll.FT_Set_Transform
-FT_Render_Glyph        = _dll.FT_Render_Glyph
-FT_Get_Kerning         = _dll.FT_Get_Kerning
-FT_Get_Track_Kerning   = _dll.FT_Get_Track_Kerning
-FT_Get_Glyph_Name      = _dll.FT_Get_Glyph_Name
-FT_Get_Glyph           = _dll.FT_Get_Glyph
+FT_Done_Face           = _lib.FT_Done_Face
+FT_Done_Glyph          = _lib.FT_Done_Glyph
+FT_Select_Size         = _lib.FT_Select_Size
+FT_Request_Size        = _lib.FT_Request_Size
+FT_Set_Char_Size       = _lib.FT_Set_Char_Size
+FT_Set_Pixel_Sizes     = _lib.FT_Set_Pixel_Sizes
+FT_Load_Glyph          = _lib.FT_Load_Glyph
+FT_Load_Char           = _lib.FT_Load_Char
+FT_Set_Transform       = _lib.FT_Set_Transform
+FT_Render_Glyph        = _lib.FT_Render_Glyph
+FT_Get_Kerning         = _lib.FT_Get_Kerning
+FT_Get_Track_Kerning   = _lib.FT_Get_Track_Kerning
+FT_Get_Glyph_Name      = _lib.FT_Get_Glyph_Name
+FT_Get_Glyph           = _lib.FT_Get_Glyph
 
-FT_Glyph_Get_CBox      = _dll.FT_Glyph_Get_CBox
+FT_Glyph_Get_CBox      = _lib.FT_Glyph_Get_CBox
 
-FT_Get_Postscript_Name = _dll.FT_Get_Postscript_Name
+FT_Get_Postscript_Name = _lib.FT_Get_Postscript_Name
 FT_Get_Postscript_Name.restype = c_char_p
-FT_Select_Charmap      = _dll.FT_Select_Charmap
-FT_Set_Charmap         = _dll.FT_Set_Charmap
-FT_Get_Charmap_Index   = _dll.FT_Get_Charmap_Index
-FT_Get_CMap_Language_ID= _dll.FT_Get_CMap_Language_ID
-FT_Get_CMap_Format     = _dll.FT_Get_CMap_Format
-FT_Get_Char_Index      = _dll.FT_Get_Char_Index
-FT_Get_First_Char      = _dll.FT_Get_First_Char
-FT_Get_Next_Char       = _dll.FT_Get_Next_Char
-FT_Get_Name_Index      = _dll.FT_Get_Name_Index
-FT_Get_SubGlyph_Info   = _dll.FT_Get_SubGlyph_Info
+FT_Select_Charmap      = _lib.FT_Select_Charmap
+FT_Set_Charmap         = _lib.FT_Set_Charmap
+FT_Get_Charmap_Index   = _lib.FT_Get_Charmap_Index
+FT_Get_CMap_Language_ID= _lib.FT_Get_CMap_Language_ID
+FT_Get_CMap_Format     = _lib.FT_Get_CMap_Format
+FT_Get_Char_Index      = _lib.FT_Get_Char_Index
+FT_Get_First_Char      = _lib.FT_Get_First_Char
+FT_Get_Next_Char       = _lib.FT_Get_Next_Char
+FT_Get_Name_Index      = _lib.FT_Get_Name_Index
+FT_Get_SubGlyph_Info   = _lib.FT_Get_SubGlyph_Info
 
 try:
-    FT_Get_FSType_Flags    = _dll.FT_Get_FSType_Flags
+    FT_Get_FSType_Flags    = _lib.FT_Get_FSType_Flags
     FT_Get_FSType_Flags.restype  = c_ushort
 except AttributeError:
 	pass
 
-FT_Get_X11_Font_Format = _dll.FT_Get_X11_Font_Format
+FT_Get_X11_Font_Format = _lib.FT_Get_X11_Font_Format
 FT_Get_X11_Font_Format.restype = c_char_p
 
-FT_Get_Sfnt_Name_Count = _dll.FT_Get_Sfnt_Name_Count
-FT_Get_Sfnt_Name       = _dll.FT_Get_Sfnt_Name
-FT_Get_Advance         = _dll.FT_Get_Advance
+FT_Get_Sfnt_Name_Count = _lib.FT_Get_Sfnt_Name_Count
+FT_Get_Sfnt_Name       = _lib.FT_Get_Sfnt_Name
+FT_Get_Advance         = _lib.FT_Get_Advance
 
 
-FT_Outline_GetInsideBorder  = _dll.FT_Outline_GetInsideBorder
-FT_Outline_GetOutsideBorder = _dll.FT_Outline_GetOutsideBorder
-FT_Outline_Get_BBox         = _dll.FT_Outline_Get_BBox
-FT_Outline_Get_CBox         = _dll.FT_Outline_Get_CBox
-FT_Stroker_New              = _dll.FT_Stroker_New
-FT_Stroker_Set              = _dll.FT_Stroker_Set
-FT_Stroker_Rewind           = _dll.FT_Stroker_Rewind
-FT_Stroker_ParseOutline     = _dll.FT_Stroker_ParseOutline
-FT_Stroker_BeginSubPath     = _dll.FT_Stroker_BeginSubPath
-FT_Stroker_EndSubPath       = _dll.FT_Stroker_EndSubPath
-FT_Stroker_LineTo           = _dll.FT_Stroker_LineTo
-FT_Stroker_ConicTo          = _dll.FT_Stroker_ConicTo
-FT_Stroker_CubicTo          = _dll.FT_Stroker_CubicTo
-FT_Stroker_GetBorderCounts  = _dll.FT_Stroker_GetBorderCounts
-FT_Stroker_ExportBorder     = _dll.FT_Stroker_ExportBorder
-FT_Stroker_GetCounts        = _dll.FT_Stroker_GetCounts
-FT_Stroker_Export           = _dll.FT_Stroker_Export
-FT_Stroker_Done             = _dll.FT_Stroker_Done
-FT_Glyph_Stroke             = _dll.FT_Glyph_Stroke
-FT_Glyph_StrokeBorder       = _dll.FT_Glyph_StrokeBorder
-FT_Glyph_To_Bitmap          = _dll.FT_Glyph_To_Bitmap
+FT_Outline_GetInsideBorder  = _lib.FT_Outline_GetInsideBorder
+FT_Outline_GetOutsideBorder = _lib.FT_Outline_GetOutsideBorder
+FT_Outline_Get_BBox         = _lib.FT_Outline_Get_BBox
+FT_Outline_Get_CBox         = _lib.FT_Outline_Get_CBox
+FT_Stroker_New              = _lib.FT_Stroker_New
+FT_Stroker_Set              = _lib.FT_Stroker_Set
+FT_Stroker_Rewind           = _lib.FT_Stroker_Rewind
+FT_Stroker_ParseOutline     = _lib.FT_Stroker_ParseOutline
+FT_Stroker_BeginSubPath     = _lib.FT_Stroker_BeginSubPath
+FT_Stroker_EndSubPath       = _lib.FT_Stroker_EndSubPath
+FT_Stroker_LineTo           = _lib.FT_Stroker_LineTo
+FT_Stroker_ConicTo          = _lib.FT_Stroker_ConicTo
+FT_Stroker_CubicTo          = _lib.FT_Stroker_CubicTo
+FT_Stroker_GetBorderCounts  = _lib.FT_Stroker_GetBorderCounts
+FT_Stroker_ExportBorder     = _lib.FT_Stroker_ExportBorder
+FT_Stroker_GetCounts        = _lib.FT_Stroker_GetCounts
+FT_Stroker_Export           = _lib.FT_Stroker_Export
+FT_Stroker_Done             = _lib.FT_Stroker_Done
+FT_Glyph_Stroke             = _lib.FT_Glyph_Stroke
+FT_Glyph_StrokeBorder       = _lib.FT_Glyph_StrokeBorder
+FT_Glyph_To_Bitmap          = _lib.FT_Glyph_To_Bitmap
