@@ -90,3 +90,4 @@ Contributors
 * Tillmann Karras (bug report & fix)
 * Matthew Sitton (bug report & fix)
 * Tao Gong (bug report)
+* Matthew Sitton (Remove raw interfaces from the __init__.py file)

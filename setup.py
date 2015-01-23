@@ -3,16 +3,16 @@
 #  FreeType high-level python API - copyright 2011 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 # -----------------------------------------------------------------------------
-from distutils.core import setup
 from os import path
 from codecs import open
+from setuptools import setup, Extension
 
 here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
   long_description = f.read()
 
 setup( name        = 'freetype-py',
-       version     = '0.5.1',
+       version     = '0.5.3',
        description = 'Freetype python bindings',
        long_description = long_description,
        author      = 'Nicolas P. Rougier',
