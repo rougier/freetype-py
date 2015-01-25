@@ -128,9 +128,9 @@ class TextureAtlas:
             A newly allocated region as (x,y,width,height) or (-1,-1,0,0)
         '''
 
-        best_height = sys.maxint
+        best_height = sys.maxsize
         best_index = -1
-        best_width = sys.maxint
+        best_width = sys.maxsize
         region = 0, 0, width, height
 
         for i in range(len(self.nodes)):
@@ -306,8 +306,8 @@ class TextureFont:
 
         for charcode in charcodes:
             face.set_char_size( int(self.size * 64), 0, hres, 72 )
-            matrix = Matrix( int((hscale) * 0x10000L), int((0.0) * 0x10000L),
-                             int((0.0)    * 0x10000L), int((1.0) * 0x10000L) )
+            matrix = Matrix( int((hscale) * 0x10000), int((0.0) * 0x10000),
+                             int((0.0)    * 0x10000), int((1.0) * 0x10000) )
             face.set_transform( matrix, pen )
             if charcode in self.glyphs.keys():
                 continue
@@ -326,7 +326,7 @@ class TextureFont:
 
             x,y,w,h = self.atlas.get_region(width/self.depth+2, rows+2)
             if x < 0:
-                print 'Missed !'
+                print ('Missed !')
                 continue
             x,y = x+1, y+1
             w,h = w-2, h-2

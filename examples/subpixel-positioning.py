@@ -223,7 +223,7 @@ if __name__ == '__main__':
     glut.glutReshapeFunc( on_reshape )
     glut.glutKeyboardFunc( on_keyboard )
 
-    font = TextureFont(atlas, './Arial.ttf', 9)
+    font = TextureFont(atlas, './Vera.ttf', 9)
     text = "|... A Quick Brown Fox Jumps Over The Lazy Dog"
     labels = []
     x,y = 20,310
