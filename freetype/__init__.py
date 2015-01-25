@@ -24,7 +24,7 @@ from freetype.raw import *
 PY3 = sys.version_info[0] == 3
 if PY3: unicode = str
 
-__handle__ = None
+_handle = None
 
 
 FT_Library_filename = filename
@@ -42,10 +42,10 @@ class _FT_Library_Wrapper(FT_Library):
         self._ft_done_freetype(self)
 
 def _init_freetype():
-    global __handle__
+    global _handle
 
-    __handle__ = _FT_Library_Wrapper()
-    error = FT_Init_FreeType( byref(__handle__) )
+    _handle = _FT_Library_Wrapper()
+    error = FT_Init_FreeType( byref(_handle) )
 
     if error: raise FT_Exception(error)
 
@@ -64,10 +64,10 @@ def get_handle():
     Get unique FT_Library handle
     '''
 
-    if not __handle__:
+    if not _handle:
         _init_freetype()
 
-    return __handle__
+    return _handle
 
 def version():
     '''
