@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ def line(x, y, dx, dy, **kwargs):
 def point(x, y, r, **kwargs):
     kwargs['color'] = 'k'
     plt.scatter([x],[y],r,**kwargs)
-    
+
 def text( x,y,text, **kwargs):
     kwargs['fontsize'] = 18
     plt.text(x, y, text, **kwargs)
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     # Iterate over each contour
     for i in range(len(outline.contours)):
         end    = outline.contours[i]
-        points = outline.points[start:end+1] 
+        points = outline.points[start:end+1]
         points.append(points[0])
         tags   = outline.tags[start:end+1]
         tags.append(tags[0])
@@ -164,7 +164,7 @@ if __name__ == '__main__':
     arrow(0, ymax/2., xmin, 0)
     text(-10, ymax/2, "$X_{bearing}$", va='baseline', ha='right')
 
-    
+
     # -------------------------------------------------------------------------
 
     axes = plt.subplot(122, frameon=False, aspect=1)

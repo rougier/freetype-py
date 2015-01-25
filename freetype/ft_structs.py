@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -139,15 +139,15 @@ class FT_BBox(Structure):
 # -----------------------------------------------------------------------------
 # A simple structure used to store a 2x2 matrix. Coefficients are in 16.16
 # fixed float format. The computation performed is:
-#   x' = x*xx + y*xy                                             
-#   y' = x*yx + y*yy   
+#   x' = x*xx + y*xy
+#   y' = x*yx + y*yy
 class FT_Matrix(Structure):
     '''
     A simple structure used to store a 2x2 matrix. Coefficients are in 16.16
     fixed float format. The computation performed is:
 
-    x' = x*xx + y*xy                                             
-    y' = x*yx + y*yy   
+    x' = x*xx + y*xy
+    y' = x*yx + y*yy
 
     xx: Matrix coefficient.
     xy: Matrix coefficient.
@@ -265,7 +265,7 @@ class FT_Generic(Structure):
     Client applications often need to associate their own data to a variety of
     FreeType core objects. For example, a text layout API might want to
     associate a glyph cache to a given size object.
-    
+
     Most FreeType object contains a 'generic' field, of type FT_Generic, which
     usage is left to client applications and font servers.
 
@@ -295,7 +295,7 @@ class FT_Bitmap_Size(Structure):
     This structure models the metrics of a bitmap strike (i.e., a set of glyphs
     for a given point size and resolution) in a bitmap font. It is used for the
     'available_sizes' field of FT_Face.
-    
+
     height: The vertical distance, in pixels, between two consecutive
             baselines. It is always positive.
 
@@ -791,7 +791,7 @@ class FT_FaceRec(Structure):
 
           # The following member variables (down to `underline_thickness')
           # are only relevant to scalable outlines; cf. @FT_Bitmap_Size
-          # for bitmap fonts.    
+          # for bitmap fonts.
           ('bbox', FT_BBox),
 
           ('units_per_EM', FT_UShort),
@@ -809,7 +809,7 @@ class FT_FaceRec(Structure):
           ('size',    FT_Size),
           ('charmap', FT_Charmap),
 
-          # private 
+          # private
           ('driver',          c_void_p),
           ('memory',          c_void_p),
           ('stream',          c_void_p),
@@ -935,7 +935,7 @@ class FT_BitmapGlyphRec(Structure):
     A structure used for bitmap glyph images. This really is a 'sub-class' of
     FT_GlyphRec.
     '''
-    _fields_ = [ 
+    _fields_ = [
         ('root' , FT_GlyphRec),
         ('left', FT_Int),
         ('top', FT_Int),

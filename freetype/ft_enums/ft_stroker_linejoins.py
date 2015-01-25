@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011-2012 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -32,5 +31,3 @@ FT_STROKER_LINEJOINS = { 'FT_STROKER_LINEJOIN_ROUND' : 0,
                          'FT_STROKER_LINEJOIN_BEVEL' : 1,
                          'FT_STROKER_LINEJOIN_MITER' : 2}
 globals().update(FT_STROKER_LINEJOINS)
-
-

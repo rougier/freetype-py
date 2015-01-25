@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011-2014 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -68,7 +67,7 @@ def version():
     amajor = FT_Int()
     aminor = FT_Int()
     apatch = FT_Int()
-    
+
     library = get_handle()
     FT_Library_Version(library, byref(amajor), byref(aminor), byref(apatch))
     return (amajor.value, aminor.value, apatch.value)

@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
+#
 # -----------------------------------------------------------------------------
 from __future__ import print_function
 from __future__ import division
@@ -117,7 +119,7 @@ def get_name_id( name_id ):
     elif name_id == TT_NAME_ID_TRADEMARK:
         return "trademark"
 
-    # the following values are from the OpenType spec 
+    # the following values are from the OpenType spec
     elif name_id == TT_NAME_ID_MANUFACTURER:
         return "manufacturer"
     elif name_id == TT_NAME_ID_DESIGNER:
@@ -250,7 +252,7 @@ if __name__ == '__main__':
 
     if len(sys.argv) < 2:
         usage( execname )
-    
+
     try:
         opts, args = getopt.getopt(sys.argv[1:], ':nv')
     except getopt.GetoptError, err:
@@ -285,7 +287,7 @@ if __name__ == '__main__':
         if name_tables and face.is_sfnt:
             print( )
             Print_Sfnt_Names( face )
-            
+
         if face.num_fixed_sizes:
             print(  )
             Print_Fixed( face )

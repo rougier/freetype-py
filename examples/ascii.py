@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -118,4 +118,3 @@ if __name__ == '__main__':
     Z = numpy.array(data,dtype=float).reshape(rows,width)
     Z = Z[::-1,:]
     imshow (Z, cmap=CM_Grey)
-

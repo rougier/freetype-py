@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -193,8 +193,8 @@ class TextureAtlas:
 
         node = self.nodes[index]
         x,y = node[0], node[1]
-        width_left = width        
-        
+        width_left = width
+
         if x+width > self.width:
             return -1
 
@@ -244,7 +244,7 @@ class TextureFont:
 
         filename: str
             Font filename
-        
+
         size : float
             Font size
         '''
@@ -283,19 +283,19 @@ class TextureFont:
             self.atlas.upload()
         self._dirty = False
         return self.atlas.texid
-    
+
     texid = property(get_texid,
                      doc='''Underlying texture identity.''')
 
 
- 
+
     def load(self, charcodes = ''):
         '''
         Build glyphs corresponding to individual characters in charcodes.
 
         Parameters:
         -----------
-        
+
         charcodes: [str | unicode]
             Set of characters to be represented
         '''

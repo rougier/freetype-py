@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -11,12 +10,12 @@ A list of bit-field constants use for the flags in an outline's 'flags'
 field.
 
 
-FT_OUTLINE_NONE	
+FT_OUTLINE_NONE
 
   Value 0 is reserved.
 
 
-FT_OUTLINE_OWNER	
+FT_OUTLINE_OWNER
 
   If set, this flag indicates that the outline's field arrays (i.e., 'points',
   'flags', and 'contours') are 'owned' by the outline object, and should thus
@@ -59,14 +58,14 @@ FT_OUTLINE_INCLUDE_STUBS
 
 
 FT_OUTLINE_HIGH_PRECISION
- 
+
   This flag indicates that the scan-line converter should try to convert this
   outline to bitmaps with the highest possible quality. It is typically set for
   small character sizes. Note that this is only a hint that might be completely
   ignored by a given scan-converter.
 
 
-FT_OUTLINE_SINGLE_PASS	
+FT_OUTLINE_SINGLE_PASS
 
   This flag is set to force a given scan-converter to only use a single pass
   over the outline to render a bitmap glyph image. Normally, it is set for very
@@ -83,5 +82,3 @@ FT_OUTLINE_FLAGS = { 'FT_OUTLINE_NONE'            : 0x0,
                      'FT_OUTLINE_HIGH_PRECISION'  : 0x100,
                      'FT_OUTLINE_SINGLE_PASS'     : 0x200 }
 globals().update(FT_OUTLINE_FLAGS)
-
-

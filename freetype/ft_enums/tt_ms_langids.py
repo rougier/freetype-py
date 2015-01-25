@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011-2012 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -748,4 +747,3 @@ TT_MS_LANGIDS = {
     'TT_MS_LANGID_UIGHUR_CHINA'                      : 0x0480,
     'TT_MS_LANGID_MAORI_NEW_ZEALAND'                 : 0x0481 }
 globals().update(TT_MS_LANGIDS)
-

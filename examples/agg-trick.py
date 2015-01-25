@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -61,7 +61,7 @@ def render(filename = "Vera.ttf", hinting = (False,False), gamma = 1.5, lcd=Fals
         I = Image.fromarray(Z, mode='RGB')
     else:
         I = Image.fromarray(Z, mode='L')
- 
+
     name = filename.split('.')[0]
     filename = '%s-gamma(%.1f)-hinting(%d,%d)-lcd(%d).png' % (name,gamma,hinting[0],hinting[1],lcd)
     I.save(filename)
@@ -70,4 +70,3 @@ def render(filename = "Vera.ttf", hinting = (False,False), gamma = 1.5, lcd=Fals
 
 if __name__ == '__main__':
     render('Vera.ttf', (0,1), 1.25, True)
-        

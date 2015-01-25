@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
 #  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
@@ -33,7 +35,7 @@ if __name__ == '__main__':
     # Iterate over each contour
     for i in range(len(outline.contours)):
         end    = outline.contours[i]
-        points = outline.points[start:end+1] 
+        points = outline.points[start:end+1]
         points.append(points[0])
         tags   = outline.tags[start:end+1]
         tags.append(tags[0])
@@ -86,6 +88,3 @@ if __name__ == '__main__':
     axis.set_ylim(y.min()-100, y.max()+100)
     plt.yticks([])
     plt.show()
-
-    
-

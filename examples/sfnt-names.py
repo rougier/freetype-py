@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
+#
 # -----------------------------------------------------------------------------
 from __future__ import print_function
 from __future__ import division
@@ -60,7 +62,3 @@ if __name__ == '__main__':
     for i in range(face.sfnt_name_count):
         name = face.get_sfnt_name(i).string
         print(i, name.decode('utf-8', 'ignore'))
-
-
-    
-

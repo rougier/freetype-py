@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011-2012 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -11,7 +10,7 @@ An enumeration type used to describe the format of a given glyph image. Note
 that this version of FreeType only supports two image formats, even though
 future font drivers will be able to register their own format.
 
-FT_GLYPH_FORMAT_NONE	
+FT_GLYPH_FORMAT_NONE
 
   The value 0 is reserved.
 
@@ -21,7 +20,7 @@ FT_GLYPH_FORMAT_COMPOSITE
   used with FT_LOAD_NO_RECURSE, and is used to report compound glyphs (like
   accented characters).
 
-FT_GLYPH_FORMAT_BITMAP	
+FT_GLYPH_FORMAT_BITMAP
 
   The glyph image is a bitmap, and can be described as an FT_Bitmap. You
   generally need to access the 'bitmap' field of the FT_GlyphSlotRec structure

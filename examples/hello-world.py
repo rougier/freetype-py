@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -31,7 +31,7 @@ if __name__ == '__main__':
         previous = c
 
     Z = numpy.zeros((height,width), dtype=numpy.ubyte)
-    
+
     # Second pass for actual rendering
     x, y = 0, 0
     previous = 0
@@ -45,7 +45,7 @@ if __name__ == '__main__':
         kerning = face.get_kerning(previous, c)
         x += (kerning.x >> 6)
         Z[y:y+h,x:x+w] += numpy.array(bitmap.buffer).reshape(h,w)
-        x += (slot.advance.x >> 6) 
+        x += (slot.advance.x >> 6)
         previous = c
 
     plt.figure(figsize=(10, 10*Z.shape[0]/float(Z.shape[1])))

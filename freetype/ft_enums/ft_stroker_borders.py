@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011-2012 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -11,7 +10,7 @@ These values are used to select a given stroke border in
 FT_Stroker_GetBorderCounts and FT_Stroker_ExportBorder.
 
 
-FT_STROKER_BORDER_LEFT	
+FT_STROKER_BORDER_LEFT
 
   Select the left border, relative to the drawing direction.
 
@@ -34,5 +33,3 @@ Note
 FT_STROKER_BORDERS = { 'FT_STROKER_BORDER_LEFT'  : 0,
                        'FT_STROKER_BORDER_RIGHT' : 1}
 globals().update(FT_STROKER_BORDERS)
-
-

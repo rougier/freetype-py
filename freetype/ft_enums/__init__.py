@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -71,7 +70,7 @@ TT_PLATFORMS: A list of valid values for the 'platform_id' identifier code in
 
 TT_APPLE_IDS: A list of valid values for the 'encoding_id' for
               TT_PLATFORM_APPLE_UNICODE charmaps and name entries.
- 
+
 TT_MAC_IDS: A list of valid values for the 'encoding_id' for
             TT_PLATFORM_MACINTOSH charmaps and name entries.
 

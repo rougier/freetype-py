@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -54,7 +54,7 @@ void main() {
         r = mix(current.r, previous.b, z);
         g = mix(current.g, current.r,  z);
         b = mix(current.b, current.g,  z);
-    } 
+    }
     else if( m <= 0.666 )
     {
         float z = (m-0.33)/0.333;

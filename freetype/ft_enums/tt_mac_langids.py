@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011-2012 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -372,5 +371,3 @@ TT_MAC_LANGIDS = {
     'TT_MAC_LANGID_GREELANDIC'                 : 149,
     'TT_MAC_LANGID_AZERBAIJANI_ROMAN_SCRIPT'   : 150 }
 globals().update(TT_MAC_LANGIDS)
-
-

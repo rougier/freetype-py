@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011-2012 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -10,11 +9,11 @@
 An enumeration used to specify character sets supported by charmaps. Used in
 the FT_Select_Charmap API function.
 
-FT_ENCODING_NONE	
+FT_ENCODING_NONE
 
   The encoding value 0 is reserved.
 
-FT_ENCODING_UNICODE	
+FT_ENCODING_UNICODE
 
   Corresponds to the Unicode character set. This value covers all versions of
   the Unicode repertoire, including ASCII and Latin-1. Most fonts include a
@@ -23,34 +22,34 @@ FT_ENCODING_UNICODE
   For example, if you want to access Unicode value U+1F028 (and the font
   contains it), use value 0x1F028 as the input value for FT_Get_Char_Index.
 
-FT_ENCODING_MS_SYMBOL	
+FT_ENCODING_MS_SYMBOL
 
   Corresponds to the Microsoft Symbol encoding, used to encode mathematical
   symbols in the 32..255 character code range. For more information, see
   'http://www.ceviz.net/symbol.htm'.
 
-FT_ENCODING_SJIS	
+FT_ENCODING_SJIS
 
   Corresponds to Japanese SJIS encoding. More info at at
   'http://langsupport.japanreference.com/encoding.shtml'. See note on
   multi-byte encodings below.
 
-FT_ENCODING_GB2312	
+FT_ENCODING_GB2312
 
   Corresponds to an encoding system for Simplified Chinese as used used in
   mainland China.
 
-FT_ENCODING_BIG5	
+FT_ENCODING_BIG5
 
   Corresponds to an encoding system for Traditional Chinese as used in Taiwan
   and Hong Kong.
 
-FT_ENCODING_WANSUNG	
+FT_ENCODING_WANSUNG
 
   Corresponds to the Korean encoding system known as Wansung. For more
   information see 'http://www.microsoft.com/typography/unicode/949.txt'.
 
-FT_ENCODING_JOHAB	
+FT_ENCODING_JOHAB
 
   The Korean standard character set (KS C 5601-1992), which corresponds to MS
   Windows code page 1361. This character set includes all possible Hangeul

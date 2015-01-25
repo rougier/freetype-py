@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011-2012 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -12,7 +11,7 @@ structure. They inform client applications of properties of the corresponding
 face.
 
 
-FT_FACE_FLAG_SCALABLE	
+FT_FACE_FLAG_SCALABLE
 
   Indicates that the face contains outline glyphs. This doesn't prevent bitmap
   strikes, i.e., a face can have both this and and FT_FACE_FLAG_FIXED_SIZES
@@ -31,7 +30,7 @@ FT_FACE_FLAG_FIXED_WIDTH
   Lucido, MonoType, etc.).
 
 
-FT_FACE_FLAG_SFNT	
+FT_FACE_FLAG_SFNT
 
   Indicates that the face uses the 'sfnt' storage scheme. For now, this means
   TrueType and OpenType.
@@ -43,13 +42,13 @@ FT_FACE_FLAG_HORIZONTAL
   for all common formats.
 
 
-FT_FACE_FLAG_VERTICAL	
+FT_FACE_FLAG_VERTICAL
 
   Indicates that the face contains vertical glyph metrics. This is only
   available in some formats, not all of them.
 
 
-FT_FACE_FLAG_KERNING	
+FT_FACE_FLAG_KERNING
 
   Indicates that the face contains kerning information. If set, the kerning
   distance can be retrieved through the function FT_Get_Kerning. Otherwise the
@@ -78,7 +77,7 @@ FT_FACE_FLAG_EXTERNAL_STREAM
   called. Don't read or test this flag.
 
 
-FT_FACE_FLAG_HINTER	
+FT_FACE_FLAG_HINTER
 
   Set if the font driver has a hinting machine of its own. For example, with
   TrueType fonts, it makes sense to use data from the SFNT 'gasp' table only if
@@ -86,7 +85,7 @@ FT_FACE_FLAG_HINTER
   available and active.
 
 
-FT_FACE_FLAG_CID_KEYED	
+FT_FACE_FLAG_CID_KEYED
 
   Set if the font is CID-keyed. In that case, the font is not accessed by glyph
   indices but by CID values. For subsetted CID-keyed fonts this has the
@@ -100,7 +99,7 @@ FT_FACE_FLAG_CID_KEYED
   indices); the 'CID-ness' isn't visible to the application.
 
 
-FT_FACE_FLAG_TRICKY	
+FT_FACE_FLAG_TRICKY
 
   Set if the font is 'tricky', this is, it always needs the font format's
   native hinting engine to get a reasonable result. A typical example is the
@@ -131,4 +130,3 @@ FT_FACE_FLAGS = { 'FT_FACE_FLAG_SCALABLE'          : 1 <<  0,
                   'FT_FACE_FLAG_TRICKY'            : 1 << 13
 }
 globals().update(FT_FACE_FLAGS)
-

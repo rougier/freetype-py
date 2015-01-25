@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011-2012 Nicolas P. Rougier
+#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -30,5 +29,3 @@ FT_STROKER_LINECAPS = { 'FT_STROKER_LINECAP_BUTT'   : 0,
                         'FT_STROKER_LINECAP_ROUND'  : 1,
                         'FT_STROKER_LINECAP_SQUARE' : 2}
 globals().update(FT_STROKER_LINECAPS)
-
-
