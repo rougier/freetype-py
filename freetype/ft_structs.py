@@ -835,8 +835,8 @@ class FT_FaceRec(Structure):
     ]
 FT_Face = POINTER(FT_FaceRec)
 
-# fill out fields for FT_CharMap.
-FT_CharMap._fields_ = [
+# fill out fields for FT_CharMapRec.
+FT_CharMapRec._fields_ = [
     ('face', FT_Face),
     ('encoding', FT_Encoding),
     ('platform_id', FT_UShort),
