@@ -153,6 +153,7 @@ FT_Size_Request_Type = c_int
 FT_StrokerBorder     = c_int
 FT_Stroker_LineCap   = c_int
 FT_Stroker_LineJoin  = c_int
+FT_LcdFilter         = c_int
 
 
 # Describe a function used to destroy the 'client' data of any FreeType
