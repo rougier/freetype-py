@@ -75,7 +75,7 @@ def imshow (Z, vmin=None, vmax=None, cmap=CM_Hot, show_cmap=False):
     ''' Show a 2D numpy array using terminal colors '''
 
     if len(Z.shape) != 2:
-        print "Cannot display non 2D array"
+        print ("Cannot display non 2D array")
         return
 
     vmin = vmin or Z.min()
@@ -105,7 +105,7 @@ def imshow (Z, vmin=None, vmax=None, cmap=CM_Hot, show_cmap=False):
             data += "\x1b[48;5;%dm  " % (16 + (1-i/float(Z.shape[0]))*239)
             data += "\x1b[0m %+.2f" % u
         data += "\x1b[0m\n"
-    print init+data[:-1]+'\x1b[0m'
+    print (init+data[:-1]+'\x1b[0m')
 
 
 if __name__ == '__main__':

@@ -28,10 +28,10 @@ def make_label(text, filename, size=12, angle=0):
     face = Face(filename)
     face.set_char_size( size*64 )
     angle = (angle/180.0)*math.pi
-    matrix  = FT_Matrix( (int)( math.cos( angle ) * 0x10000L ),
-                         (int)(-math.sin( angle ) * 0x10000L ),
-                         (int)( math.sin( angle ) * 0x10000L ),
-                         (int)( math.cos( angle ) * 0x10000L ))
+    matrix  = FT_Matrix( (int)( math.cos( angle ) * 0x10000 ),
+                         (int)(-math.sin( angle ) * 0x10000 ),
+                         (int)( math.sin( angle ) * 0x10000 ),
+                         (int)( math.cos( angle ) * 0x10000 ))
     flags = FT_LOAD_RENDER
     pen = FT_Vector(0,0)
     FT_Set_Transform( face._FT_Face, byref(matrix), byref(pen) )
@@ -127,7 +127,7 @@ if __name__ == '__main__':
                     I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,2] |= (c * L).astype(int)
                     break
 
-    print "Number of fails:", fails
+    print ("Number of fails: {}".format(fails))
     fig = plt.figure(figsize=(W/dpi,H/dpi), dpi=dpi)
     ax = fig.add_axes([0,0,1,1], frameon=False)
     ax.imshow(I, interpolation='nearest', cmap=plt.cm.gray, origin='upper')

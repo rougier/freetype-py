@@ -8,7 +8,7 @@
 # -----------------------------------------------------------------------------
 from freetype import *
 import numpy as np
-import Image
+from PIL import Image
 
 
 def render(filename = "Vera.ttf", hinting = (False,False), gamma = 1.5, lcd=False):
@@ -32,8 +32,8 @@ def render(filename = "Vera.ttf", hinting = (False,False), gamma = 1.5, lcd=Fals
 
     for size in range(9,23):
         face.set_char_size( size * 64, 0, hres, 72 )
-        matrix = Matrix( int((hscale) * 0x10000L), int((0.0) * 0x10000L),
-                         int((0.0)    * 0x10000L), int((1.0) * 0x10000L) )
+        matrix = Matrix( int((hscale) * 0x10000), int((0.0) * 0x10000),
+                         int((0.0)    * 0x10000), int((1.0) * 0x10000) )
         previous = 0
         pen.x = 5*64
         for current in text:

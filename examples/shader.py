@@ -80,7 +80,7 @@ class Shader:
         # if compilation failed, print the log
         if not status:
             # display the log
-            print gl.glGetShaderInfoLog(shader)
+            print (gl.glGetShaderInfoLog(shader))
         else:
             # all is well, so attach the shader to the program
             gl.glAttachShader(self.handle, shader)
@@ -103,7 +103,7 @@ class Shader:
             # retrieve the log text
             log = gl.glGetProgramInfoLog(self.handle) #, temp, None, buffer)
             # print the log to the console
-            print log
+            print (log)
         else:
             # all is well, so we are linked
             self.linked = True
