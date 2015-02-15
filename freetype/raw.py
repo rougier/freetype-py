@@ -174,7 +174,7 @@ FT_Get_CMap_Format     = _def_func('FT_Get_CMap_Format', FT_Long, (FT_CharMap,))
 ##### FT_WINFONTS_H #####
 
 ##### FT_GLYPH_H #####
-FT_Get_Glyph           = _def_func('FT_Get_Glyph', FT_Error, (FT_Glyph, POINTER(FT_Glyph)))
+FT_Get_Glyph           = _def_func('FT_Get_Glyph', FT_Error, (FT_GlyphSlot, POINTER(FT_Glyph)))
 # FT_Glyph_Copy
 # FT_Glyph_Transform
 FT_Glyph_Get_CBox      = _def_func('FT_Glyph_Get_CBox', None, (FT_Glyph, FT_UInt, POINTER(FT_BBox)))
