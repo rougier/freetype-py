@@ -24,40 +24,50 @@ from freetype.raw import *
 PY3 = sys.version_info[0] == 3
 if PY3: unicode = str
 
-__handle__ = None
+_handle = None
 
 
 FT_Library_filename = filename
+
+class _FT_Library_Wrapper(FT_Library):
+    '''Subclass of FT_Library to help with calling FT_Done_FreeType'''
+    # for some reason this doesn't get carried over and ctypes complains
+    _type_ = FT_Library._type_
+
+    # Store ref to FT_Done_FreeType otherwise it will be deleted before needed.
+    _ft_done_freetype = FT_Done_FreeType
+
+    def __del__(self):
+        # call FT_Done_FreeType
+        self._ft_done_freetype(self)
+
+def _init_freetype():
+    global _handle
+
+    _handle = _FT_Library_Wrapper()
+    error = FT_Init_FreeType( byref(_handle) )
+
+    if error: raise FT_Exception(error)
+
+    try:
+        set_lcd_filter( FT_LCD_FILTER_DEFAULT )
+    except:
+        pass
 
 # -----------------------------------------------------------------------------
 # High-level API of FreeType 2
 # -----------------------------------------------------------------------------
 
-def __del_library__(self):
-    global __handle__
-    if __handle__:
-        try:
-            FT_Done_FreeType(self)
-            __handle__ = None
-        except:
-            pass
-FT_Library.__del__ = __del_library__
 
 def get_handle():
     '''
     Get unique FT_Library handle
     '''
-    global __handle__
-    if not __handle__:
-        __handle__ = FT_Library( )
-        error = FT_Init_FreeType( byref(__handle__) )
-        if error: raise FT_Exception(error)
-        try:
-            set_lcd_filter( FT_LCD_FILTER_DEFAULT )
-        except:
-            pass
-        if error: raise FT_Exception(error)
-    return __handle__
+
+    if not _handle:
+        _init_freetype()
+
+    return _handle
 
 def version():
     '''
