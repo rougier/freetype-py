@@ -19,114 +19,7 @@ from freetype.ft_enums import *
 from freetype.ft_errors import *
 from freetype.ft_structs import *
 
-# on windows all ctypes does when checking for the library
-# is to append .dll to the end and look for an exact match
-# within any entry in PATH.
-filename = ctypes.util.find_library('freetype')
-
-osName = platform.system()
-
-if filename is None:
-    if osName == 'Windows':
-        # Check current working directory for dll as ctypes fails to do so
-        filename = os.path.join(os.path.realpath('.'), 'freetype.dll')
-    else:
-        filename = 'libfreetype.so.6'
-
-try:
-    _lib = ctypes.CDLL(filename)
-except (OSError, TypeError):
-    _lib = None
-    raise RuntimeError('Freetype library not found')
-
-
-if osName == 'Windows':
-    _funcType = WINFUNCTYPE
-else: # Linux and OS X
-    _funcType = CFUNCTYPE
-
-_version = None
-
-def _get_ft_version():
-
-    handle = FT_Library()
-    FT_Init_FreeType(byref(handle))
-    major = FT_Int(0)
-    minor = FT_Int(0)
-    patch = FT_Int(0)
-
-    FT_Library_Version(handle, byref(major), byref(minor), byref(patch))
-
-    FT_Done_FreeType(handle)
-
-    return (major.value, minor.value, patch.value)
-
-class _FTUndefinedFunction(object):
-    def __init__(self, name, version):
-        self.name = name
-        self.version = version
-
-    def __call__(self, *args, **kwargs):
-        reqStr = '.'.join(map(str, self.version))
-        verStr = '.'.join(map(str, _version))
-
-        message = 'The function {0} is not implemented in Freetype {1}' \
-                ', Freetype {2} or above is required.'.format(self.name,
-                verStr, reqStr)
-
-        warnings.simplefilter("always")
-        warnings.warn(message)
-        warnings.simplefilter("default")
-
-def _ft_func(name, returnType, paramTypes, version=None):
-    '''
-    Define function for the freetype library
-
-    Version requirements can be set on functions which will
-    emit a warning for older freetype versions.
-    '''
-    global _version
-
-    if version is not None:
-        if _version is None:
-            _version = _get_ft_version()
-
-        if not _version >= version:
-            verStr = '.'.join(map(str, _version))
-
-            message = 'FreeType {} installed, newer functionallity will ' \
-                    'not be available.'.format(verStr)
-
-            warnings.warn(message)
-            return _FTUndefinedFunction(name, version)
-
-    try:
-        address = getattr(_lib, name)
-        function = _funcType(returnType, *paramTypes)
-
-    except AttributeError:
-        raise AttributeError('{}: Function not found.'.format(name))
-
-    return cast(address, function)
-
-
-# functions needed to do version checking on the freetype library.
-# Need to be defined before any function requireing a specific version.
-FT_Init_FreeType    = _ft_func(
-        'FT_Init_FreeType',
-         FT_Error,
-        (POINTER(FT_Library),))
-
-FT_Done_FreeType    = _ft_func(
-        'FT_Done_FreeType',
-         FT_Error,
-        (FT_Library,))
-
-FT_Library_Version  = _ft_func(
-        'FT_Library_Version',
-         None,
-        (FT_Library, POINTER(FT_Int), POINTER(FT_Int), POINTER(FT_Int)))
-
+from freetype.utils import _ft_func
 
 ####### Functions/Macros ######
 
@@ -152,8 +45,17 @@ FT_Library_Version  = _ft_func(
 # FT_IS_TRICKY
 # FT_HAS_COLOR
 #end macros
-# FT_Init_FreeType                    # defined earlier for version checking.
-# FT_Done_FreeType                    # defined earlier for version checking.
+
+FT_Init_FreeType    = _ft_func(
+        'FT_Init_FreeType',
+         FT_Error,
+        (POINTER(FT_Library),))
+
+FT_Done_FreeType    = _ft_func(
+        'FT_Done_FreeType',
+         FT_Error,
+        (FT_Library,))
+
 FT_New_Face            = _ft_func(
         'FT_New_Face',
         FT_Error,
@@ -309,7 +211,12 @@ FT_Get_FSType_Flags    = _ft_func(
 # FT_CeilFix
 # FT_FloorFix
 # FT_Vector_Transform
-# FT_Library_Version                    # defined earlier for version checking.
+
+FT_Library_Version  = _ft_func(
+        'FT_Library_Version',
+         None,
+        (FT_Library, POINTER(FT_Int), POINTER(FT_Int), POINTER(FT_Int)))
+
 # FT_Face_CheckTrueTypePatents # 2.3.5+
 # FT_Face_SetUnpatentedHinting # 2.3.5+
 

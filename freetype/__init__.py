@@ -27,8 +27,6 @@ if PY3: unicode = str
 _handle = None
 
 
-FT_Library_filename = filename
-
 class _FT_Library_Wrapper(FT_Library):
     '''Subclass of FT_Library to help with calling FT_Done_FreeType'''
     # for some reason this doesn't get carried over and ctypes complains
