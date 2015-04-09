@@ -1110,6 +1110,24 @@ class Face( object ):
             charcode = ord(charcode)
         return FT_Get_Char_Index( self._FT_Face, charcode )
 
+    def get_glyph_name(self, agindex, buffer_max=64):
+        '''
+        This function is used to return the glyph name for the given charcode.
+
+        :param agindex: The glyph index.
+
+        :param buffer_max: The maximum number of bytes to use to store the
+            glyph name.
+
+        :param glyph_name: The glyph name, possibly truncated.
+
+        '''
+        buff = create_string_buffer(buffer_max)
+        error = FT_Get_Glyph_Name(self._FT_Face, FT_UInt(agindex), byref(buff),
+                                  FT_UInt(buffer_max))
+        if error: raise FT_Exception(error)
+        return buff.value
+
     def get_first_char( self ):
         '''
         This function is used to return the first character code in the current
