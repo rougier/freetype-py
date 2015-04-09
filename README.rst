@@ -91,3 +91,4 @@ Contributors
 * Matthew Sitton (bug report & fix)
 * Tao Gong (bug report)
 * Matthew Sitton (Remove raw interfaces from the __init__.py file)
+* Daniel McCloy (Adde glyph_name function)
