@@ -8,7 +8,7 @@ Freetype raw API
 
 This is the raw ctypes freetype binding.
 '''
-import sys,os
+import sys,os,glob
 import platform
 from ctypes import *
 import ctypes.util
@@ -21,25 +21,43 @@ from freetype.ft_structs import *
 # on windows all ctypes does when checking for the library
 # is to append .dll to the end and look for an exact match
 # within any entry in PATH.
-found = ctypes.util.find_library('freetype')
-filepath,filename = (None,None) if not found else os.path.split(found)
 
-if filename is None:
-    if platform.system() == 'Windows':
-        # Check current working directory for dll as ctypes fails to do so
-        filepath = os.path.realpath('.')
-        filename = 'freetype.dll'
-    else:
-        filepath = ''
-        filename = 'libfreetype.so.6'
-    if not os.path.exists(os.path.join(filepath,filename)): filepath=None
+def win_find_library(name):
+        if name in ('c', 'm'):
+            return find_msvcrt()
+        # See MSDN for the REAL search order.
+        for directory in os.environ['PATH'].split(os.pathsep):
+            #fname = os.path.join(directory, name)
+            if name.endswith(".dll"):
+                fname = glob.glob( os.path.sep.join((directory,'*%s'%name)))
+            else:
+                fname = glob.glob( os.path.sep.join((directory,'*%s*.dll'%name )))
+                
+            if len(fname):
+                fname = fname[0]
+                if os.path.isfile(fname):
+                    return fname
+            continue
+        return ''
 
-    if filepath is None:
-        for path in sys.path:
-            if os.path.exists(os.path.join(path,filename)): filepath=path; break
-            
-    if filepath is None:
-        raise RuntimeError('Freetype library not found')
+if platform.system() == 'Windows': # add CWD to the search path
+    CWD = os.path.realpath('.')
+    if CWD not in os.environ['PATH']:
+        os.environ['PATH'] = os.pathsep.join((os.environ['PATH'],CWD))
+
+# add local DLLS directory to the search path (last ditch fail-safe)
+DLL_directory = os.path.sep.join((os.path.dirname(__file__), 'DLLS'))
+os.environ['PATH'] = os.pathsep.join((os.environ['PATH'],DLL_directory))
+
+if platform.system() == 'Windows':
+    found = win_find_library('freetype')
+else:
+    found = ctypes.util.find_library('freetype')
+
+if not found:
+    raise RuntimeError('Freetype library not found')
+
+filepath,filename = os.path.split(found)
 
 try:
     lastcwd = os.getcwd()
