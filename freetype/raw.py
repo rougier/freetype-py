@@ -8,7 +8,7 @@ Freetype raw API
 
 This is the raw ctypes freetype binding.
 '''
-import os
+import sys,os
 import platform
 from ctypes import *
 import ctypes.util
@@ -21,20 +21,34 @@ from freetype.ft_structs import *
 # on windows all ctypes does when checking for the library
 # is to append .dll to the end and look for an exact match
 # within any entry in PATH.
-filename = ctypes.util.find_library('freetype')
+found = ctypes.util.find_library('freetype')
+filepath,filename = (None,None) if not found else os.path.split(found)
 
 if filename is None:
     if platform.system() == 'Windows':
         # Check current working directory for dll as ctypes fails to do so
-        filename = os.path.join(os.path.realpath('.'), 'freetype.dll')
+        filepath = os.path.realpath('.')
+        filename = 'freetype.dll'
     else:
+        filepath = ''
         filename = 'libfreetype.so.6'
+    if not os.path.exists(os.path.join(filepath,filename)): filepath=None
+
+    if filepath is None:
+        for path in sys.path:
+            if os.path.exists(os.path.join(path,filename)): filepath=path; break
+            
+    if filepath is None:
+        raise RuntimeError('Freetype library not found')
 
 try:
-    _lib = ctypes.CDLL(filename)
+    lastcwd = os.getcwd()
+    os.chdir(filepath) # this method succeeds LoadLibrary(os.path.join(filepath,filename)) fails.
+    _lib = ctypes.cdll.LoadLibrary(filename)
+    os.chdir(lastcwd)
 except (OSError, TypeError):
     _lib = None
-    raise RuntimeError('Freetype library not found')
+    raise RuntimeError('Freetype library dependences not installed')
 
 FT_Init_FreeType       = _lib.FT_Init_FreeType
 FT_Done_FreeType       = _lib.FT_Done_FreeType
@@ -102,8 +116,8 @@ FT_Get_X11_Font_Format.restype = c_char_p
 
 FT_Get_Sfnt_Name_Count = _lib.FT_Get_Sfnt_Name_Count
 FT_Get_Sfnt_Name       = _lib.FT_Get_Sfnt_Name
-FT_Get_Advance         = _lib.FT_Get_Advance
-
+try: FT_Get_Advance         = _lib.FT_Get_Advance
+except: pass
 
 FT_Outline_GetInsideBorder  = _lib.FT_Outline_GetInsideBorder
 FT_Outline_GetOutsideBorder = _lib.FT_Outline_GetOutsideBorder
