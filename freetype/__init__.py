@@ -962,24 +962,32 @@ class Face( object ):
                The index of the face within the font.
                The first face has index 0.
         '''
+        with open(filename, mode='rb') as f:
+            filebody = f.read()
+        self._init(filebody, index)
+
+    def _init(self, filebody, index):
         library = get_handle( )
         face = FT_Face( )
         self._FT_Face = None
         #error = FT_New_Face( library, filename, 0, byref(face) )
         self._filebodys = []
-        try:
-            u_filename = c_char_p(_encode_filename(filename))
-            error = FT_New_Face( library, u_filename, index, byref(face) )
-        except UnicodeError:
-            with open(filename, mode='rb') as f:
-                filebody = f.read()
-            error = FT_New_Memory_Face( library, filebody, len(filebody),
-                                        index, byref(face) )
-            self._filebodys.append(filebody)  # prevent gc
+        error = FT_New_Memory_Face( library, filebody, len(filebody),
+                                    index, byref(face) )
+        self._filebodys.append(filebody)  # prevent gc
         if error: raise FT_Exception( error )
         self._filename = filename
         self._index = index
         self._FT_Face = face
+
+    @classmethod
+    def from_memory(cls, filebody, index=0):
+        '''
+        Construct a Face object from memory rather than from filename.
+        '''
+        t = cls.__new__(cls)
+        t._init(filebody, index)
+        return t
 
     def __del__( self ):
         '''
