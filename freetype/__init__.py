@@ -21,8 +21,10 @@ from ctypes import *
 from freetype.raw import *
 
 # Hack to get unicode class in python3
-PY3 = sys.version_info[0] == 3
-if PY3: unicode = str
+try:
+    unicode
+except:
+    unicode = str
 
 _handle = None
 
