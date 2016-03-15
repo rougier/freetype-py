@@ -985,7 +985,7 @@ class Face( object ):
             # fileOrData is filebody
             error = FT_New_Memory_Face( library, fileOrData, len(fileOrData),
                                         index, byref(face) )
-            self._filebodys.append(filebody)  # prevent gc
+            self._filebodys.append(fileOrData)  # prevent gc
         if error: raise FT_Exception( error )
         self._filename = filename
         self._index = index
