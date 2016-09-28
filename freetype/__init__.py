@@ -39,7 +39,10 @@ class _FT_Library_Wrapper(FT_Library):
 
     def __del__(self):
         # call FT_Done_FreeType
-        self._ft_done_freetype(self)
+        # This does not work properly (seg fault on sime system (OSX))
+        # self._ft_done_freetype(self)
+        pass
+    
 
 def _init_freetype():
     global _handle
@@ -778,7 +781,7 @@ class Glyph( object ):
           FT_GLYPH_BBOX_PIXELS.
         '''
         bbox = FT_BBox()
-        error = FT_Glyph_Get_CBox(byref(self._FT_Glyph), bbox_mode,byref(bbox))
+        error = FT_Glyph_Get_CBox(byref(self._FT_Glyph), bbox_mode, byref(bbox))
         if error: raise FT_Exception(error)
         return BBox(bbox)
 

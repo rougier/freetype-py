@@ -122,9 +122,9 @@ if __name__ == '__main__':
                     fails += 1
                     break
                 if (I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,0] * L).sum() == 0:
-                    I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,0] |= (c * L).astype(int)
-                    I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,1] |= (c * L).astype(int)
-                    I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,2] |= (c * L).astype(int)
+                    I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,0] |= (c * L).astype('ubyte')
+                    I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,1] |= (c * L).astype('ubyte')
+                    I[y-h//2:y-h//2+h, x-w//2:x-w//2+w,2] |= (c * L).astype('ubyte')
                     break
 
     print ("Number of fails: {}".format(fails))
