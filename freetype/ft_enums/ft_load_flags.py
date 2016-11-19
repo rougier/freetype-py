@@ -133,6 +133,15 @@ FT_LOAD_LINEAR_DESIGN
 FT_LOAD_NO_AUTOHINT
 
   Disable auto-hinter. See also the note below.
+
+
+FT_LOAD_COLOR
+
+ This flag is used to request loading of color embedded-bitmap images. The 
+ resulting color bitmaps, if available, will have the FT_PIXEL_MODE_BGRA 
+ format. When the flag is not used and color bitmaps are found, they will be
+ converted to 256-level gray bitmaps transparently. Those bitmaps will be in
+ the FT_PIXEL_MODE_GRAY format.
 """
 
 FT_LOAD_FLAGS = { 'FT_LOAD_DEFAULT'                      : 0x0,
@@ -149,5 +158,6 @@ FT_LOAD_FLAGS = { 'FT_LOAD_DEFAULT'                      : 0x0,
                   'FT_LOAD_IGNORE_TRANSFORM'             : 0x800,
                   'FT_LOAD_MONOCHROME'                   : 0x1000,
                   'FT_LOAD_LINEAR_DESIGN'                : 0x2000,
-                  'FT_LOAD_NO_AUTOHINT'                  : 0x8000 }
+                  'FT_LOAD_NO_AUTOHINT'                  : 0x8000,
+                  'FT_LOAD_COLOR'                        : 0x100000 }
 globals().update(FT_LOAD_FLAGS)
