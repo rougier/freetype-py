@@ -28,7 +28,7 @@ FT_Generic: Client applications generic data.
 
 FT_Bitmap_Size: Metrics of a bitmap strike.
 
-FT_Charmap: The base charmap structure.
+FT_CharMap: The base charmap structure.
 
 FT_Glyph_Metrics:A structure used to model the metrics of a single glyph.
 
@@ -57,6 +57,8 @@ FT_SfntName: A structure used to model an SFNT 'name' table entry.
 FT_Stroker: Opaque handler to a path stroker object.
 
 FT_BitmapGlyph: A structure used for bitmap glyph images.
+
+FT_Size_Request: A structure used to model a size request.
 '''
 from freetype.ft_types import *
 
@@ -319,14 +321,31 @@ class FT_Bitmap_Size(Structure):
 
 # -----------------------------------------------------------------------------
 # The base charmap structure.
-class FT_CharmapRec(Structure):
+class FT_CharMapRec(Structure):
     '''
     The base charmap structure.
 
-    face : A handle to the parent face object.
+    A charmap is used to translate character codes in a given encoding into
+    glyph indexes for its parent's face. Some font formats may provide several
+    charmaps per font.
 
-    encoding : An FT_Encoding tag identifying the charmap. Use this with
-               FT_Select_Charmap.
+    Each face object owns zero or more charmaps, but only one of them can be
+    'active' and used by FT_Get_Char_Index or FT_Load_Char.
+
+    The list of available charmaps in a face is available through the
+    'face.num_charmaps' and 'face.charmaps' fields of FT_FaceRec.
+
+    The currently active charmap is available as 'face.charmap'. You should
+    call FT_Set_Charmap to change it.
+
+    When a new face is created (either through FT_New_Face or FT_Open_Face),
+    the library looks for a Unicode charmap within the list and automatically
+    activates it.
+
+    face: A handle to the parent face object.
+
+    encoding: An FT_Encoding tag identifying the charmap. Use this with
+              FT_Select_Charmap.
 
     platform_id: An ID number describing the platform for the following
                  encoding ID. This comes directly from the TrueType
@@ -335,13 +354,8 @@ class FT_CharmapRec(Structure):
     encoding_id: A platform specific encoding number. This also comes from the
                  TrueType specification and should be emulated similarly.
     '''
-    _fields_ = [
-        ('face',        c_void_p),  # Shoudl be FT_Face
-        ('encoding',    FT_Encoding),
-        ('platform_id', FT_UShort),
-        ('encoding_id', FT_UShort),
-        ]
-FT_Charmap = POINTER(FT_CharmapRec)
+    pass
+FT_CharMap = POINTER(FT_CharMapRec)
 
 
 
@@ -785,7 +799,7 @@ class FT_FaceRec(Structure):
           ('available_sizes', POINTER(FT_Bitmap_Size)),
 
           ('num_charmaps', c_int),
-          ('charmaps',     POINTER(FT_Charmap)),
+          ('charmaps',     POINTER(FT_CharMap)),
 
           ('generic', FT_Generic),
 
@@ -807,7 +821,7 @@ class FT_FaceRec(Structure):
 
           ('glyph',   FT_GlyphSlot),
           ('size',    FT_Size),
-          ('charmap', FT_Charmap),
+          ('charmap', FT_CharMap),
 
           # private
           ('driver',          c_void_p),
@@ -821,7 +835,13 @@ class FT_FaceRec(Structure):
     ]
 FT_Face = POINTER(FT_FaceRec)
 
-
+# fill out fields for FT_CharMapRec.
+FT_CharMapRec._fields_ = [
+    ('face', FT_Face),
+    ('encoding', FT_Encoding),
+    ('platform_id', FT_UShort),
+    ('encoding_id', FT_UShort)
+]
 
 # -----------------------------------------------------------------------------
 # A simple structure used to pass more or less generic parameters to
@@ -942,3 +962,28 @@ class FT_BitmapGlyphRec(Structure):
         ('bitmap', FT_Bitmap)
     ]
 FT_BitmapGlyph = POINTER(FT_BitmapGlyphRec)
+
+class FT_Size_RequestRec(Structure):
+    '''
+    A structure used to model a size request.
+
+    type: See FT_Size_Request_Type.
+
+    width: The desired width.
+
+    height: The desired height.
+
+    horiResolution: The horizontal resolution.  If set to zero, 'width' is
+                    treated as a 26.6 fractional pixel value.
+
+    vertResolution: The vertical resolution.  If set to zero, 'height' is
+                    treated as a 26.6 fractional pixel value.
+    '''
+    _fields_ = [
+        ('type', FT_Size_Request_Type),
+        ('width', FT_Long),
+        ('height', FT_Long),
+        ('horiResolution', FT_UInt),
+        ('vertResolution', FT_UInt)
+    ]
+FT_Size_Request = POINTER(FT_Size_RequestRec)

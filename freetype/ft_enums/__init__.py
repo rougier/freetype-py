@@ -109,6 +109,7 @@ from freetype.ft_enums.ft_render_modes import *
 from freetype.ft_enums.ft_stroker_borders import *
 from freetype.ft_enums.ft_stroker_linecaps import *
 from freetype.ft_enums.ft_stroker_linejoins import *
+from freetype.ft_enums.ft_size_request import *
 from freetype.ft_enums.ft_style_flags import *
 from freetype.ft_enums.tt_adobe_ids import *
 from freetype.ft_enums.tt_apple_ids import *
