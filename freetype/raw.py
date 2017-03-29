@@ -126,3 +126,11 @@ FT_Stroker_Done             = _lib.FT_Stroker_Done
 FT_Glyph_Stroke             = _lib.FT_Glyph_Stroke
 FT_Glyph_StrokeBorder       = _lib.FT_Glyph_StrokeBorder
 FT_Glyph_To_Bitmap          = _lib.FT_Glyph_To_Bitmap
+
+
+# FT_Property_Get/FT_Property_Set requires FreeType 2.7.x+
+try:
+    FT_Property_Get    = _lib.FT_Property_Get
+    FT_Property_Set    = _lib.FT_Property_Set
+except AttributeError:
+    pass
