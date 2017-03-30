@@ -137,11 +137,28 @@ FT_LOAD_NO_AUTOHINT
 
 FT_LOAD_COLOR
 
- This flag is used to request loading of color embedded-bitmap images. The 
- resulting color bitmaps, if available, will have the FT_PIXEL_MODE_BGRA 
- format. When the flag is not used and color bitmaps are found, they will be
- converted to 256-level gray bitmaps transparently. Those bitmaps will be in
- the FT_PIXEL_MODE_GRAY format.
+  This flag is used to request loading of color embedded-bitmap images. The
+  resulting color bitmaps, if available, will have the FT_PIXEL_MODE_BGRA
+  format. When the flag is not used and color bitmaps are found, they will be
+  converted to 256-level gray bitmaps transparently. Those bitmaps will be in
+  the FT_PIXEL_MODE_GRAY format.
+
+
+FT_LOAD_COMPUTE_METRICS
+  Compute glyph metrics from the glyph data, without the use of bundled metrics
+  tables (for example, the `hdmx' table in TrueType fonts).  This flag is
+  mainly used by font validating or font editing applications, which need to
+  ignore, verify, or edit those tables.
+
+  Currently, this flag is only implemented for TrueType fonts.
+
+
+FT_LOAD_BITMAP_METRICS_ONLY
+  Request loading of the metrics and bitmap image information of a (possibly
+  embedded) bitmap glyph without allocating or copying the bitmap image data
+  itself.  No effect if the target glyph is not a bitmap image.
+
+  This flag unsets FT_LOAD_RENDER.
 """
 
 FT_LOAD_FLAGS = { 'FT_LOAD_DEFAULT'                      : 0x0,
@@ -159,5 +176,7 @@ FT_LOAD_FLAGS = { 'FT_LOAD_DEFAULT'                      : 0x0,
                   'FT_LOAD_MONOCHROME'                   : 0x1000,
                   'FT_LOAD_LINEAR_DESIGN'                : 0x2000,
                   'FT_LOAD_NO_AUTOHINT'                  : 0x8000,
-                  'FT_LOAD_COLOR'                        : 0x100000 }
+                  'FT_LOAD_COLOR'                        : 0x100000,
+                  'FT_LOAD_COMPUTE_METRICS'              : 0x200000,
+                  'FT_LOAD_BITMAP_METRICS_ONLY'          : 0x400000 }
 globals().update(FT_LOAD_FLAGS)
