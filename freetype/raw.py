@@ -59,7 +59,7 @@ FT_Attach_Stream       = _lib.FT_Attach_Stream
 try:
     FT_Reference_Face      = _lib.FT_Reference_Face
 except AttributeError:
-	pass
+    pass
 
 FT_Done_Face           = _lib.FT_Done_Face
 FT_Done_Glyph          = _lib.FT_Done_Glyph
@@ -99,7 +99,7 @@ try:
     FT_Get_FSType_Flags    = _lib.FT_Get_FSType_Flags
     FT_Get_FSType_Flags.restype  = c_ushort
 except AttributeError:
-	pass
+    pass
 
 FT_Get_X11_Font_Format = _lib.FT_Get_X11_Font_Format
 FT_Get_X11_Font_Format.restype = c_char_p
