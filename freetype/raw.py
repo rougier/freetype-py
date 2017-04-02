@@ -143,6 +143,13 @@ try:
 except AttributeError:
     pass
 
+# These two are only found when TT debugger is enabled
+try:
+    TT_New_Context     = _lib.TT_New_Context
+    TT_RunIns          = _lib.TT_RunIns
+except AttributeError:
+    pass
+
 
 # Wholesale import of 102 routines which can be reasonably expected
 # to be found in freetype 2.2.x onwards. Some of these might need
