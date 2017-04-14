@@ -712,6 +712,9 @@ class Glyph( object ):
                        before rendering. Can be 0 (if no translation). The origin is
                        expressed in 26.6 pixels.
 
+                       We also detect a plain vector and make a pointer out of it,
+                       if that's the case.
+
         :param destroy: A boolean that indicates that the original glyph image
                         should be destroyed by this function. It is never destroyed
                         in case of error.
@@ -727,8 +730,13 @@ class Glyph( object ):
           replaced by this function (with newly allocated data). Typically, you
           would use (omitting error handling):
         '''
-        error = FT_Glyph_To_Bitmap( byref(self._FT_Glyph),
-                                    mode, origin, destroy)
+        if ( type(origin) == FT_Vector ):
+            error = FT_Glyph_To_Bitmap( byref(self._FT_Glyph),
+                                        mode, byref(origin), destroy )
+        else:
+            error = FT_Glyph_To_Bitmap( byref(self._FT_Glyph),
+                                        mode, origin, destroy )
+
         if error: raise FT_Exception( error )
         return BitmapGlyph( self._FT_Glyph )
 
