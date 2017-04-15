@@ -1291,8 +1291,16 @@ class Face( object ):
           This function simply calls FT_Get_Char_Index and FT_Load_Glyph.
         '''
 
-        if len(char) == 1:
+        # python 2 with ascii input
+        if ( isinstance(char, str) and ( len(char) == 1 ) ):
             char = ord(char)
+        # python 2 with utf8 string input
+        if ( isinstance(char, str) and ( len(char) != 1 ) ):
+            char = ord(char.decode('utf8'))
+        # python 3 or python 2 with __future__.unicode_literals
+        if ( isinstance(char, unicode) and ( len(char) == 1 ) ):
+            char = ord(char)
+        # allow bare integer to pass through
         error = FT_Load_Char( self._FT_Face, char, flags )
         if error: raise FT_Exception( error )
 
