@@ -8,7 +8,7 @@ Freetype raw API
 
 This is the raw ctypes freetype binding.
 '''
-import os
+import sys,os,glob
 import platform
 from ctypes import *
 import ctypes.util
@@ -21,20 +21,52 @@ from freetype.ft_structs import *
 # on windows all ctypes does when checking for the library
 # is to append .dll to the end and look for an exact match
 # within any entry in PATH.
-filename = ctypes.util.find_library('freetype')
 
-if filename is None:
-    if platform.system() == 'Windows':
-        # Check current working directory for dll as ctypes fails to do so
-        filename = os.path.join(os.path.realpath('.'), 'freetype.dll')
-    else:
-        filename = 'libfreetype.so.6'
+def win_find_library(name):
+        if name in ('c', 'm'):
+            return find_msvcrt()
+        # See MSDN for the REAL search order.
+        for directory in os.environ['PATH'].split(os.pathsep):
+            #fname = os.path.join(directory, name)
+            if name.endswith(".dll"):
+                fname = glob.glob( os.path.sep.join((directory,'*%s'%name)))
+            else:
+                fname = glob.glob( os.path.sep.join((directory,'*%s*.dll'%name )))
+                
+            if len(fname):
+                fname = fname[0]
+                if os.path.isfile(fname):
+                    return fname
+            continue
+        return ''
+
+if platform.system() == 'Windows': # add CWD to the search path
+    CWD = os.path.realpath('.')
+    if CWD not in os.environ['PATH']:
+        os.environ['PATH'] = os.pathsep.join((os.environ['PATH'],CWD))
+
+# add local DLLS directory to the search path (last ditch fail-safe)
+DLL_directory = os.path.sep.join((os.path.dirname(__file__), 'DLLS'))
+os.environ['PATH'] = os.pathsep.join((os.environ['PATH'],DLL_directory))
+
+if platform.system() == 'Windows':
+    found = win_find_library('freetype')
+else:
+    found = ctypes.util.find_library('freetype')
+
+if not found:
+    raise RuntimeError('Freetype library not found')
+
+filepath,filename = os.path.split(found)
 
 try:
-    _lib = ctypes.CDLL(filename)
+    lastcwd = os.getcwd()
+    os.chdir(filepath) # this method succeeds LoadLibrary(os.path.join(filepath,filename)) fails.
+    _lib = ctypes.cdll.LoadLibrary(filename)
+    os.chdir(lastcwd)
 except (OSError, TypeError):
     _lib = None
-    raise RuntimeError('Freetype library not found')
+    raise RuntimeError('Freetype library dependences not installed')
 
 FT_Init_FreeType       = _lib.FT_Init_FreeType
 FT_Done_FreeType       = _lib.FT_Done_FreeType
@@ -102,8 +134,8 @@ FT_Get_X11_Font_Format.restype = c_char_p
 
 FT_Get_Sfnt_Name_Count = _lib.FT_Get_Sfnt_Name_Count
 FT_Get_Sfnt_Name       = _lib.FT_Get_Sfnt_Name
-FT_Get_Advance         = _lib.FT_Get_Advance
-
+try: FT_Get_Advance         = _lib.FT_Get_Advance
+except: pass
 
 FT_Outline_GetInsideBorder  = _lib.FT_Outline_GetInsideBorder
 FT_Outline_GetOutsideBorder = _lib.FT_Outline_GetOutsideBorder
