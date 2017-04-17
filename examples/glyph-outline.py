@@ -23,8 +23,8 @@ if __name__ == '__main__':
     glyph = slot.get_glyph()
     stroker = Stroker( )
     stroker.set(64, FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0 )
-    glyph.stroke( stroker )
-    blyph = glyph.to_bitmap(FT_RENDER_MODE_NORMAL, Vector(0,0))
+    glyph.stroke( stroker , True )
+    blyph = glyph.to_bitmap(FT_RENDER_MODE_NORMAL, Vector(0,0), True )
     bitmap = blyph.bitmap
     width, rows, pitch = bitmap.width, bitmap.rows, bitmap.pitch
     top, left = blyph.top, blyph.left

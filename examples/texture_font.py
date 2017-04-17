@@ -261,7 +261,10 @@ class TextureFont:
         self.height    = metrics.height/64.0
         self.linegap   = self.height - self.ascender + self.descender
         self.depth = atlas.depth
-        set_lcd_filter(FT_LCD_FILTER_LIGHT)
+        try:
+            set_lcd_filter(FT_LCD_FILTER_LIGHT)
+        except:
+            pass
 
 
     def __getitem__(self, charcode):
