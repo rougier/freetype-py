@@ -167,9 +167,8 @@ if __name__ == '__main__':
                     scalematrix.scale(1.0,1.0)
                     scalematrix.translate(w//2 - x, h//2 - y)
                     pattern.set_matrix(scalematrix)
-                    ctxI.mask(pattern)
                     ctxI.set_source_rgba(c,c,c,c)
-                    ctxI.fill()
+                    ctxI.mask(pattern)
                     drawn_regions.union(new_region)
                     break
     I.flush()
