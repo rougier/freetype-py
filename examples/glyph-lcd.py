@@ -7,7 +7,7 @@
 #
 # -----------------------------------------------------------------------------
 '''
-Glyph bitmap monochrome rendring
+Glyph bitmap LCD display (sub-pixel) rendering
 '''
 from freetype import *
 
