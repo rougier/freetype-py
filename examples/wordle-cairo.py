@@ -10,6 +10,7 @@
 #
 #  This example behaves differently under pycairo 1.11+ (released in 2017-04-09).
 #  Auto-checked. On older pycairo, it does not draw partial patterns at the edges.
+#  Also, Suface.get_data() is not in the "python 3, pycairo < 1.11" combination.
 #
 # -----------------------------------------------------------------------------
 from math import cos, sin
