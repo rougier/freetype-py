@@ -5,6 +5,12 @@
 #  FreeType high-level python API - Copyright 2011 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 #
+#  - The code is strickly speaking not optimal, as it ignores the 3rd order
+#    bezier curve bit and always intepolate between off-curve points.
+#    This is only correct for truetype fonts (which only use 2nd order bezier curves).
+#  - Also it seems to assume the first point is always on curve; this is
+#    unusual but legal.
+#
 # -----------------------------------------------------------------------------
 '''
 Show how to access glyph outline description.
