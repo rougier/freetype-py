@@ -14,6 +14,8 @@ Usage:
 
 Works with cairocffi too. (Replace "from cairo ..." with "from cairocffi ...")
 
+Limitation: Surface.create_for_data is not in the "python 3, pycairo < 1.11" combo.
+
 This is a heavily modified copy of a few routines from Lawrence D'Oliveiro[1],
 adjusted for freetype-py, and bugfix/workaround for mono-rendering [2].
 
