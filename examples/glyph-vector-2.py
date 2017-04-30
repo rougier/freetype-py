@@ -94,5 +94,5 @@ if __name__ == '__main__':
     axis.set_xlim(x.min(), x.max())
     axis.set_ylim(y.min(), y.max())
 
-    plt.savefig('test.svg')
+    plt.savefig('glyph-vector-2.svg')
     plt.show()
