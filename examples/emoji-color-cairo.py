@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 #  pycairo/cairocffi-based emoji-color example - Copyright 2017 Hin-Tak Leung
