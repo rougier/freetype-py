@@ -20,6 +20,10 @@ face.load_char('😀', freetype.FT_LOAD_COLOR)
 bitmap = face.glyph.bitmap
 width = face.glyph.bitmap.width
 rows = face.glyph.bitmap.rows
+
+# The line below depends on this assumption. Check.
+if ( face.glyph.bitmap.pitch != width * 4 ):
+    raise RuntimeError('pitch != width * 4 for color bitmap: Please report this.')
 bitmap = np.array(bitmap.buffer, dtype=np.uint8).reshape((bitmap.rows,bitmap.width,4))
 
 I = ImageSurface(FORMAT_ARGB32, width, rows)
