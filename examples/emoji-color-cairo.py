@@ -14,6 +14,8 @@ from PIL import Image
 from cairo import ImageSurface, FORMAT_ARGB32, Context
 
 face = freetype.Face("Apple Color Emoji.ttf")
+# Not all char sizes are valid for emoji fonts;
+# Google's NotoColorEmoji only accept size 109 to get 136x128 bitmaps
 face.set_char_size( 160*64 )
 face.load_char('😀', freetype.FT_LOAD_COLOR)
 
