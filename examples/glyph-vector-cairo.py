@@ -7,10 +7,12 @@
 #
 #  rewrite of the numply,matplotlib-based example from Nicolas P. Rougier
 #  - The code is incomplete and over-simplified, as it ignores the 3rd order
-#    bezier curve bit and always intepolate between off-curve points.
+#    bezier curve bit when intepolating between off-curve points.
 #    This is only correct for truetype fonts (which only use 2nd order bezier curves).
 #  - Also it seems to assume the first point is always on curve; this is
 #    unusual but legal.
+#
+#  Can cope with well-behaved Postscript/CFF fonts too.
 #
 # -----------------------------------------------------------------------------
 '''
@@ -31,10 +33,6 @@ if __name__ == '__main__':
     # Replacement for Path enums:
     STOP, MOVETO, LINETO, CURVE3, CURVE4 = 0, 1, 2, 3, 4
 
-    def tag_meaning(tag):
-        # return on/off_curve(), is_3rd_order_control_point()
-        return [tag & 1 == 1, tag & 2 == 2]
-
     face = Face('./Vera.ttf')
     face.set_char_size( 48*64 )
     face.load_char('S')
@@ -54,7 +52,7 @@ if __name__ == '__main__':
     ctx.transform(Matrix(1,0,0,-1))
     ctx.translate(0, -(cbox.yMax + cbox.yMin)) # difference!
 
-    meaning = [tag_meaning(tag) for tag in outline.tags]
+    Curve_Tag = [FT_Curve_Tag(tag) for tag in outline.tags]
 
     start, end = 0, 0
 
@@ -82,7 +80,7 @@ if __name__ == '__main__':
         ctx.new_path()
         ctx.set_source_rgb(0,0,1)
         for j in range(start, end+1):
-            if ( meaning[j][0] ):
+            if ( Curve_Tag[j] == FT_Curve_Tag_On ):
                 point = outline.points[j]
                 ctx.move_to(point[0],point[1])
                 ctx.arc(point[0], point[1], 40, 0, 2 * math.pi)
@@ -91,7 +89,7 @@ if __name__ == '__main__':
         ctx.new_path()
         ctx.set_source_rgb(1,0,0)
         for j in range(start, end+1):
-            if ( not meaning[j][0] ):
+            if ( Curve_Tag[j] != FT_Curve_Tag_On ):
                 point = outline.points[j]
                 ctx.move_to(point[0],point[1])
                 ctx.arc(point[0], point[1], 10, 0, 2 * math.pi)
@@ -105,10 +103,11 @@ if __name__ == '__main__':
         segments = [ [points[0],], ]
         for j in range(1, len(points) ):
             segments[-1].append(points[j])
-            if tags[j] & (1 << 0) and j < (len(points)-1):
+            if ( FT_Curve_Tag( tags[j] ) == FT_Curve_Tag_On ) and j < (len(points)-1):
                 segments.append( [points[j],] )
         verts = [points[0], ]
         codes = [MOVETO,]
+        tags.pop()
         for segment in segments:
             if len(segment) == 2:
                 verts.extend(segment[1:])
@@ -116,7 +115,13 @@ if __name__ == '__main__':
             elif len(segment) == 3:
                 verts.extend(segment[1:])
                 codes.extend([CURVE3, CURVE3])
+            elif ( len(segment) == 4 ) \
+                 and ( FT_Curve_Tag(tags[1]) == FT_Curve_Tag_Cubic ) \
+                 and ( FT_Curve_Tag(tags[2]) == FT_Curve_Tag_Cubic ):
+                verts.extend(segment[1:])
+                codes.extend([CURVE4, CURVE4, CURVE4])
             else:
+                # Intepolation code
                 verts.append(segment[1])
                 codes.append(CURVE3)
                 for i in range(1,len(segment)-2):
@@ -126,6 +131,7 @@ if __name__ == '__main__':
                     codes.extend([ CURVE3, CURVE3])
                 verts.append(segment[-1])
                 codes.append(CURVE3)
+            [tags.pop() for x in range(len(segment) - 1)]
         VERTS.extend(verts)
         CODES.extend(codes)
         start = end+1
@@ -145,8 +151,11 @@ if __name__ == '__main__':
                          VERTS[i+1][0],VERTS[i+1][1], # undocumented
                          VERTS[i+1][0],VERTS[i+1][1])
             i += 2
-        else:
-            raise NotImplementedError("Cannot cope!")
+        elif (CODES[i] == CURVE4):
+            ctx.curve_to(VERTS[i][0],VERTS[i][1],
+                         VERTS[i+1][0],VERTS[i+1][1],
+                         VERTS[i+2][0],VERTS[i+2][1])
+            i += 3
     ctx.fill()
 
     surface.flush()
