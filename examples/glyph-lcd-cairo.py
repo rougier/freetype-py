@@ -31,20 +31,20 @@ if __name__ == '__main__':
     width  = face.glyph.bitmap.width//3
     rows   = face.glyph.bitmap.rows
     pitch  = face.glyph.bitmap.pitch
-    whole_thing = (c_ubyte * (pitch * rows))()
-    memmove(pointer(whole_thing), bitmap._FT_Bitmap.buffer,
+    copybuffer = (c_ubyte * (pitch * rows))()
+    memmove(pointer(copybuffer), bitmap._FT_Bitmap.buffer,
             pitch * rows)
 
     I = ImageSurface(FORMAT_ARGB32, width, rows)
-    ndR = ndarray(shape=(rows,width), buffer=whole_thing,
+    ndR = ndarray(shape=(rows,width), buffer=copybuffer,
                   dtype=ubyte, order='C',
                   offset=0,
                   strides=[pitch, 3])
-    ndG = ndarray(shape=(rows,width), buffer=whole_thing,
+    ndG = ndarray(shape=(rows,width), buffer=copybuffer,
                   dtype=ubyte, order='C',
                   offset=1,
                   strides=[pitch, 3])
-    ndB = ndarray(shape=(rows,width), buffer=whole_thing,
+    ndB = ndarray(shape=(rows,width), buffer=copybuffer,
                   dtype=ubyte, order='C',
                   offset=2,
                   strides=[pitch, 3])
@@ -77,20 +77,20 @@ if __name__ == '__main__':
     width  = face.glyph.bitmap.width
     rows   = face.glyph.bitmap.rows//3
     pitch  = face.glyph.bitmap.pitch
-    whole_thing = (c_ubyte * (pitch * face.glyph.bitmap.rows))()
-    memmove(pointer(whole_thing), bitmap._FT_Bitmap.buffer,
+    copybuffer = (c_ubyte * (pitch * face.glyph.bitmap.rows))()
+    memmove(pointer(copybuffer), bitmap._FT_Bitmap.buffer,
             pitch * face.glyph.bitmap.rows)
 
     I = ImageSurface(FORMAT_ARGB32, width, rows)
-    ndR = ndarray(shape=(rows,width), buffer=whole_thing,
+    ndR = ndarray(shape=(rows,width), buffer=copybuffer,
                   dtype=ubyte, order='C',
                   offset=0,
                   strides=[pitch*3, 1])
-    ndG = ndarray(shape=(rows,width), buffer=whole_thing,
+    ndG = ndarray(shape=(rows,width), buffer=copybuffer,
                   dtype=ubyte, order='C',
                   offset=pitch,
                   strides=[pitch*3, 1])
-    ndB = ndarray(shape=(rows,width), buffer=whole_thing,
+    ndB = ndarray(shape=(rows,width), buffer=copybuffer,
                   dtype=ubyte, order='C',
                   offset=2*pitch,
                   strides=[pitch*3, 1])
