@@ -6,6 +6,8 @@
 #
 #  This script demonstrates overlapping emojis.
 #
+#  Note: On Mac OS X before Sierra (10.12), change ttc->ttf;
+#        try Google's NotoColorEmoji.ttf at size 109 on Linux.
 
 import freetype
 import numpy as np
@@ -13,7 +15,7 @@ from PIL import Image
 
 from cairo import ImageSurface, FORMAT_ARGB32, Context
 
-face = freetype.Face("Apple Color Emoji.ttf")
+face = freetype.Face("/System/Library/Fonts/Apple Color Emoji.ttc")
 # Not all char sizes are valid for emoji fonts;
 # Google's NotoColorEmoji only accept size 109 to get 136x128 bitmaps
 face.set_char_size( 160*64 )
