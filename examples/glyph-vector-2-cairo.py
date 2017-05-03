@@ -6,7 +6,7 @@
 #  Distributed under the terms of the new BSD license.
 #
 #  rewrite of the numply,matplotlib-based example from Nicolas P. Rougier
-#  - The code is strickly speaking not optimal, as it ignores the 3rd order
+#  - The code is incomplete and over-simplified, as it ignores the 3rd order
 #    bezier curve bit and always intepolate between off-curve points.
 #    This is only correct for truetype fonts (which only use 2nd order bezier curves).
 #  - Also it seems to assume the first point is always on curve; this is
