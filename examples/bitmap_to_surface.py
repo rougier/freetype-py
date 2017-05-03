@@ -1,13 +1,30 @@
+# FT_Bitmap to CAIRO_SURFACE_TYPE_IMAGE module
+# ============================================
+#
+# Copyright 2017 Hin-Tak Leung
+#
+# FreeType is under FTL (BSD license with an advertising clause) or GPLv2+.
+# Cairo is under LGPLv2 or MPLv1.1.
+#
+# This is a heavily modified copy of a few routines from Lawrence D'Oliveiro[1],
+# adjusted for freetype-py, and bugfix/workaround for mono-rendering [2].
+#
+# The bugfix/workaround requires libtiff on small-endian platforms.
+#
+# TODO: Look into using FreeType's FT_Bitmap_Convert() instead. However, libtiff
+#      is common enough, and probably not important.
+#
+#[1] https://github.com/ldo/python_freetype
+#    https://github.com/ldo/python_freetype_examples
+#
+#[2] https://github.com/ldo/python_freetype/issues/1
+#    https://github.com/ldo/python_freetype_examples/issues/1
+#
 '''
 FT_Bitmap to CAIRO_SURFACE_TYPE_IMAGE module
 ============================================
 
 Converting from Freetype's FT_Bitmap to Cairo's CAIRO_SURFACE_TYPE_IMAGE
-
-Copyright 2017 Hin-Tak Leung
-
-FreeType is under FTL (BSD license with an advertising clause) or GPLv2+.
-Cairo is under LGPLv2 or MPLv1.1.
 
 Usage:
      from bitmap_to_surface import make_image_surface
@@ -15,20 +32,6 @@ Usage:
 Works with cairocffi too. (Replace "from cairo ..." with "from cairocffi ...")
 
 Limitation: Surface.create_for_data is not in the "python 3, pycairo < 1.11" combo.
-
-This is a heavily modified copy of a few routines from Lawrence D'Oliveiro[1],
-adjusted for freetype-py, and bugfix/workaround for mono-rendering [2].
-
-The bugfix/workaround requires libtiff on small-endian platforms.
-
-TODO: Look into using FreeType's FT_Bitmap_Convert() instead. However, libtiff
-      is common enough, and probably not important.
-
-[1] https://github.com/ldo/python_freetype
-    https://github.com/ldo/python_freetype_examples
-
-[2] https://github.com/ldo/python_freetype/issues/1
-    https://github.com/ldo/python_freetype_examples/issues/1
 '''
 from freetype import FT_PIXEL_MODE_MONO, FT_PIXEL_MODE_GRAY, FT_Pointer, FT_Bitmap
 
