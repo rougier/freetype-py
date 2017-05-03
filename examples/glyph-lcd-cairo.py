@@ -51,7 +51,8 @@ if __name__ == '__main__':
     ndI = ndarray(shape=(rows,width), buffer=I.get_data(),
                   dtype=uint32, order='C',
                   strides=[I.get_stride(), 4])
-    ndI[:,:] = 4278190080 + ndR[:,:] * 65536 + ndG[:,:] * 256 + ndB[:,:]
+    # 255 * 2**24 = opaque
+    ndI[:,:] = 255 * 2**24 + ndR[:,:] * 2**16 + ndG[:,:] * 2**8 + ndB[:,:]
     I.mark_dirty()
 
     surface = ImageSurface(FORMAT_ARGB32, 800, 600)
@@ -97,7 +98,8 @@ if __name__ == '__main__':
     ndI = ndarray(shape=(rows,width), buffer=I.get_data(),
                   dtype=uint32, order='C',
                   strides=[I.get_stride(), 4])
-    ndI[:,:] = 4278190080 + ndR[:,:] * 65536 + ndG[:,:] * 256 + ndB[:,:]
+    # 255 * 2**24 = opaque
+    ndI[:,:] = 255 * 2**24 + ndR[:,:] * 2**16 + ndG[:,:] * 2**8 + ndB[:,:]
     I.mark_dirty()
 
     ctx.set_source_surface(I, 0, 0)
