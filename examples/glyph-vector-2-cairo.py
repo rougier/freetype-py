@@ -52,8 +52,14 @@ if __name__ == '__main__':
     MARGIN  = 10
     scale = 3
 
-    width_s = ((bbox.xMax - bbox.xMin)//scale + 2 * MARGIN)
-    height_s = ((bbox.yMax - bbox.yMin)//scale + 2 * MARGIN)
+    def Floor64(x):
+        return (x//64) * 64
+
+    def Ceil64(x):
+        return ((x+63)//64) * 64
+
+    width_s = (width * 64)//scale + 2 * MARGIN
+    height_s = (rows * 64)//scale + 2 * MARGIN
 
     surface = SVGSurface('glyph-vector-2-cairo.svg',
                          width_s,
@@ -63,9 +69,9 @@ if __name__ == '__main__':
     ctx.paint()
     ctx.save()
     ctx.scale(1.0/scale,1.0/scale)
-    ctx.translate(-bbox.xMin + MARGIN * scale,-bbox.yMin + MARGIN * scale)
+    ctx.translate(-Floor64(bbox.xMin) + MARGIN * scale,-Floor64(bbox.yMin) + MARGIN * scale)
     ctx.transform(Matrix(1,0,0,-1))
-    ctx.translate(0, -(bbox.yMax + bbox.yMin)) # difference!
+    ctx.translate(0, -(Ceil64(bbox.yMax) + Floor64(bbox.yMin))) # difference!
 
     start, end = 0, 0
 
