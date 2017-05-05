@@ -48,9 +48,12 @@ if __name__ == '__main__':
                   dtype=ubyte, order='C',
                   offset=2,
                   strides=[pitch, 3])
-    ndI = ndarray(shape=(rows,width), buffer=I.get_data(),
-                  dtype=uint32, order='C',
-                  strides=[I.get_stride(), 4])
+    try:
+        ndI = ndarray(shape=(rows,width), buffer=I.get_data(),
+                      dtype=uint32, order='C',
+                      strides=[I.get_stride(), 4])
+    except NotImplementedError:
+       raise SystemExit("For python 3.x, you need pycairo >= 1.11+ (from https://github.com/pygobject/pycairo)")
     # 255 * 2**24 = opaque
     ndI[:,:] = 255 * 2**24 + ndR[:,:] * 2**16 + ndG[:,:] * 2**8 + ndB[:,:]
     I.mark_dirty()

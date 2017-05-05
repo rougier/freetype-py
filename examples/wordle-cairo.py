@@ -140,7 +140,10 @@ if __name__ == '__main__':
     drawn_regions = Region()
     for size in sizes:
         angle = random.randint(-25,25)
-        L = make_label('Hello', './Vera.ttf', size, angle=angle)
+        try:
+            L = make_label('Hello', './Vera.ttf', size, angle=angle)
+        except NotImplementedError:
+            raise SystemExit("For python 3.x, you need pycairo >= 1.11+ (from https://github.com/pygobject/pycairo)")
         h = L.get_height()
         w = L.get_width()
         if h < H and w < W:
