@@ -8,6 +8,8 @@
 #
 #  Note: On Mac OS X before Sierra (10.12), change ttc->ttf;
 #        try Google's NotoColorEmoji.ttf at size 109 on Linux.
+#
+#  Limitation: Suface.get_data() is not in the "python 3, pycairo < 1.11" combo.
 
 import freetype
 import numpy as np
