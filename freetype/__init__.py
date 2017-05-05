@@ -650,8 +650,7 @@ class Outline( object ):
         which is dedicated to this single task.
         '''
         bbox = FT_BBox()
-        error = FT_Outline_Get_CBox(byref(self._FT_Outline), byref(bbox))
-        if error: raise FT_Exception(error)
+        FT_Outline_Get_CBox(byref(self._FT_Outline), byref(bbox))
         return BBox(bbox)
 
 

@@ -9,6 +9,10 @@
 Freetype enum types
 -------------------
 
+FT_CURVE_TAGS: An enumeration type for each point on an outline to indicate
+               whether it describes a point used to control a line segment
+               or an arc.
+
 FT_PIXEL_MODES: An enumeration type used to describe the format of pixels in a
                 given bitmap. Note that additional formats may be added in the
                 future.
@@ -93,6 +97,7 @@ TT_NAME_IDS: Possible values of the `name' identifier field in the name
              records of the TTF `name' table.  These values are platform
              independent.
 '''
+from freetype.ft_enums.ft_curve_tags import *
 from freetype.ft_enums.ft_fstypes import *
 from freetype.ft_enums.ft_face_flags import *
 from freetype.ft_enums.ft_encodings import *

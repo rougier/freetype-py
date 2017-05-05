@@ -127,6 +127,9 @@ FT_Error   = c_int    # The FreeType error code type. A value of 0 is always
 FT_Fixed   = c_long   # This type is used to store 16.16 fixed float values,
                       # like scaling values or matrix coefficients.
 
+FT_Angle   = FT_Fixed # This type is used to model angle values in FreeType.  Note that the
+                      # angle is a 16.16 fixed-point value expressed in degrees.
+
 FT_Pointer = c_void_p # A simple typedef for a typeless pointer.
 
 FT_Pos     = c_long   # The type FT_Pos is used to store vectorial
