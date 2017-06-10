@@ -1097,9 +1097,16 @@ class Face( object ):
         '''
         Select a given charmap for character code to glyph index mapping.
 
-        :param charmap: A handle to the selected charmap.
+        :param charmap: A handle to the selected charmap, or an index to face->charmaps[]
         '''
-        error = FT_Set_Charmap( self._FT_Face, charmap._FT_Charmap )
+        if ( type(charmap) == Charmap ):
+            error = FT_Set_Charmap( self._FT_Face, charmap._FT_Charmap )
+            # Type 14 is allowed to fail, to match ft2demo's behavior.
+            if ( charmap.cmap_format == 14 ):
+                error = 0
+        else:
+            # Treat "charmap" as plain number
+            error = FT_Set_Charmap( self._FT_Face, self._FT_Face.contents.charmaps[charmap] )
         if error : raise FT_Exception(error)
 
     def get_char_index( self, charcode ):
