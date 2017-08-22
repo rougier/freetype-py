@@ -42,7 +42,7 @@ Freetype245.dll) and make sure to place a copy in Windows/System32 directory.
 Installation
 ============
 
-The easiest way to install freetype-pu is to use pip::
+The easiest way to install freetype-py is to use pip::
 
   pip install freetype-py
 
