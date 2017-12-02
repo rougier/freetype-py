@@ -59,6 +59,7 @@ Usage example
 Contributors
 ============
 
+* Hin-Tak Leung (many fixes, cairo examples)
 * Titusz Pan (bug report)
 * Ekkehard.Blanz (bug report)
 * Jānis Lībeks (bug report)
@@ -70,7 +71,7 @@ Contributors
 """
 
 setup( name        = 'freetype-py',
-       version     = '1.0.2',
+       version     = '1.1',
        description = 'Freetype python bindings',
        long_description = description,
        author      = 'Nicolas P. Rougier',
