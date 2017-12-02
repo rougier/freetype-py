@@ -187,8 +187,12 @@ FT_DivFix                      = _lib.FT_DivFix
 FT_Done_Library                = _lib.FT_Done_Library
 FT_Done_Size                   = _lib.FT_Done_Size
 FT_FloorFix                    = _lib.FT_FloorFix
-FT_Get_BDF_Charset_ID          = _lib.FT_Get_BDF_Charset_ID
-FT_Get_BDF_Property            = _lib.FT_Get_BDF_Property
+try:
+    # Not in default windows build of 2.8.x
+    FT_Get_BDF_Charset_ID          = _lib.FT_Get_BDF_Charset_ID
+    FT_Get_BDF_Property            = _lib.FT_Get_BDF_Property
+except AttributeError:
+    pass
 FT_Get_MM_Var                  = _lib.FT_Get_MM_Var
 FT_Get_Module                  = _lib.FT_Get_Module
 FT_Get_Multi_Master            = _lib.FT_Get_Multi_Master
