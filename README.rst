@@ -49,9 +49,12 @@ Windows expects the library in one of the directories listed in the $PATH
 environment variable. As it is not recommended to place the dll in a Windows
 system folder, you can choose one of the following ways to solve this:
 
-* Place library in a folder of choice and edit the $PATH user environment variable
-* Place library in a folder of choice and edit the $PATH system environment variable
-* For development purpose, place the library in the working directory of application
+* Place library in a folder of your choice and edit the $PATH user
+  environment variable
+* Place library in a folder of your choice and edit the $PATH system
+  environment variable
+* For development purpose, place the library in the working directory of
+  the application
 * Place the library in one of the existing directories listed in $PATH
 
 To get a complete list of all the directories in the $PATH
@@ -77,25 +80,25 @@ Screenshots
 Screenshot below comes from the wordle.py example. No clever tricks here, just
 brute force.
 
-.. image:: doc/_static/wordle.png
+.. image:: https://raw.githubusercontent.com/rougier/freetype-py/master/doc/_static/wordle.png
 
 Screenshots below comes from the glyph-vector.py and glyph-vectopr-2.py
 examples showing how to access a glyph outline information and use it to draw
 the glyph. Rendering (with Bézier curves) is done using matplotlib.
 
-.. image:: doc/_static/S.png
-.. image:: doc/_static/G.png
+.. image:: https://raw.githubusercontent.com/rougier/freetype-py/master/doc/_static/S.png
+.. image:: https://raw.githubusercontent.com/rougier/freetype-py/master/doc/_static/G.png
 
 
 Screenshot below comes from the glyph-color.py showing how to draw and combine
 a glyph outline with the regular glyph.
 
-.. image:: doc/_static/outline.png
+.. image:: https://raw.githubusercontent.com/rougier/freetype-py/master/doc/_static/outline.png
 
 The screenshot below comes from the hello-world.py example showing how to draw
 text in a bitmap (that has been zoomed in to show antialiasing).
 
-.. image:: doc/_static/hello-world.png
+.. image:: https://raw.githubusercontent.com/rougier/freetype-py/master/doc/_static/hello-world.png
 
 
 The screenshot below comes from the agg-trick.py example showing an
@@ -103,7 +106,7 @@ implementation of ideas from the `Texts Rasterization Exposures
 <http://agg.sourceforge.net/antigrain.com/research/font_rasterization/>`_ by
 Maxim Shemarev.
 
-.. image:: doc/_static/agg-trick.png
+.. image:: https://raw.githubusercontent.com/rougier/freetype-py/master/doc/_static/agg-trick.png
 
 
 Contributors
