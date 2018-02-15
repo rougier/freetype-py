@@ -43,6 +43,9 @@ except NotImplementedError:
 # Although both are 32-bit, cairo is host-order while
 # freetype is small endian.
 ndI[:,:] = bitmap[:,:,3] * 2**24 + bitmap[:,:,2] * 2**16 + bitmap[:,:,1] * 2**8 + bitmap[:,:,0]
+# ndI[...] = (bitmap*(1,2**8,2**16,2**24)).sum(axis=-1)
+
+
 I.mark_dirty()
 
 surface = ImageSurface(FORMAT_ARGB32, 2*width, rows)
