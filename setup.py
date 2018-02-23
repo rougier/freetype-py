@@ -9,7 +9,7 @@ from codecs import open
 from setuptools import setup, Extension
 
 description = open(path.join(path.abspath(path.dirname(__file__)),
-                             'README.rst')).read()
+                             'README.rst'), encoding='utf-8').read()
 
 setup( name        = 'freetype-py',
        version     = '1.2',
