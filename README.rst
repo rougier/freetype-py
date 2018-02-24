@@ -59,7 +59,9 @@ system folder, you can choose one of the following ways to solve this:
 
 To get a complete list of all the directories in the $PATH
 environment variable (user and system), open a command promt and type
+
 .. code::
+
    echo %PATH%
 
 Usage example
