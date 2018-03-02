@@ -1,0 +1,82 @@
+environment:
+  global:
+    PACKAGE_NAME: freetype-py
+    FREETYPEPY_BUNDLE_FT: 1
+    # PyPI username and encrypted password
+    #TWINE_USERNAME: xxx
+    #TWINE_PASSWORD:
+    #  secure: xxx
+  matrix:
+    - PYTHON: C:\Python27
+      PYTHON_VERSION: 2.7
+      PYTHON_ARCH: '32'
+
+    - PYTHON: C:\Python36-x64
+      PYTHON_VERSION: 3.6
+      PYTHON_ARCH: '64'
+
+init:
+  - ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%
+
+install:
+  # If there is a newer build queued for the same PR, cancel this one.
+  # The AppVeyor 'rollout builds' option is supposed to serve the same
+  # purpose but it is problematic because it tends to cancel builds pushed
+  # directly to master instead of just PR builds (or the converse).
+  # credits: JuliaLang developers.
+  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
+        https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
+        Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
+          throw "There are newer queued builds for this pull request, failing early." }
+
+  # checkout git sub-modules
+  - git submodule update --init --recursive
+
+  # prepend Python to the PATH
+  - SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+
+  # check that we have the expected version and architecture for Python
+  - python --version
+  - python -c "import struct; print(struct.calcsize('P') * 8)"
+
+  # install/upgrade python setup requirements
+  - python -m pip install --disable-pip-version-check --upgrade pip
+  - pip --version
+  - pip install --upgrade setuptools wheel virtualenv
+
+build_script:
+  # build the wheel in the default 'dist/' folder
+  - python setup.py bdist_wheel
+
+test_script:
+  # create test env
+  - python -m virtualenv test_env
+  - test_env\Scripts\activate
+  - where python
+  - pip install pytest
+
+  # install from wheel
+  - pip install --no-index --find-links dist %PACKAGE_NAME%
+
+  # run tests from installed wheel
+  - cd tests
+  - pytest
+
+artifacts:
+  # archive the generated packages in the ci.appveyor.com build report
+  - path: dist\*.whl
+
+#on_success:
+#  # upload coverage data to Codecov.io
+#  - codecov --env PYTHON PYTHON_VERSION PYTHON_ARCH MSYS_ARCH
+#  # deploy wheels on tags to PyPI
+#  - ps: >-
+#      if($env:APPVEYOR_REPO_TAG -eq 'true') {
+#        Write-Output ("Deploying " + $env:APPVEYOR_REPO_TAG_NAME + " to #PyPI...")
+#        pip install --upgrade twine
+#        # If powershell ever sees anything on stderr it thinks it's a fail.
+#        # So we use cmd to redirect stderr to stdout before PS can see it.
+#        cmd /c 'twine upload dist\*.whl 2>&1'
+#      } else {
+#        Write-Output "Not deploying as this is not a tagged commit"
+#      }

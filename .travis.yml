@@ -1,0 +1,67 @@
+env:
+    global:
+        - REPO_DIR=.
+        # Commit from your-project that you want to build
+        #- BUILD_COMMIT=v0.1.0
+        # pip dependencies to _build_ your project
+        #- BUILD_DEPENDS="Cython numpy"
+        # pip dependencies to _test_ your project.  Include any dependencies
+        # that you need, that are also specified in BUILD_DEPENDS, this will be
+        # a separate install.
+        - TEST_DEPENDS="pytest"
+        - PLAT=x86_64
+        - CONFIG_PATH="ci/multibuild_config.sh"
+        - FREETYPEPY_BUNDLE_FT=1
+
+language: python
+# The travis Python version is unrelated to the version we build and test
+# with.  This is set with the MB_PYTHON_VERSION variable.
+python: 3.5
+sudo: required
+dist: trusty
+services: docker
+
+cache:
+  directories:
+    - $HOME/.ccache
+
+matrix:
+  exclude:
+    # Exclude the default Python 3.5 build
+    - python: 3.5
+  include:
+    - os: linux
+      env:
+        - MB_PYTHON_VERSION=2.7
+        - PLAT=i686
+        - USE_CCACHE=1
+    - os: linux
+      env:
+        - MB_PYTHON_VERSION=3.6
+        - USE_CCACHE=1
+    - os: osx
+      language: generic
+      env:
+        - MB_PYTHON_VERSION=3.6
+
+before_install:
+    - source ci/multibuild/common_utils.sh
+    - source ci/multibuild/travis_steps.sh
+    - before_install
+
+install:
+    - build_wheel $REPO_DIR $PLAT
+
+script:
+    - install_run $PLAT
+
+#after_success:
+#    # Upload wheels to Rackspace container
+#    - pip install wheelhouse-uploader
+#    # This uploads the wheels to a Rackspace container owned by the
+#    # scikit-learn team, available at http://wheels.scipy.org.  See above
+#    # for information on using this account or choosing another.
+#    - python -m wheelhouse_uploader upload --local-folder
+#        ${TRAVIS_BUILD_DIR}/wheelhouse/
+#        --no-update-index
+#        wheels

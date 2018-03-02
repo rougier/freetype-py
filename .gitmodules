@@ -1,0 +1,3 @@
+[submodule "ci/multibuild"]
+	path = ci/multibuild
+	url = https://github.com/matthew-brett/multibuild

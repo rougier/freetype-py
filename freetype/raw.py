@@ -13,22 +13,37 @@ import platform
 from ctypes import *
 import ctypes.util
 
+import freetype
 from freetype.ft_types import *
 from freetype.ft_enums import *
 from freetype.ft_errors import *
 from freetype.ft_structs import *
 
-# on windows all ctypes does when checking for the library
-# is to append .dll to the end and look for an exact match
-# within any entry in PATH.
-filename = ctypes.util.find_library('freetype')
+# First, look for a bundled FreeType shared object on the top-level of the
+# installed freetype-py module.
+system = platform.system()
+if system == 'Windows':
+    library_name = 'libfreetype.dll'
+elif system == 'Darwin':
+    library_name = 'libfreetype.dylib'
+else:
+    library_name = 'libfreetype.so'
 
-if filename is None:
-    if platform.system() == 'Windows':
-        # Check current working directory for dll as ctypes fails to do so
-        filename = os.path.join(os.path.realpath('.'), 'freetype.dll')
-    else:
-        filename = 'libfreetype.so.6'
+filename = os.path.join(os.path.dirname(freetype.__file__), library_name)
+
+# If no bundled shared object is found, look for a system-wide installed one.
+if not os.path.exists(filename):
+    # on windows all ctypes does when checking for the library
+    # is to append .dll to the end and look for an exact match
+    # within any entry in PATH.
+    filename = ctypes.util.find_library('freetype')
+
+    if filename is None:
+        if platform.system() == 'Windows':
+            # Check current working directory for dll as ctypes fails to do so
+            filename = os.path.join(os.path.realpath('.'), "freetype.dll")
+        else:
+            filename = library_name
 
 try:
     _lib = ctypes.CDLL(filename)
