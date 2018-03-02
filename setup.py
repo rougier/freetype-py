@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 from os import path
 from codecs import open
-from setuptools import setup, Extension
+from setuptools import setup, find_packages, Extension
 
 description = open(path.join(path.abspath(path.dirname(__file__)),
                              'README.rst'), encoding='utf-8').read()
@@ -18,7 +18,8 @@ setup( name        = 'freetype-py',
        author      = 'Nicolas P. Rougier',
        author_email= 'Nicolas.Rougier@inria.fr',
        url         = 'https://github.com/rougier/freetype-py',
-       packages    = ['freetype', 'freetype.ft_enums'],
+       package_dir = {"": "src"},
+       packages    = find_packages("src"),
        classifiers = [
           'Development Status :: 5 - Production/Stable',
           'Environment :: X11 Applications',
