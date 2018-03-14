@@ -11,13 +11,18 @@ Installation
 
 **From PyPI, recommended**: `pip install freetype-py`. This will install the
 library with a bundled FreeType binary, so you're ready to go on Windows,
-macOS and Linux (all with 32 and 64 bit support).
+macOS and Linux (all with 32 and 64 bit x86 architecture support).
+
+Do note: if you specify the `--no-binary` paramater to pip, or use a different
+architecture for which we don't pre-compile binaries, the package will default
+to using an external FreeType library. Specify the environment variable
+`FREETYPEPY_BUNDLE_FT=1` before calling pip to compile a binary yourself.
 
 Installation with compiling FreeType from source
 ------------------------------------------------
 
 If you don't want to or can't use the pre-built binaries, build FreeType
-yourself: `export FREETYPEPY_BUNDLE_FT=yesplease && python setup.py install`.
+yourself: `export FREETYPEPY_BUNDLE_FT=yesplease && pip install .`.
 This will download and compile FreeType with Harfbuzz support as specified in
 `setup-build-freetype.py`. Set the environment variable `PYTHON_ARCH` to 32 or
 64 to explicitly set an architecture, default is whatever your host machine
