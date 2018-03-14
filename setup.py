@@ -98,7 +98,7 @@ if os.environ.get("FREETYPEPY_BUNDLE_FT"):
     ext_modules = [
         SharedLibrary(
             "freetype.libfreetype",  # package.shared_lib_name
-            cmd="\"{}\" ./setup-build-freetype.py".format(sys.executable),
+            cmd='"{}" ./setup-build-freetype.py'.format(sys.executable),
             output_dir="build/local/lib")
     ]
 else:
