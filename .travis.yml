@@ -11,7 +11,6 @@ env:
         - TEST_DEPENDS="pytest"
         - PLAT=x86_64
         - CONFIG_PATH="ci/multibuild_config.sh"
-        - FREETYPEPY_BUNDLE_FT=1
 
 language: python
 # The travis Python version is unrelated to the version we build and test
@@ -35,7 +34,13 @@ matrix:
         - MB_PYTHON_VERSION=2.7
         - PLAT=i686
         - USE_CCACHE=1
+        - FREETYPEPY_BUNDLE_FT=1
     - os: linux
+      env:
+        - MB_PYTHON_VERSION=3.6
+        - USE_CCACHE=1
+        - FREETYPEPY_BUNDLE_FT=1
+    - os: linux  # No bundling.
       env:
         - MB_PYTHON_VERSION=3.6
         - USE_CCACHE=1
@@ -43,6 +48,7 @@ matrix:
       language: generic
       env:
         - MB_PYTHON_VERSION=3.6
+        - FREETYPEPY_BUNDLE_FT=1
 
 before_install:
     - source ci/multibuild/common_utils.sh

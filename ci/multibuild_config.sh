@@ -7,6 +7,11 @@ function pre_build {
     if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$PLAT" == "i686" ]; then
         apt install gcc-multilib g++-multilib
     fi
+
+    # For when we test not bundling FreeType.
+    if [ "$TRAVIS_OS_NAME" == "linux" ] && [ -z "$FREETYPEPY_BUNDLE_FT" ]; then
+        apt install libfreetype6
+    fi
 }
 
 function run_tests {
