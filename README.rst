@@ -21,7 +21,7 @@ yourself: `export FREETYPEPY_BUNDLE_FT=yesplease && python setup.py install`.
 This will download and compile FreeType with Harfbuzz support as specified in
 `setup-build-freetype.py`. Set the environment variable `PYTHON_ARCH` to 32 or
 64 to explicitly set an architecture, default is whatever your host machine
-uses. On macOS, we will always build a 96 bit binary.
+uses. On macOS, we will always build a universal 32 and 64 bit Intel binary.
 
 - Windows: You need CMake and a C and C++ compiler, e.g. the Visual Code
   Community 2017 distribution with the desktop C++ workload.
