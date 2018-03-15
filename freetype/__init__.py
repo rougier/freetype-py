@@ -654,6 +654,85 @@ class Outline( object ):
         FT_Outline_Get_CBox(byref(self._FT_Outline), byref(bbox))
         return BBox(bbox)
 
+    _od_move_to_noop = FT_Outline_MoveToFunc(lambda a, b: 0)
+    def _od_move_to_builder(self, cb):
+        if cb is None:
+            return self._od_move_to_noop
+        def move_to(a, b):
+            return cb(a[0], b) or 0
+        return FT_Outline_MoveToFunc(move_to)
+
+    _od_line_to_noop = FT_Outline_LineToFunc(lambda a, b: 0)
+    def _od_line_to_builder(self, cb):
+        if cb is None:
+            return self._od_line_to_noop
+        def line_to(a, b):
+            return cb(a[0], b) or 0
+        return FT_Outline_LineToFunc(line_to)
+
+    _od_conic_to_noop = FT_Outline_ConicToFunc(lambda a, b, c: 0)
+    def _od_conic_to_builder(self, cb):
+        if cb is None:
+            return self._od_conic_to_noop
+        def conic_to(a, b, c):
+            return cb(a[0], b[0], c) or 0
+        return FT_Outline_ConicToFunc(conic_to)
+
+    _od_cubic_to_noop = FT_Outline_CubicToFunc(lambda a, b, c, d: 0)
+    def _od_cubic_to_builder(self, cb):
+        if cb is None:
+            return self._od_cubic_to_noop
+        def cubic_to(a, b, c, d):
+            return cb(a[0], b[0], c[0], d) or 0
+        return FT_Outline_CubicToFunc(cubic_to)
+
+    def decompose(self, context=None, move_to=None, line_to=None, conic_to=None, cubic_to=None, shift=0, delta=0):
+        '''
+        Decompose the outline into a sequence of move, line, conic, and
+        cubic segments.
+
+        :param context: Arbitrary contextual object which will be passed as
+                        the last parameter of all callbacks. Typically an
+                        object to be drawn to, but can be anything.
+
+        :param move_to: Callback which will be passed an `FT_Vector`
+                        control point and the context. Called when outline
+                        needs to jump to a new path component.
+
+        :param line_to: Callback which will be passed an `FT_Vector`
+                        control point and the context. Called to draw a
+                        straight line from the current position to the
+                        control point.
+
+        :param conic_to: Callback which will be passed two `FT_Vector`
+                         control points and the context. Called to draw a
+                         second-order Bézier curve from the current
+                         position using the passed control points.
+
+        :param curve_to: Callback which will be passed three `FT_Vector`
+                         control points and the context. Called to draw a
+                         third-order Bézier curve from the current position
+                         using the passed control points.
+
+        :param shift: Passed to FreeType which will transform vectors via
+                      `x = (x << shift) - delta` and `y = (y << shift) - delta`
+
+        :param delta: Passed to FreeType which will transform vectors via
+                      `x = (x << shift) - delta` and `y = (y << shift) - delta`
+
+        :since: 1.3
+        '''
+        func = FT_Outline_Funcs(
+            move_to = self._od_move_to_builder(move_to),
+            line_to = self._od_line_to_builder(line_to),
+            conic_to = self._od_conic_to_builder(conic_to),
+            cubic_to = self._od_cubic_to_builder(cubic_to),
+            shift = shift,
+            delta = FT_Pos(delta),
+        )
+
+        error = FT_Outline_Decompose( byref(self._FT_Outline), byref(func), py_object(context) )
+        if error: raise FT_Exception( error )
 
 
 
