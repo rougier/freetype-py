@@ -48,7 +48,8 @@ if os.environ.get("FREETYPEPY_BUNDLE_FT"):
             self.env = env or dict(os.environ)
 
     class SharedLibBuildExt(build_ext):
-        """Object representing command to produce and install a shared library."""
+        """Object representing command to produce and install a shared
+        library."""
 
         # Needed to make setuptools and wheel believe they're looking at an
         # extension instead of a shared library.
