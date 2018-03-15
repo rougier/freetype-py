@@ -11,6 +11,7 @@
 # GCC, Visual Studio Community 2017, ...)
 
 import distutils.dir_util
+import distutils.spawn
 import glob
 import os
 import subprocess
@@ -39,6 +40,10 @@ CMAKE_GLOBAL_SWITCHES = ("-DCMAKE_COLOR_MAKEFILE:BOOL=false "
                          "-DCMAKE_PREFIX_PATH:PATH=\"{}\" "
                          "-DCMAKE_INSTALL_PREFIX:PATH=\"{}\" ").format(
                              prefix_dir, prefix_dir)
+
+# Try to use Ninja to build things if it's available. Much faster.
+if distutils.spawn.find_executable("ninja"):
+    CMAKE_GLOBAL_SWITCHES += "-G Ninja "
 
 bitness = None
 
