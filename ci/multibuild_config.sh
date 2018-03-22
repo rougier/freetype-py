@@ -17,5 +17,6 @@ function pre_build {
 function run_tests {
     # The function is called from an empty temporary directory.
     cd ../tests
+    python -c "import freetype; print('Using FreeType version ', freetype.version())"
     pytest
 }
