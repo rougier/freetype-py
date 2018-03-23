@@ -1,3 +1,4 @@
+import glob
 import os
 
 import freetype
@@ -10,7 +11,9 @@ def test_load_ft_face():
 
 
 def test_bundle_version():
-    if os.environ.get("FREETYPEPY_BUNDLE_FT"):
+    module_dir = os.path.dirname(freetype.__file__)
+    shared_object = glob.glob(os.path.join(module_dir, "libfreetype*"))
+    if shared_object:
         import re
         with open("../setup-build-freetype.py") as f:
             m = re.findall(r"freetype-(\d+)\.(\d+)\.?(\d+)?\.tar", f.read())
