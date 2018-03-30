@@ -42,7 +42,9 @@ CMAKE_GLOBAL_SWITCHES = ("-DCMAKE_COLOR_MAKEFILE:BOOL=false "
                              prefix_dir, prefix_dir)
 
 # Try to use Ninja to build things if it's available. Much faster.
-if distutils.spawn.find_executable("ninja"):
+# On Windows, I first need to figure out how to make it aware of VC, bitness,
+# etc.
+if sys.platform != "win32" and distutils.spawn.find_executable("ninja"):
     CMAKE_GLOBAL_SWITCHES += "-G Ninja "
 
 bitness = None
