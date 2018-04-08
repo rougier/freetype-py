@@ -36,9 +36,9 @@ prefix_dir = path.abspath(path.join(build_dir, "local"))
 build_dir_ft = path.join(build_dir, FREETYPE_TARBALL.split(".tar")[0], "build")
 build_dir_hb = path.join(build_dir, HARFBUZZ_TARBALL.split(".tar")[0], "build")
 
-CMAKE_GLOBAL_SWITCHES = ("-DCMAKE_COLOR_MAKEFILE:BOOL=false "
-                         "-DCMAKE_PREFIX_PATH:PATH=\"{}\" "
-                         "-DCMAKE_INSTALL_PREFIX:PATH=\"{}\" ").format(
+CMAKE_GLOBAL_SWITCHES = ('-DCMAKE_COLOR_MAKEFILE:BOOL=false '
+                         '-DCMAKE_PREFIX_PATH:PATH="{}" '
+                         '-DCMAKE_INSTALL_PREFIX:PATH="{}" ').format(
                              prefix_dir, prefix_dir)
 
 # Try to use Ninja to build things if it's available. Much faster.
@@ -53,16 +53,18 @@ if sys.platform == "win32":
     if os.environ.get("PYTHON_ARCH", "") == "64":
         print("# Making a 64 bit build.")
         bitness = 64
-        CMAKE_GLOBAL_SWITCHES += ("-DCMAKE_GENERATOR_PLATFORM=x64 "
-                                  "-DCMAKE_GENERATOR_TOOLSET=\"host=x64\" ")
+        CMAKE_GLOBAL_SWITCHES += ('-DCMAKE_GENERATOR_PLATFORM=x64 '
+                                  '-DCMAKE_GENERATOR_TOOLSET="host=x64" ')
     else:
         print("# Making a 32 bit build.")
         bitness = 32
 
 if sys.platform == "darwin":
     print("# Making a 96 bit build.")
-    CMAKE_GLOBAL_SWITCHES += ("-DCMAKE_OSX_ARCHITECTURES=\"x86_64;i386\" "
-                              "-DCMAKE_OSX_DEPLOYMENT_TARGET=\"10.6\" ")
+    CMAKE_GLOBAL_SWITCHES += ('-DCMAKE_OSX_ARCHITECTURES="x86_64;i386" '
+                              '-DCMAKE_OSX_DEPLOYMENT_TARGET="10.6" '
+                              '-DCMAKE_C_FLAGS="-O2" '
+                              '-DCMAKE_CXX_FLAGS="-O2" ')
     bitness = 96
 
 if "linux" in sys.platform:
@@ -70,15 +72,15 @@ if "linux" in sys.platform:
         print("# Making a 32 bit build.")
         # On a 64 bit Debian/Ubuntu, this needs gcc-multilib and g++-multilib.
         # On a 64 bit Fedora, install glibc-devel and libstdc++-devel.
-        CMAKE_GLOBAL_SWITCHES += ("-DCMAKE_C_FLAGS=\"-m32\" "
-                                  "-DCMAKE_CXX_FLAGS=\"-m32\" "
-                                  "-DCMAKE_LD_FLAGS=\"-m32\" ")
+        CMAKE_GLOBAL_SWITCHES += ('-DCMAKE_C_FLAGS="-m32 -O2" '
+                                  '-DCMAKE_CXX_FLAGS="-m32 -O2" '
+                                  '-DCMAKE_LD_FLAGS="-m32" ')
         bitness = 32
     else:
         print("# Making a 64 bit build.")
-        CMAKE_GLOBAL_SWITCHES += ("-DCMAKE_C_FLAGS=\"-m64\" "
-                                  "-DCMAKE_CXX_FLAGS=\"-m64\" "
-                                  "-DCMAKE_LD_FLAGS=\"-m64\" ")
+        CMAKE_GLOBAL_SWITCHES += ('-DCMAKE_C_FLAGS="-m64 -O2" '
+                                  '-DCMAKE_CXX_FLAGS="-m64 -O2" '
+                                  '-DCMAKE_LD_FLAGS="-m64" ')
         bitness = 64
 
 
