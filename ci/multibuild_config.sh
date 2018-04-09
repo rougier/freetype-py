@@ -4,14 +4,8 @@
 function pre_build {
     # Any stuff that you need to do before you start building the wheels
     # Runs in the root directory of this repository.
-    if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$PLAT" == "i686" ]; then
-        apt install gcc-multilib g++-multilib
-    fi
 
-    # For when we test not bundling FreeType.
-    if [ "$TRAVIS_OS_NAME" == "linux" ] && [ -z "$FREETYPEPY_BUNDLE_FT" ]; then
-        apt install libfreetype6
-    fi
+    # ...
 }
 
 function run_tests {
