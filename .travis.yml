@@ -61,13 +61,21 @@ install:
 script:
     - install_run $PLAT
 
-#after_success:
-#    # Upload wheels to Rackspace container
-#    - pip install wheelhouse-uploader
-#    # This uploads the wheels to a Rackspace container owned by the
-#    # scikit-learn team, available at http://wheels.scipy.org.  See above
-#    # for information on using this account or choosing another.
-#    - python -m wheelhouse_uploader upload --local-folder
-#        ${TRAVIS_BUILD_DIR}/wheelhouse/
-#        --no-update-index
-#        wheels
+after_success:
+  # copy compiled wheels to dist/ where Travis `dpl` tool can find them and 
+  # upload to PyPI
+  - if [ -n "$TRAVIS_TAG" ]; then mkdir -p dist; cp wheelhouse/*.whl dist; fi
+
+deploy:
+  # Deploy to PyPI on tags. Since the hard work of building wheels is already 
+  # done, we need to defeat some of Travis' automation.
+  provider: pypi
+  on:
+    repo: rougier/freetype-py  # Prevent triggering from forks.
+    tags: true
+    all_branches: true
+  user: xxx
+  password:
+    secure: xxx
+  skip_cleanup: true  # Prevent deletion of dist/*.
+  distributions: check  # Dummy argument so dists aren't rebuilt by dpl.

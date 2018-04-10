@@ -3,9 +3,9 @@ environment:
     PACKAGE_NAME: freetype-py
     FREETYPEPY_BUNDLE_FT: 1
     # PyPI username and encrypted password
-    #TWINE_USERNAME: xxx
-    #TWINE_PASSWORD:
-    #  secure: xxx
+    TWINE_USERNAME: xxx
+    TWINE_PASSWORD:
+     secure: xxx
   matrix:
     - PYTHON: C:\Python27
       PYTHON_VERSION: 2.7
@@ -66,17 +66,15 @@ artifacts:
   # archive the generated packages in the ci.appveyor.com build report
   - path: dist\*.whl
 
-#on_success:
-#  # upload coverage data to Codecov.io
-#  - codecov --env PYTHON PYTHON_VERSION PYTHON_ARCH MSYS_ARCH
-#  # deploy wheels on tags to PyPI
-#  - ps: >-
-#      if($env:APPVEYOR_REPO_TAG -eq 'true') {
-#        Write-Output ("Deploying " + $env:APPVEYOR_REPO_TAG_NAME + " to #PyPI...")
-#        pip install --upgrade twine
-#        # If powershell ever sees anything on stderr it thinks it's a fail.
-#        # So we use cmd to redirect stderr to stdout before PS can see it.
-#        cmd /c 'twine upload dist\*.whl 2>&1'
-#      } else {
-#        Write-Output "Not deploying as this is not a tagged commit"
-#      }
+on_success:
+ # deploy wheels on tags to PyPI
+ - ps: >-
+     if($env:APPVEYOR_REPO_TAG -eq 'true') {
+       Write-Output ("Deploying " + $env:APPVEYOR_REPO_TAG_NAME + " to PyPI...")
+       pip install --upgrade twine
+       # If powershell ever sees anything on stderr it thinks it's a fail.
+       # So we use cmd to redirect stderr to stdout before PS can see it.
+       cmd /c 'twine upload dist\*.whl 2>&1'
+     } else {
+       Write-Output "Not deploying as this is not a tagged commit"
+     }
