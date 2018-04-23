@@ -3,9 +3,9 @@ environment:
     PACKAGE_NAME: freetype-py
     FREETYPEPY_BUNDLE_FT: 1
     # PyPI username and encrypted password
-    TWINE_USERNAME: xxx
-    TWINE_PASSWORD:
-     secure: xxx
+    TWINE_USERNAME: NicolasRougier
+    TWINE_PASSWORD: 
+     secure: E4pyyYZA167+G+7DvFQm0V4jrxbANsUIWPRRvFwTLTs=
   matrix:
     - PYTHON: C:\Python27
       PYTHON_VERSION: 2.7
