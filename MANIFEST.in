@@ -8,3 +8,4 @@ recursive-include examples *
 include MANIFEST.in
 include LICENSE.txt
 include README.rst
+include setup-build-freetype.py
