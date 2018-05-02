@@ -19,10 +19,10 @@ import sys
 from os import path
 
 FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
-FREETYPE_TARBALL = "freetype-2.9.tar.bz2"
+FREETYPE_TARBALL = "freetype-2.9.1.tar.bz2"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
 FREETYPE_SHA256 = (
-    "e6ffba3c8cef93f557d1f767d7bc3dee860ac7a3aaff588a521e081bc36f4c8a")
+    "db8d87ea720ea9d5edc5388fc7a0497bb11ba9fe972245e0f7f4c7e8b1e1e84d")
 HARFBUZZ_HOST = "https://www.freedesktop.org/software/harfbuzz/release/"
 HARFBUZZ_TARBALL = "harfbuzz-1.7.6.tar.bz2"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
@@ -33,6 +33,7 @@ root_dir = "."
 build_dir = path.join(root_dir, "build")
 # CMake requires an absolute path to a prefix.
 prefix_dir = path.abspath(path.join(build_dir, "local"))
+lib_dir = path.join(prefix_dir, "lib")
 build_dir_ft = path.join(build_dir, FREETYPE_TARBALL.split(".tar")[0], "build")
 build_dir_hb = path.join(build_dir, HARFBUZZ_TARBALL.split(".tar")[0], "build")
 
@@ -137,7 +138,10 @@ ensure_downloaded(HARFBUZZ_URL, HARFBUZZ_SHA256)
 print("# First, build FreeType without Harfbuzz support")
 shell(
     "cmake -DBUILD_SHARED_LIBS:BOOL=false "
-    "-DWITH_HarfBuzz=OFF -DWITH_PNG=OFF -DWITH_BZip2=OFF -DWITH_ZLIB=OFF "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE -DFT_WITH_HARFBUZZ=OFF "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE "
     "{} ..".format(CMAKE_GLOBAL_SWITCHES),
     cwd=build_dir_ft)
 shell("cmake --build . --config Release --target install", cwd=build_dir_ft)
@@ -155,11 +159,15 @@ shell("cmake --build . --config Release --target install", cwd=build_dir_hb)
 print("\n# Lastly, rebuild FreeType, this time with Harfbuzz support.")
 harfbuzz_includes = path.join(prefix_dir, "include", "harfbuzz")
 shell(
-    "cmake -DBUILD_SHARED_LIBS:BOOL=true -DMINGW=ON "
-    "-DWITH_HarfBuzz=ON -DWITH_PNG=OFF -DWITH_BZip2=OFF -DWITH_ZLIB=OFF "
+    "cmake -DBUILD_SHARED_LIBS:BOOL=true "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=FALSE -DFT_WITH_HARFBUZZ=ON "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE "
     "-DPKG_CONFIG_EXECUTABLE=\"\" "  # Prevent finding system libraries
     "-DHARFBUZZ_INCLUDE_DIRS=\"{}\" "
-    "{} ..".format(harfbuzz_includes, CMAKE_GLOBAL_SWITCHES),
+    "-DCMAKE_INSTALL_LIBDIR=\"{}\" "
+    "{} ..".format(harfbuzz_includes, lib_dir, CMAKE_GLOBAL_SWITCHES),
     cwd=build_dir_ft)
 shell("cmake --build . --config Release --target install", cwd=build_dir_ft)
 
