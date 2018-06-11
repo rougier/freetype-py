@@ -25,10 +25,10 @@ FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
 FREETYPE_SHA256 = (
     "db8d87ea720ea9d5edc5388fc7a0497bb11ba9fe972245e0f7f4c7e8b1e1e84d")
 HARFBUZZ_HOST = "https://www.freedesktop.org/software/harfbuzz/release/"
-HARFBUZZ_TARBALL = "harfbuzz-1.7.6.tar.bz2"
+HARFBUZZ_TARBALL = "harfbuzz-1.8.0.tar.bz2"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
 HARFBUZZ_SHA256 = (
-    "da7bed39134826cd51e57c29f1dfbe342ccedb4f4773b1c951ff05ff383e2e9b")
+    "a18518a31436f4b8124a9887ec2c0cf2e3a01f1adedd50dd45b0cc14125e96a3")
 
 root_dir = "."
 build_dir = path.join(root_dir, "build")
