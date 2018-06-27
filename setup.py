@@ -108,7 +108,7 @@ description = open(
 
 setup(
     name='freetype-py',
-    version='1.2',
+    version='2.0',
     description='Freetype python bindings',
     long_description=description,
     author='Nicolas P. Rougier',

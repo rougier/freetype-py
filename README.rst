@@ -134,17 +134,3 @@ Maxim Shemarev.
 
 .. image:: https://raw.githubusercontent.com/rougier/freetype-py/master/doc/_static/agg-trick.png
 
-
-Contributors
-============
-
-* Titusz Pan (bug report)
-* Ekkehard.Blanz (bug report)
-* Jānis Lībeks (bug report)
-* Frantisek Malina (typo)
-* Tillmann Karras (bug report & fix)
-* Matthew Sitton (bug report & fix)
-* Tao Gong (bug report)
-* Matthew Sitton (Remove raw interfaces from the __init__.py file)
-* Daniel McCloy (Adde glyph_name function)
-* Nikolaus Waxweiler (Setup of CI services and bundling of FreeType)
