@@ -1309,6 +1309,9 @@ class Face( object ):
         # python 3 or python 2 with __future__.unicode_literals
         if ( isinstance(char, unicode) and ( len(char) == 1 ) ):
             char = ord(char)
+        # python2 with emoji(utf8) and ucs-2
+        if ( ( isinstance(char, unicode) ) and ( sys.maxunicode == 65535 ) and ( len(char) == 2 ) ):
+            char = int('0x' + repr(char)[4:-1], base=16)
         # allow bare integer to pass through
         error = FT_Load_Char( self._FT_Face, char, flags )
         if error: raise FT_Exception( error )
