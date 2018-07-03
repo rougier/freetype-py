@@ -43,6 +43,7 @@ matrix:
     - os: linux  # No bundling.
       env:
         - MB_PYTHON_VERSION=3.6
+        - BUILD_SDIST=1
     - os: osx
       language: generic
       env:
@@ -59,16 +60,15 @@ before_install:
 
 install:
     - build_wheel $REPO_DIR $PLAT
-    # Additionally build sdist on tag and not bundling.
-    - if [ -z $"FREETYPEPY_BUNDLE_FT" && -n "$TRAVIS_TAG" ]; then python setup.py sdist; fi
 
 script:
     - install_run $PLAT
 
 after_success:
-  # copy compiled wheels to dist/ where Travis `dpl` tool can find them and 
+  # Copy compiled wheels to dist/ where Travis `dpl` tool can find them and 
   # upload to PyPI
   - if [ -n "$TRAVIS_TAG" ]; then mkdir -p dist; cp wheelhouse/*.whl dist; fi
+  - if [ -n "$TRAVIS_TAG" ] && [ -n "$BUILD_SDIST" ]; then python setup.py sdist; fi
 
 deploy:
   # Deploy to PyPI on tags. Since the hard work of building wheels is already 
