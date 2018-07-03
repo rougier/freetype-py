@@ -70,7 +70,8 @@ if sys.platform == "darwin":
     bitness = 96
 
 if "linux" in sys.platform:
-    if os.environ.get("PYTHON_ARCH", "") == "32":
+    if (os.environ.get("PYTHON_ARCH", "") == "32"
+            or os.environ.get("PLAT", "") == "i686"):
         print("# Making a 32 bit build.")
         # On a 64 bit Debian/Ubuntu, this needs gcc-multilib and g++-multilib.
         # On a 64 bit Fedora, install glibc-devel and libstdc++-devel.
