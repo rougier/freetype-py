@@ -108,7 +108,7 @@ description = open(
 
 setup(
     name='freetype-py',
-    version='2.0',
+    use_scm_version=True,
     description='Freetype python bindings',
     long_description=description,
     author='Nicolas P. Rougier',
@@ -133,4 +133,5 @@ setup(
         'Topic :: Multimedia :: Graphics',
     ],
     keywords=['freetype', 'font'],
+    setup_requires=['setuptools_scm'],
 )
