@@ -68,11 +68,10 @@ artifacts:
   - path: dist\*.whl
 
 on_success:
-  - ps: >-
-      if ($env:APPVEYOR_REPO_TAG -eq 'true') {
-        Write-Output ("Deploying " + $env:APPVEYOR_REPO_TAG_NAME + " to PyPI...")
-        pip install --upgrade twine
-        twine upload (ls dist\*.whl)
-      } else {
-        Write-Output "Not deploying as this is not a tagged commit"
-      }
+  - >
+    IF "%APPVEYOR_REPO_TAG%" == "true"
+    (
+    python -m pip install twine
+    &&
+    python -m twine upload dist/*.whl
+    )
