@@ -43,11 +43,11 @@ matrix:
     - os: linux  # No bundling.
       env:
         - MB_PYTHON_VERSION=3.6
-        - USE_CCACHE=1
     - os: osx
       language: generic
       env:
         - MB_PYTHON_VERSION=3.6
+        - USE_CCACHE=1
         - FREETYPEPY_BUNDLE_FT=1
 
 before_install:
