@@ -29,13 +29,13 @@ matrix:
     # Exclude the default Python 3.5 build
     - python: 3.5
   include:
-    - os: linux
+    - os: linux  # Bundle 32 bit library. Python 2.7 just to test it works there.
       env:
         - MB_PYTHON_VERSION=2.7
         - PLAT=i686
         - USE_CCACHE=1
         - FREETYPEPY_BUNDLE_FT=1
-    - os: linux
+    - os: linux  # Bundle 64 bit library.
       env:
         - MB_PYTHON_VERSION=3.6
         - USE_CCACHE=1
@@ -43,16 +43,18 @@ matrix:
     - os: linux  # No bundling.
       env:
         - MB_PYTHON_VERSION=3.6
-        - USE_CCACHE=1
     - os: osx
       language: generic
       env:
         - MB_PYTHON_VERSION=3.6
+        - USE_CCACHE=1
         - FREETYPEPY_BUNDLE_FT=1
 
 before_install:
     - source ci/multibuild/common_utils.sh
     - source ci/multibuild/travis_steps.sh
+    # Pass FREETYPEPY_BUNDLE_FT environment variable to container.
+    - source ci/custom_docker.sh
     - before_install
 
 install:

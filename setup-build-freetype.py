@@ -70,7 +70,8 @@ if sys.platform == "darwin":
     bitness = 96
 
 if "linux" in sys.platform:
-    if os.environ.get("PYTHON_ARCH", "") == "32":
+    if (os.environ.get("PYTHON_ARCH", "") == "32"
+            or os.environ.get("PLAT", "") == "i686"):
         print("# Making a 32 bit build.")
         # On a 64 bit Debian/Ubuntu, this needs gcc-multilib and g++-multilib.
         # On a 64 bit Fedora, install glibc-devel and libstdc++-devel.
@@ -179,8 +180,9 @@ shell(
     cwd=build_dir_ft)
 shell("cmake --build . --config Release --target install", cwd=build_dir_ft)
 
-# Move libraries from PREFIX/bin to PREFIX/lib if need be (Windows DLLs are 
+# Move libraries from PREFIX/bin to PREFIX/lib if need be (Windows DLLs are
 # treated as runtimes and may end up in bin/). This keeps setup.py simple.
+target_dir = path.join(prefix_dir, "lib")
 bin_so = glob.glob(path.join(prefix_dir, "bin", "*freetype*"))
 bin_so.extend(glob.glob(path.join(prefix_dir, "lib64", "*freetype*")))
 bin_so.extend(glob.glob(path.join(prefix_dir, "lib", "freetype*.dll")))
@@ -188,6 +190,9 @@ for so in bin_so:
     so_target_name = path.basename(so)
     if not so_target_name.startswith("lib"):
         so_target_name = "lib" + so_target_name
-    lib_path = path.join(prefix_dir, "lib", so_target_name)
+    lib_path = path.join(target_dir, so_target_name)
+
     print("# Moving '{}' to '{}'".format(so, lib_path))
+    if not path.exists(target_dir):
+        os.makedirs(target_dir)
     os.rename(so, lib_path)

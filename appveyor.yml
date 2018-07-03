@@ -60,6 +60,7 @@ test_script:
 
   # run tests from installed wheel
   - cd tests
+  - python -c "import freetype; print('Using FreeType version ', freetype.version())"
   - pytest
 
 artifacts:
