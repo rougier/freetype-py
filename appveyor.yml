@@ -71,8 +71,9 @@ on_success:
   - ps: >-
       if ($env:APPVEYOR_REPO_TAG -eq 'true') {
         Write-Output ("Deploying " + $env:APPVEYOR_REPO_TAG_NAME + " to PyPI...")
+        cd ..
         pip install --upgrade twine
-        twine upload (ls dist\*.whl)
+        twine upload dist\*.whl
       } else {
         Write-Output "Not deploying as this is not a tagged commit"
       }
