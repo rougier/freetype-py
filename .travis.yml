@@ -53,6 +53,8 @@ matrix:
 before_install:
     - source ci/multibuild/common_utils.sh
     - source ci/multibuild/travis_steps.sh
+    # Pass FREETYPEPY_BUNDLE_FT environment variable to container.
+    - source ci/custom_docker.sh
     - before_install
 
 install:
