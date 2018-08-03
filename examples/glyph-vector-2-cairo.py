@@ -47,7 +47,7 @@ if __name__ == '__main__':
     points = numpy.array(outline.points, dtype=[('x',float), ('y',float)])
     x, y = points['x'], points['y']
 
-    bbox = outline.get_bbox()
+    bbox = outline.get_cbox()
 
     MARGIN  = 10
     scale = 3
