@@ -10,6 +10,12 @@ def test_load_ft_face():
     assert freetype.Face('../examples/Vera.ttf')
 
 
+def test_load_from_memfile():
+    """Test loading from memory file"""
+    with open('../examples/Vera.ttf') as f:
+        assert freetype.Face(f)
+
+
 def test_bundle_version():
     module_dir = os.path.dirname(freetype.__file__)
     shared_object = glob.glob(os.path.join(module_dir, "libfreetype*"))
