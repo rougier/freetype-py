@@ -961,7 +961,7 @@ class Face( object ):
     FreeType root face class structure. A face object models a typeface in a
     font file.
     '''
-    def __init__( self, filename, index = 0 ):
+    def __init__( self, filename, index = 0, filebody=None ):
         '''
         Build a new Face
 
@@ -969,23 +969,33 @@ class Face( object ):
             A path to the font file.
 
         :param int index:
-               The index of the face within the font.
-               The first face has index 0.
+            The index of the face within the font.
+            The first face has index 0.
+        :param bytes filebody:
+            Contents of font file. `filename` and `filebody`
+            cannot be both set at the same time.
         '''
+        if filename and filebody:
+            raise ValueError('Both filename and filebody set')
         library = get_handle( )
         face = FT_Face( )
         self._FT_Face = None
         #error = FT_New_Face( library, filename, 0, byref(face) )
         self._filebodys = []
-        try:
-            u_filename = c_char_p(_encode_filename(filename))
-            error = FT_New_Face( library, u_filename, index, byref(face) )
-        except UnicodeError:
-            with open(filename, mode='rb') as f:
-                filebody = f.read()
+        if filebody:
+            self._filebodys.append(filebody)
             error = FT_New_Memory_Face( library, filebody, len(filebody),
                                         index, byref(face) )
-            self._filebodys.append(filebody)  # prevent gc
+        else:
+            try:
+                u_filename = c_char_p(_encode_filename(filename))
+                error = FT_New_Face( library, u_filename, index, byref(face) )
+            except UnicodeError:
+                with open(filename, mode='rb') as f:
+                    filebody = f.read()
+                error = FT_New_Memory_Face( library, filebody, len(filebody),
+                                            index, byref(face) )
+                self._filebodys.append(filebody)  # prevent gc
         if error: raise FT_Exception( error )
         self._filename = filename
         self._index = index
