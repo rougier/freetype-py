@@ -982,20 +982,16 @@ class Face( object ):
         self._FT_Face = None
         #error = FT_New_Face( library, filename, 0, byref(face) )
         self._filebodys = []
+        try:
+            u_filename = c_char_p(_encode_filename(filename))
+            error = FT_New_Face( library, u_filename, index, byref(face) )
+        except UnicodeError:
+            with open(filename, mode='rb') as f:
+                filebody = f.read()
         if filebody:
-            self._filebodys.append(filebody)
             error = FT_New_Memory_Face( library, filebody, len(filebody),
                                         index, byref(face) )
-        else:
-            try:
-                u_filename = c_char_p(_encode_filename(filename))
-                error = FT_New_Face( library, u_filename, index, byref(face) )
-            except UnicodeError:
-                with open(filename, mode='rb') as f:
-                    filebody = f.read()
-                error = FT_New_Memory_Face( library, filebody, len(filebody),
-                                            index, byref(face) )
-                self._filebodys.append(filebody)  # prevent gc
+            self._filebodys.append(filebody)  # prevent gc
         if error: raise FT_Exception( error )
         self._filename = filename
         self._index = index
@@ -1009,7 +1005,7 @@ class Face( object ):
             FT_Done_Face( self._FT_Face )
 
 
-    def attach_file( self, filename ):
+    def attach_file( self, filename, filebody=None ):
         '''
         Attach data to a face object. Normally, this is used to read
         additional information for the face object. For example, you can attach
@@ -1017,7 +1013,7 @@ class Face( object ):
         other metrics.
 
         :param filename: Filename to attach
-
+        :param filebody: Contents to attach.
         **Note**
 
         The meaning of the 'attach' (i.e., what really happens when the new
@@ -1028,13 +1024,15 @@ class Face( object ):
         invoking this function. Most drivers simply do not implement file
         attachments.
         '''
-
+        if filename and filebody:
+            raise ValueError('Both filename and filebody set')
         try:
             u_filename = c_char_p(_encode_filename(filename))
             error = FT_Attach_File( self._FT_Face, u_filename )
         except UnicodeError:
             with open(filename, mode='rb') as f:
                 filebody = f.read()
+        if filebody:
             parameters = FT_Open_Args()
             parameters.flags = FT_OPEN_MEMORY
             parameters.memory_base = filebody
