@@ -15,6 +15,7 @@ Note: C Library will be searched using the ctypes.util.find_library. However,
       this search might fail. In such a case (or for other reasons), you may
       have to specify an explicit path below.
 '''
+import io
 import sys
 from ctypes import *
 
@@ -961,12 +962,12 @@ class Face( object ):
     FreeType root face class structure. A face object models a typeface in a
     font file.
     '''
-    def __init__( self, filename, index = 0 ):
+    def __init__( self, path_or_stream, index = 0 ):
         '''
         Build a new Face
 
-        :param str filename:
-            A path to the font file.
+        :param Union[str, io.BytesIO] path_or_stream:
+            A path to the font file or an io.BytesIO stream.
 
         :param int index:
                The index of the face within the font.
@@ -975,21 +976,38 @@ class Face( object ):
         library = get_handle( )
         face = FT_Face( )
         self._FT_Face = None
-        #error = FT_New_Face( library, filename, 0, byref(face) )
+        #error = FT_New_Face( library, path_or_stream, 0, byref(face) )
         self._filebodys = []
-        try:
-            u_filename = c_char_p(_encode_filename(filename))
-            error = FT_New_Face( library, u_filename, index, byref(face) )
-        except UnicodeError:
-            with open(filename, mode='rb') as f:
-                filebody = f.read()
-            error = FT_New_Memory_Face( library, filebody, len(filebody),
-                                        index, byref(face) )
-            self._filebodys.append(filebody)  # prevent gc
-        if error: raise FT_Exception( error )
-        self._filename = filename
+        if hasattr(path_or_stream, "read"):
+            error = self._init_from_memory(library, face, index, path_or_stream.read())
+        else:
+            try:
+                error = self._init_from_file(library, face, index, path_or_stream)
+            except UnicodeError:
+                with open(path_or_stream, mode="rb") as f:
+                    filebody = f.read()
+                error = self._init_from_memory(library, face, index, filebody)
+        if error:
+            raise FT_Exception(error)
+        self._filename = path_or_stream
         self._index = index
         self._FT_Face = face
+
+    def _init_from_file(self, library, face, index, path):
+        u_filename = c_char_p(_encode_filename(path))
+        error = FT_New_Face(library, u_filename, index, byref(face))
+        return error
+
+    def _init_from_memory(self, library, face, index, byte_stream):
+        error = FT_New_Memory_Face(
+            library, byte_stream, len(byte_stream), index, byref(face)
+        )
+        self._filebodys.append(byte_stream)  # prevent gc
+        return error
+
+    @classmethod
+    def from_memory(cls, bytes_, index=0):
+         return cls(io.BytesIO(bytes_), index)
 
     def __del__( self ):
         '''
