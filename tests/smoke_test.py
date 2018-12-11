@@ -17,7 +17,7 @@ def test_load_ft_face_from_memory():
 
     with open("../examples/Vera.ttf", mode="rb") as f:
         byte_stream = f.read()
-    assert freetype.Face.from_memory(byte_stream)
+    assert freetype.Face.from_bytes(byte_stream)
 
 
 def test_bundle_version():

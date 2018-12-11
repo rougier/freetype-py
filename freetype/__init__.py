@@ -966,7 +966,7 @@ class Face( object ):
         '''
         Build a new Face
 
-        :param Union[str, io.BytesIO] path_or_stream:
+        :param Union[str, typing.BinaryIO] path_or_stream:
             A path to the font file or an io.BytesIO stream.
 
         :param int index:
@@ -989,7 +989,6 @@ class Face( object ):
                 error = self._init_from_memory(library, face, index, filebody)
         if error:
             raise FT_Exception(error)
-        self._filename = path_or_stream
         self._index = index
         self._FT_Face = face
 
@@ -1006,7 +1005,7 @@ class Face( object ):
         return error
 
     @classmethod
-    def from_memory(cls, bytes_, index=0):
+    def from_bytes(cls, bytes_, index=0):
          return cls(io.BytesIO(bytes_), index)
 
     def __del__( self ):
