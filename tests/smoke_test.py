@@ -7,7 +7,17 @@ import pytest
 
 def test_load_ft_face():
     """A smoke test."""
-    assert freetype.Face('../examples/Vera.ttf')
+    assert freetype.Face("../examples/Vera.ttf")
+
+
+def test_load_ft_face_from_memory():
+    """Another smoke test."""
+    with open("../examples/Vera.ttf", mode="rb") as f:
+        assert freetype.Face(f)
+
+    with open("../examples/Vera.ttf", mode="rb") as f:
+        byte_stream = f.read()
+    assert freetype.Face.from_bytes(byte_stream)
 
 
 def test_bundle_version():
