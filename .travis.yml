@@ -16,8 +16,7 @@ language: python
 # The travis Python version is unrelated to the version we build and test
 # with.  This is set with the MB_PYTHON_VERSION variable.
 python: 3.5
-sudo: required
-dist: trusty
+dist: xenial
 services: docker
 
 cache:
@@ -35,7 +34,7 @@ matrix:
         - PLAT=i686
         - USE_CCACHE=1
         - FREETYPEPY_BUNDLE_FT=1
-    - os: linux  # Bundle 64 bit library.
+    - os: linux  # Bundle 64 bit library for Python 3.6.
       env:
         - MB_PYTHON_VERSION=3.6
         - USE_CCACHE=1
@@ -48,6 +47,17 @@ matrix:
       language: generic
       env:
         - MB_PYTHON_VERSION=3.6
+        - USE_CCACHE=1
+        - FREETYPEPY_BUNDLE_FT=1
+    - os: linux  # Bundle 64 bit library for Python 3.7.
+      env:
+        - MB_PYTHON_VERSION=3.7
+        - USE_CCACHE=1
+        - FREETYPEPY_BUNDLE_FT=1
+    - os: osx
+      language: generic
+      env:
+        - MB_PYTHON_VERSION=3.7
         - USE_CCACHE=1
         - FREETYPEPY_BUNDLE_FT=1
 

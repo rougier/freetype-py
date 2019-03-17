@@ -20,15 +20,15 @@ import sys
 from os import path
 
 FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
-FREETYPE_TARBALL = "freetype-2.9.1.tar.bz2"
+FREETYPE_TARBALL = "freetype-2.10.0.tar.bz2"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
 FREETYPE_SHA256 = (
-    "db8d87ea720ea9d5edc5388fc7a0497bb11ba9fe972245e0f7f4c7e8b1e1e84d")
+    "fccc62928c65192fff6c98847233b28eb7ce05f12d2fea3f6cc90e8b4e5fbe06")
 HARFBUZZ_HOST = "https://www.freedesktop.org/software/harfbuzz/release/"
-HARFBUZZ_TARBALL = "harfbuzz-1.8.0.tar.bz2"
+HARFBUZZ_TARBALL = "harfbuzz-2.3.1.tar.bz2"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
 HARFBUZZ_SHA256 = (
-    "a18518a31436f4b8124a9887ec2c0cf2e3a01f1adedd50dd45b0cc14125e96a3")
+    "f205699d5b91374008d6f8e36c59e419ae2d9a7bb8c5d9f34041b9a5abcae468")
 
 root_dir = "."
 build_dir = path.join(root_dir, "build")
@@ -136,13 +136,6 @@ distutils.dir_util.mkpath(build_dir_hb)
 
 ensure_downloaded(FREETYPE_URL, FREETYPE_SHA256)
 ensure_downloaded(HARFBUZZ_URL, HARFBUZZ_SHA256)
-
-# XXX: Temporary hack for 2.9.1 because the installation fails on Windows.
-if sys.platform == "win32":
-    src = path.join("ci", "ft291-CMakeLists.txt")
-    dst = path.join(build_dir_ft, "..", "CMakeLists.txt")
-    print("XXX: Copying {} to {}.".format(src, dst))
-    distutils.file_util.copy_file(src, dst)
 
 print("# First, build FreeType without Harfbuzz support")
 shell(
