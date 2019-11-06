@@ -27,8 +27,8 @@ def cubic_to(a, b, c, ctx):
 
 if __name__ == '__main__':
     face = freetype.Face('./Vera.ttf')
-    face.set_char_size( 12*64 )
-    face.load_char('B')
+    face.set_char_size( 18*64 )
+    face.load_char('B', freetype.FT_LOAD_DEFAULT | freetype.FT_LOAD_NO_BITMAP)
     ctx = []
     face.glyph.outline.decompose(ctx, move_to=move_to, line_to=line_to, conic_to=conic_to, cubic_to=cubic_to)
     print("""<?xml version="1.0" encoding="UTF-8" standalone="no"?>
