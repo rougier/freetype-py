@@ -651,7 +651,7 @@ class Outline( object ):
         which is dedicated to this single task.
         '''
         bbox = FT_BBox()
-        FT_Outline_Get_CBox(byref(self._FT_Outline), byref(bbox))
+        FT_Outline_Get_CBox(byref(self._FT_Outline.contents), byref(bbox))
         return BBox(bbox)
 
     _od_move_to_noop = FT_Outline_MoveToFunc(lambda a, b: 0)
