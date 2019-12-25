@@ -651,7 +651,7 @@ class Outline( object ):
         which is dedicated to this single task.
         '''
         bbox = FT_BBox()
-        FT_Outline_Get_CBox(byref(self._FT_Outline.contents), byref(bbox))
+        FT_Outline_Get_CBox(byref(self._FT_Outline), byref(bbox))
         return BBox(bbox)
 
     _od_move_to_noop = FT_Outline_MoveToFunc(lambda a, b: 0)
@@ -868,7 +868,7 @@ class Glyph( object ):
           FT_GLYPH_BBOX_PIXELS.
         '''
         bbox = FT_BBox()
-        error = FT_Glyph_Get_CBox(byref(self._FT_Glyph), bbox_mode, byref(bbox))
+        error = FT_Glyph_Get_CBox(byref(self._FT_Glyph.contents), bbox_mode, byref(bbox))
         if error: raise FT_Exception(error)
         return BBox(bbox)
 
