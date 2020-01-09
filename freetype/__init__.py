@@ -18,12 +18,21 @@ Note: C Library will be searched using the ctypes.util.find_library. However,
 import io
 import sys
 from ctypes import *
+import ctypes.util
+import struct
 
 from freetype.raw import *
 
 # Hack to get unicode class in python3
 PY3 = sys.version_info[0] == 3
 if PY3: unicode = str
+
+
+def unmake_tag(i):
+    # roughly opposite of FT_MAKE_TAG, converts 32-bit int to Python string
+    # could do with .to_bytes if limited to Python 3.2 or higher...
+    b = struct.pack('>I', i)
+    return b.decode('ascii', errors='replace')
 
 _handle = None
 
@@ -165,6 +174,28 @@ def _encode_filename(filename):
 Vector = FT_Vector
 Matrix = FT_Matrix
 
+
+# -----------------------------------------------------------------------------
+# Handling for FT_Done_MM_Var, which was added in FreeType 2.9. Prior to that,
+# we need to import libc and use libc free on the memory allocated for the
+# FT_MM_Var data structure. See Face.get_variation_info().
+# -----------------------------------------------------------------------------
+if version() < (2,9,1):
+    if platform.system() == "Windows":
+        libcpath = ctypes.util.find_library("msvcrt")
+    else:
+        libcpath = ctypes.util.find_library("c")
+    libc = CDLL(libcpath)
+    libc.free.argtypes = [c_void_p]
+    libc.free.restype = None
+
+    def FT_Done_MM_Var_func(p):
+        libc.free(p)
+else:
+    def FT_Done_MM_Var_func(p):
+        error = FT_Done_MM_Var(get_handle(), p)
+        if error:
+            raise FT_Exception("Failure calling FT_Done_MM_Var")
 
 
 # -----------------------------------------------------------------------------
@@ -1070,6 +1101,7 @@ class Face( object ):
             raise FT_Exception(error)
         self._index = index
         self._FT_Face = face
+        self._name_strings = dict()
 
     def _init_from_file(self, library, face, index, path):
         u_filename = c_char_p(_encode_filename(path))
@@ -1082,6 +1114,19 @@ class Face( object ):
         )
         self._filebodys.append(byte_stream)  # prevent gc
         return error
+
+    def _init_name_string_map(self):
+        # build map of (nID, pID, eID, lID) keys to name string bytes
+        self._name_strings = dict()
+
+        for nidx in range(self._get_sfnt_name_count()):
+            namerec = self.get_sfnt_name(nidx)
+            nk = (namerec.name_id,
+                    namerec.platform_id,
+                    namerec.encoding_id,
+                    namerec.language_id)
+
+            self._name_strings[nk] = namerec.string
 
     @classmethod
     def from_bytes(cls, bytes_, index=0):
@@ -1511,6 +1556,169 @@ class Face( object ):
         error = FT_Get_Sfnt_Name( self._FT_Face, index, byref(name) )
         if error: raise FT_Exception( error )
         return SfntName( name )
+
+    def get_best_name_string(self, nameID, default_string='', preferred_order=None):
+        '''
+        Retrieve a name string given nameID. Searches available font names
+        matching nameID and returnsthe decoded bytes of the best match.
+        "Best" is defined as a preferred list of platform/encoding/languageIDs
+        which can be overridden by supplying a preferred_order matching the
+        scheme of 'sort_order' (see below).
+
+       The routine will attempt to decode the string's bytes to a Python str, when the
+        platform/encoding[/langID] are known (Windows, Mac, or Unicode platforms).
+ 
+        If you prefer more control over name string selection and decoding than
+        this routine provides:
+            - call self._init_name_string_map()
+            - use (nameID, platformID, encodingID, languageID) as a key into 
+              the self._name_strings dict
+       '''
+        if not(self._name_strings):
+            self._init_name_string_map()
+
+        sort_order = preferred_order or (
+            (3, 1, 1033),  # Microsoft/Windows/US English
+            (1, 0, 0),     # Mac/Roman/English
+            (0, 6, 0),     # Unicode/SMP/*
+            (0, 4, 0),     # Unicode/SMP/*
+            (0, 3, 0),     # Unicode/BMP/*
+            (0, 2, 0),     # Unicode/10646-BMP/*
+            (0, 1, 0),     # Unicode/1.1/*
+        )
+
+        # get all keys matching nameID
+        keys_present = [k for k in self._name_strings.keys() if k[0] == nameID]
+
+        if keys_present:
+            # sort found keys by sort_order
+            key_order = {k: v for v, k in enumerate(sort_order)}
+            keys_present.sort(key=lambda x: key_order.get(x[1:4]))
+            best_key = keys_present[0]
+            nsbytes = self._name_strings[best_key]
+
+            if best_key[1:3] == (3, 1) or best_key[1] == 0:
+                enc = "utf-16-be"
+            elif bset_key[1:4] == (1, 0, 0):
+                enc = "mac-roman"
+            else:
+                enc = "unicode_escape"
+
+            ns = nsbytes.decode(enc)
+
+        else:
+            ns = default_string
+
+        return ns
+
+    def get_variation_info(self):
+        '''
+        Retrieves variation space information for the current face.
+        '''
+        if version() < (2, 8, 1):
+            raise NotImplementedError("freetype-py VF support requires FreeType 2.8.1 or later")
+
+        p_amaster = pointer(FT_MM_Var())
+        error = FT_Get_MM_Var(self._FT_Face, byref(p_amaster))
+        
+        if error:
+            raise FT_Exception(error)
+
+        vsi = VariationSpaceInfo(self, p_amaster)
+
+        FT_Done_MM_Var_func(p_amaster)
+
+        return vsi
+
+    def get_var_blend_coords(self):
+        '''
+        Get the current blend coordinates (-1.0..+1.0)
+        '''
+        vsi = self.get_variation_info()
+        num_coords = len(vsi.axes)
+        ft_coords = (FT_Fixed * num_coords)()
+        error = FT_Get_Var_Blend_Coordinates(self._FT_Face, num_coords, byref(ft_coords))
+
+        if error:
+            raise FT_Exception(error)
+
+        coords = tuple([ft_coords[ai]/65536.0 for ai in range(num_coords)])
+
+        return coords
+
+    def set_var_blend_coords(self, coords, reset=False):
+        '''
+        Set blend coords. Using reset=True will set all axes to
+        their default coordinates.
+        '''
+        if reset:
+            error = FT_Set_Var_Blend_Coordinates(self._FT_Face, 0, 0)
+        else:
+            num_coords = len(coords)
+            ft_coords = [int(round(c * 65536.0)) for c in coords]
+            coords_array = (FT_Fixed * num_coords)(*ft_coords)
+            error = FT_Set_Var_Blend_Coordinates(self._FT_Face, num_coords, byref(coords_array))
+
+        if error:
+            raise FT_Exception(error)
+
+    def get_var_design_coords(self):
+        '''
+        Get the current design coordinates
+        '''
+        vsi = self.get_variation_info()
+        num_coords = len(vsi.axes)
+        ft_coords = (FT_Fixed * num_coords)()
+        error = FT_Get_Var_Design_Coordinates(self._FT_Face, num_coords, byref(ft_coords))
+
+        if error:
+            raise FT_Exception(error)
+
+        coords = tuple([ft_coords[ai]/65536.0 for ai in range(num_coords)])
+
+        return coords
+
+    def set_var_design_coords(self, coords, reset=False):
+        '''
+        Set design coords. Using reset=True will set all axes to
+        their default coordinates.
+        '''
+        if reset:
+            error = FT_Set_Var_Design_Coordinates(self._FT_Face, 0, 0)
+        
+        else:
+            num_coords = len(coords)
+            ft_coords = [int(round(c * 65536.0)) for c in coords]
+            coords_array = (FT_Fixed * num_coords)(*ft_coords)
+            error = FT_Set_Var_Design_Coordinates(self._FT_Face, num_coords, byref(coords_array))
+
+        if error:
+            raise FT_Exception(error)
+
+    def set_var_named_instance(self, instance_name):
+        '''
+        Set instance by name. This will work with any FreeType with variable support
+        (for our purposes: v2.8.1 or later). If the actual FT_Set_Named_Instance()
+        function is available (v2.9.1 or later), we use it (which, despite what you might
+        expect from its name, sets instances by *index*). Otherwise we just use the coords
+        of the named instance (if found) and call self.set_var_design_coords.
+        '''
+        have_func = freetype.version() >= (2, 9, 1)
+        vsi = self.get_variation_info()
+
+        for inst_idx, inst in enumerate(vsi.instances, start=1):
+            if inst.name == instance_name:
+                if have_func:
+                    error = FT_Set_Named_Instance(self._FT_Face, inst_idx)
+                else:
+                    error = self.set_var_design_coords(inst.coords)
+
+                if error:
+                    raise FT_Exception(error)
+
+                break
+
+        # named instance not found; do nothing
 
     def _get_postscript_name( self ):
         return FT_Get_Postscript_Name( self._FT_Face )
@@ -2048,3 +2256,65 @@ class Stroker( object ):
         :param outline: The target outline.
         '''
         FT_Stroker_Export( self._FT_Stroker, outline._FT_Outline )
+
+
+# -----------------------------------------------------------------------------
+# Classes related to Variable Font support
+#
+class VariationAxis(object):
+    tag = None
+    coords = tuple()
+
+    def __init__(self, ftvaraxis):
+        self.tag = unmake_tag(ftvaraxis.tag)
+        self.name = ftvaraxis.name.decode('ascii')
+        self.minimum = ftvaraxis.minimum/65536.0
+        self.default = ftvaraxis.default/65536.0
+        self.maximum = ftvaraxis.maximum/65536.0
+        self.strid = ftvaraxis.strid  # do we need this? Should be same as 'name'...
+
+    def __repr__(self):
+        return "<VariationAxis '{}' ('{}') [{}, {}, {}]>".format(
+            self.tag, self.name, self.minimum, self.default, self.maximum)
+
+class VariationInstance(object):
+    def __init__(self, name, psname, coords):
+        self.name = name
+        self.psname = psname
+        self.coords = coords
+
+    def __repr__(self):
+        return "<VariationInstance '{}' {}>".format(
+            self.name, self.coords)
+
+class VariationSpaceInfo(object):
+    """
+    VF info (axes & instances).
+    """
+    def __init__(self, face, p_ftmmvar):
+        """
+        Build a VariationSpaceInfo object given face (freetype.Face) and
+        p_ftmmvar (pointer to FT_MM_Var).
+        """
+        ftmv = p_ftmmvar.contents
+
+        axes = []
+        for axidx in range(ftmv.num_axis):
+            axes.append(VariationAxis(ftmv.axis[axidx]))
+
+        self.axes = tuple(axes)
+
+        inst = []
+        for instidx in range(ftmv.num_namedstyles):
+            instinfo = ftmv.namedstyle[instidx]
+            nid = instinfo.strid
+            name = face.get_best_name_string(nid)
+            psid = instinfo.psid
+            psname = face.get_best_name_string(psid)
+            coords = []
+            for cidx in range(len(self.axes)):
+                coords.append(instinfo.coords[cidx]/65536.0)
+
+            inst.append(VariationInstance(name, psname, tuple(coords)))
+
+        self.instances = tuple(inst)

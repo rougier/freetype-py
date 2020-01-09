@@ -166,6 +166,29 @@ except AttributeError:
     pass
 
 
+# Routines for variable font support. These were introduced at different
+# points in FreeType's history (except for FT_Get_MM_Var which has been
+# around for a long time).
+FT_Get_MM_Var  = _lib.FT_Get_MM_Var  # v2.old
+
+# -- since 2.8.1 for sure (some 2.7.1 or possibly older, but to be safe,
+# implementation should check FT version >= 2.8.1
+try:
+    FT_Get_Var_Axis_Flags         = _lib.FT_Get_Var_Axis_Flags
+    FT_Get_Var_Blend_Coordinates  = _lib.FT_Get_Var_Blend_Coordinates
+    FT_Get_Var_Design_Coordinates = _lib.FT_Get_Var_Design_Coordinates
+    FT_Set_Var_Blend_Coordinates  = _lib.FT_Set_Var_Blend_Coordinates
+    FT_Set_Var_Design_Coordinates = _lib.FT_Set_Var_Design_Coordinates
+except AttributeError:
+    pass
+
+# -- since v2.9; we can work around if these are not present.
+try:
+    FT_Done_MM_Var        = _lib.FT_Done_MM_Var
+    FT_Set_Named_Instance = _lib.FT_Set_Named_Instance
+except AttributeError:
+    pass
+
 # Wholesale import of 102 routines which can be reasonably expected
 # to be found in freetype 2.2.x onwards. Some of these might need
 # to be protected with try:/except AttributeError: in some freetype builds.
@@ -208,7 +231,6 @@ try:
     FT_Get_BDF_Property            = _lib.FT_Get_BDF_Property
 except AttributeError:
     pass
-FT_Get_MM_Var                  = _lib.FT_Get_MM_Var
 FT_Get_Module                  = _lib.FT_Get_Module
 FT_Get_Multi_Master            = _lib.FT_Get_Multi_Master
 FT_Get_PFR_Advance             = _lib.FT_Get_PFR_Advance
@@ -260,8 +282,6 @@ FT_Set_Debug_Hook              = _lib.FT_Set_Debug_Hook
 FT_Set_MM_Blend_Coordinates    = _lib.FT_Set_MM_Blend_Coordinates
 FT_Set_MM_Design_Coordinates   = _lib.FT_Set_MM_Design_Coordinates
 FT_Set_Renderer                = _lib.FT_Set_Renderer
-FT_Set_Var_Blend_Coordinates   = _lib.FT_Set_Var_Blend_Coordinates
-FT_Set_Var_Design_Coordinates  = _lib.FT_Set_Var_Design_Coordinates
 FT_Sfnt_Table_Info             = _lib.FT_Sfnt_Table_Info
 FT_Sin                         = _lib.FT_Sin
 FT_Stream_OpenGzip             = _lib.FT_Stream_OpenGzip
