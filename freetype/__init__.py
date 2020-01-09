@@ -868,7 +868,7 @@ class Glyph( object ):
           FT_GLYPH_BBOX_PIXELS.
         '''
         bbox = FT_BBox()
-        error = FT_Glyph_Get_CBox(byref(self._FT_Glyph), bbox_mode, byref(bbox))
+        error = FT_Glyph_Get_CBox(byref(self._FT_Glyph.contents), bbox_mode, byref(bbox))
         if error: raise FT_Exception(error)
         return BBox(bbox)
 
