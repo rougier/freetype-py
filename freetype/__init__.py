@@ -1565,7 +1565,7 @@ class Face( object ):
         which can be overridden by supplying a preferred_order matching the
         scheme of 'sort_order' (see below).
 
-       The routine will attempt to decode the string's bytes to a Python str, when the
+        The routine will attempt to decode the string's bytes to a Python str, when the
         platform/encoding[/langID] are known (Windows, Mac, or Unicode platforms).
  
         If you prefer more control over name string selection and decoding than
