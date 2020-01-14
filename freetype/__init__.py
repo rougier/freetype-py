@@ -1560,7 +1560,7 @@ class Face( object ):
     def get_best_name_string(self, nameID, default_string='', preferred_order=None):
         '''
         Retrieve a name string given nameID. Searches available font names
-        matching nameID and returnsthe decoded bytes of the best match.
+        matching nameID and returns the decoded bytes of the best match.
         "Best" is defined as a preferred list of platform/encoding/languageIDs
         which can be overridden by supplying a preferred_order matching the
         scheme of 'sort_order' (see below).
