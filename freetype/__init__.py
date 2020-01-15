@@ -1599,7 +1599,7 @@ class Face( object ):
 
             if best_key[1:3] == (3, 1) or best_key[1] == 0:
                 enc = "utf-16-be"
-            elif bset_key[1:4] == (1, 0, 0):
+            elif best_key[1:4] == (1, 0, 0):
                 enc = "mac-roman"
             else:
                 enc = "unicode_escape"
