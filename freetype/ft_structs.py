@@ -983,3 +983,48 @@ class FT_BitmapGlyphRec(Structure):
         ('bitmap', FT_Bitmap)
     ]
 FT_BitmapGlyph = POINTER(FT_BitmapGlyphRec)
+
+
+# -----------------------------------------------------------------------------
+# Structures related to variable fonts as used in the various VF routines.
+#
+class FT_Var_Axis(Structure):
+    '''
+    A structure to model a given axis in design space for Multiple Masters,
+    TrueType GX, and OpenType variation fonts.
+    '''
+    _fields_ = [
+        ('name', FT_String_p),
+        ('minimum', FT_Fixed),
+        ('default', FT_Fixed),
+        ('maximum', FT_Fixed),
+        ('tag', FT_ULong),
+        ('strid', FT_UInt)
+    ]
+
+
+class FT_Var_Named_Style(Structure):
+    '''
+    A structure to model a named instance in a TrueType GX or OpenType
+    variation font.
+    '''
+    _fields_ = [
+        ('coords', POINTER(FT_Fixed)),
+        ('strid', FT_UInt),
+        ('psid', FT_UInt)
+    ]
+
+
+class FT_MM_Var(Structure):
+    '''
+    A structure to model the axes and space of an Adobe MM, TrueType GX,
+    or OpenType variation font.
+    Some fields are specific to one format and not to the others.
+    '''
+    _fields_ = [
+        ('num_axis', FT_UInt),
+        ('num_designs', FT_UInt),
+        ('num_namedstyles', FT_UInt),
+        ('axis', POINTER(FT_Var_Axis)),
+        ('namedstyle', POINTER(FT_Var_Named_Style))
+    ]
