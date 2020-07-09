@@ -203,4 +203,4 @@ for so in bin_so:
     print("# Moving '{}' to '{}'".format(so, lib_path))
     if not path.exists(target_dir):
         os.makedirs(target_dir)
-    os.rename(so, lib_path)
+    os.replace(so, lib_path)
