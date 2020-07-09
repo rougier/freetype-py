@@ -26,13 +26,13 @@ from urllib.request import urlopen
 import certifi
 
 FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
-FREETYPE_TARBALL = "freetype-2.10.0.tar.bz2"
+FREETYPE_TARBALL = "freetype-2.10.2.tar.xz"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
-FREETYPE_SHA256 = "fccc62928c65192fff6c98847233b28eb7ce05f12d2fea3f6cc90e8b4e5fbe06"
+FREETYPE_SHA256 = "1543d61025d2e6312e0a1c563652555f17378a204a61e99928c9fcef030a2d8b"
 HARFBUZZ_HOST = "https://www.freedesktop.org/software/harfbuzz/release/"
-HARFBUZZ_TARBALL = "harfbuzz-2.3.1.tar.bz2"
+HARFBUZZ_TARBALL = "harfbuzz-2.6.7.tar.xz"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
-HARFBUZZ_SHA256 = "f205699d5b91374008d6f8e36c59e419ae2d9a7bb8c5d9f34041b9a5abcae468"
+HARFBUZZ_SHA256 = "49e481d06cdff97bf68d99fa26bdf785331f411614485d892ea4c78eb479b218"
 
 root_dir = "."
 build_dir = path.join(root_dir, "build")
@@ -137,7 +137,7 @@ def ensure_downloaded(url, sha256_sum):
             hasher.update(tb.read())
         assert hasher.hexdigest() == sha256_sum
 
-        with tarfile.open(tarball, "r:bz2") as tb:
+        with tarfile.open(tarball, "r:xz") as tb:
             tb.extractall(build_dir)
 
 
