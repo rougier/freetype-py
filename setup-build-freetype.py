@@ -131,7 +131,6 @@ def ensure_downloaded(url, sha256_sum):
         download(url, tarball)
 
     if not path.exists(path.join(build_dir, tarball_dir, "CMakeLists.txt")):
-
         hasher = hashlib.sha256()
         with open(tarball, "rb") as tb:
             hasher.update(tb.read())
@@ -156,10 +155,11 @@ shell(
     "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE "
     "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
     "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE "
     "{} ..".format(CMAKE_GLOBAL_SWITCHES),
     cwd=build_dir_ft,
 )
-shell("cmake --build . --config Release --target install", cwd=build_dir_ft)
+shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_ft)
 
 print("\n# Next, build Harfbuzz and point it to the FreeType we just build.")
 shell(
@@ -170,7 +170,7 @@ shell(
     "{} ..".format(CMAKE_GLOBAL_SWITCHES),
     cwd=build_dir_hb,
 )
-shell("cmake --build . --config Release --target install", cwd=build_dir_hb)
+shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_hb)
 
 print("\n# Lastly, rebuild FreeType, this time with Harfbuzz support.")
 harfbuzz_includes = path.join(prefix_dir, "include", "harfbuzz")
@@ -180,13 +180,14 @@ shell(
     "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE "
     "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
     "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE "
     '-DPKG_CONFIG_EXECUTABLE="" '  # Prevent finding system libraries
     '-DHARFBUZZ_INCLUDE_DIRS="{}" '
     "-DSKIP_INSTALL_HEADERS=ON "
     "{} ..".format(harfbuzz_includes, CMAKE_GLOBAL_SWITCHES),
     cwd=build_dir_ft,
 )
-shell("cmake --build . --config Release --target install", cwd=build_dir_ft)
+shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_ft)
 
 # Move libraries from PREFIX/bin to PREFIX/lib if need be (Windows DLLs are
 # treated as runtimes and may end up in bin/). This keeps setup.py simple.
