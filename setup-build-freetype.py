@@ -11,27 +11,28 @@ import distutils.dir_util
 import distutils.file_util
 import distutils.spawn
 import glob
+import hashlib
 import os
 import shutil
 import ssl
 import subprocess
 import sys
+import tarfile
 import urllib
 from os import path
 from urllib.request import urlopen
 
+# Needed for the GitHub Actions macOS CI runner, which appears to come without CAs.
 import certifi
 
 FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
 FREETYPE_TARBALL = "freetype-2.10.0.tar.bz2"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
-FREETYPE_SHA256 = (
-    "fccc62928c65192fff6c98847233b28eb7ce05f12d2fea3f6cc90e8b4e5fbe06")
+FREETYPE_SHA256 = "fccc62928c65192fff6c98847233b28eb7ce05f12d2fea3f6cc90e8b4e5fbe06"
 HARFBUZZ_HOST = "https://www.freedesktop.org/software/harfbuzz/release/"
 HARFBUZZ_TARBALL = "harfbuzz-2.3.1.tar.bz2"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
-HARFBUZZ_SHA256 = (
-    "f205699d5b91374008d6f8e36c59e419ae2d9a7bb8c5d9f34041b9a5abcae468")
+HARFBUZZ_SHA256 = "f205699d5b91374008d6f8e36c59e419ae2d9a7bb8c5d9f34041b9a5abcae468"
 
 root_dir = "."
 build_dir = path.join(root_dir, "build")
@@ -41,10 +42,11 @@ lib_dir = path.join(prefix_dir, "lib")
 build_dir_ft = path.join(build_dir, FREETYPE_TARBALL.split(".tar")[0], "build")
 build_dir_hb = path.join(build_dir, HARFBUZZ_TARBALL.split(".tar")[0], "build")
 
-CMAKE_GLOBAL_SWITCHES = ('-DCMAKE_COLOR_MAKEFILE=false '
-                         '-DCMAKE_PREFIX_PATH="{}" '
-                         '-DCMAKE_INSTALL_PREFIX="{}" ').format(
-                             prefix_dir, prefix_dir)
+CMAKE_GLOBAL_SWITCHES = (
+    "-DCMAKE_COLOR_MAKEFILE=false "
+    '-DCMAKE_PREFIX_PATH="{}" '
+    '-DCMAKE_INSTALL_PREFIX="{}" '
+).format(prefix_dir, prefix_dir)
 
 # Try to use Ninja to build things if it's available. Much faster.
 # On Windows, I first need to figure out how to make it aware of VC, bitness,
@@ -58,35 +60,44 @@ if sys.platform == "win32":
     if os.environ.get("PYTHON_ARCH", "") == "64":
         print("# Making a 64 bit build.")
         bitness = 64
-        CMAKE_GLOBAL_SWITCHES += ('-DCMAKE_GENERATOR_PLATFORM=x64 '
-                                  '-DCMAKE_GENERATOR_TOOLSET="host=x64" ')
+        CMAKE_GLOBAL_SWITCHES += (
+            "-DCMAKE_GENERATOR_PLATFORM=x64 " '-DCMAKE_GENERATOR_TOOLSET="host=x64" '
+        )
     else:
         print("# Making a 32 bit build.")
         bitness = 32
 
 if sys.platform == "darwin":
     print("# Making a 64 bit build.")
-    CMAKE_GLOBAL_SWITCHES += ('-DCMAKE_OSX_ARCHITECTURES="x86_64" '
-                              '-DCMAKE_OSX_DEPLOYMENT_TARGET="10.9" '
-                              '-DCMAKE_C_FLAGS="-O2" '
-                              '-DCMAKE_CXX_FLAGS="-O2" ')
+    CMAKE_GLOBAL_SWITCHES += (
+        '-DCMAKE_OSX_ARCHITECTURES="x86_64" '
+        '-DCMAKE_OSX_DEPLOYMENT_TARGET="10.9" '
+        '-DCMAKE_C_FLAGS="-O2" '
+        '-DCMAKE_CXX_FLAGS="-O2" '
+    )
     bitness = 64
 
 if "linux" in sys.platform:
-    if (os.environ.get("PYTHON_ARCH", "") == "32"
-            or os.environ.get("PLAT", "") == "i686"):
+    if (
+        os.environ.get("PYTHON_ARCH", "") == "32"
+        or os.environ.get("PLAT", "") == "i686"
+    ):
         print("# Making a 32 bit build.")
         # On a 64 bit Debian/Ubuntu, this needs gcc-multilib and g++-multilib.
         # On a 64 bit Fedora, install glibc-devel and libstdc++-devel.
-        CMAKE_GLOBAL_SWITCHES += ('-DCMAKE_C_FLAGS="-m32 -O2" '
-                                  '-DCMAKE_CXX_FLAGS="-m32 -O2" '
-                                  '-DCMAKE_LD_FLAGS="-m32" ')
+        CMAKE_GLOBAL_SWITCHES += (
+            '-DCMAKE_C_FLAGS="-m32 -O2" '
+            '-DCMAKE_CXX_FLAGS="-m32 -O2" '
+            '-DCMAKE_LD_FLAGS="-m32" '
+        )
         bitness = 32
     else:
         print("# Making a 64 bit build.")
-        CMAKE_GLOBAL_SWITCHES += ('-DCMAKE_C_FLAGS="-m64 -O2" '
-                                  '-DCMAKE_CXX_FLAGS="-m64 -O2" '
-                                  '-DCMAKE_LD_FLAGS="-m64" ')
+        CMAKE_GLOBAL_SWITCHES += (
+            '-DCMAKE_C_FLAGS="-m64 -O2" '
+            '-DCMAKE_CXX_FLAGS="-m64 -O2" '
+            '-DCMAKE_LD_FLAGS="-m64" '
+        )
         bitness = 64
 
 
@@ -99,7 +110,7 @@ def download(url, target_path):
     """Download url to target_path."""
     print("Downloading {}...".format(url))
     # Create a custom context and fill in certifi CAs because GitHub Action's macOS CI
-    # runners don't seem to have certificates installed, leading to a download 
+    # runners don't seem to have certificates installed, leading to a download
     # failure...
     context = ssl.create_default_context(
         ssl.Purpose.SERVER_AUTH, cafile=certifi.where()
@@ -120,14 +131,13 @@ def ensure_downloaded(url, sha256_sum):
         download(url, tarball)
 
     if not path.exists(path.join(build_dir, tarball_dir, "CMakeLists.txt")):
-        import hashlib
+
         hasher = hashlib.sha256()
-        with open(tarball, 'rb') as tb:
+        with open(tarball, "rb") as tb:
             hasher.update(tb.read())
         assert hasher.hexdigest() == sha256_sum
 
-        import tarfile
-        with tarfile.open(tarball, 'r:bz2') as tb:
+        with tarfile.open(tarball, "r:bz2") as tb:
             tb.extractall(build_dir)
 
 
@@ -147,17 +157,19 @@ shell(
     "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
     "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE "
     "{} ..".format(CMAKE_GLOBAL_SWITCHES),
-    cwd=build_dir_ft)
+    cwd=build_dir_ft,
+)
 shell("cmake --build . --config Release --target install", cwd=build_dir_ft)
 
 print("\n# Next, build Harfbuzz and point it to the FreeType we just build.")
 shell(
     "cmake -DBUILD_SHARED_LIBS=OFF " +
     # https://stackoverflow.com/questions/3961446
-    ("-DCMAKE_POSITION_INDEPENDENT_CODE=ON " if bitness > 32 else "") +
-    "-DHB_HAVE_FREETYPE=ON -DHB_HAVE_GLIB=OFF -DHB_HAVE_CORETEXT=OFF "
+    ("-DCMAKE_POSITION_INDEPENDENT_CODE=ON " if bitness > 32 else "")
+    + "-DHB_HAVE_FREETYPE=ON -DHB_HAVE_GLIB=OFF -DHB_HAVE_CORETEXT=OFF "
     "{} ..".format(CMAKE_GLOBAL_SWITCHES),
-    cwd=build_dir_hb)
+    cwd=build_dir_hb,
+)
 shell("cmake --build . --config Release --target install", cwd=build_dir_hb)
 
 print("\n# Lastly, rebuild FreeType, this time with Harfbuzz support.")
@@ -168,11 +180,12 @@ shell(
     "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE "
     "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
     "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE "
-    "-DPKG_CONFIG_EXECUTABLE=\"\" "  # Prevent finding system libraries
-    "-DHARFBUZZ_INCLUDE_DIRS=\"{}\" "
+    '-DPKG_CONFIG_EXECUTABLE="" '  # Prevent finding system libraries
+    '-DHARFBUZZ_INCLUDE_DIRS="{}" '
     "-DSKIP_INSTALL_HEADERS=ON "
     "{} ..".format(harfbuzz_includes, CMAKE_GLOBAL_SWITCHES),
-    cwd=build_dir_ft)
+    cwd=build_dir_ft,
+)
 shell("cmake --build . --config Release --target install", cwd=build_dir_ft)
 
 # Move libraries from PREFIX/bin to PREFIX/lib if need be (Windows DLLs are
