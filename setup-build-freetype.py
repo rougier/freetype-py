@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 # This will build a FreeType binary for bundling with freetype-py on Windows,
 # Linux and macOS. The environment determines if it's a 32 or 64 bit build (on
 # Windows, set $env:PYTHON_ARCH="64" for a x64 build; on Linux, set it to "32"
@@ -15,9 +12,15 @@ import distutils.file_util
 import distutils.spawn
 import glob
 import os
+import shutil
+import ssl
 import subprocess
 import sys
+import urllib
 from os import path
+from urllib.request import urlopen
+
+import certifi
 
 FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
 FREETYPE_TARBALL = "freetype-2.10.0.tar.bz2"
@@ -62,12 +65,12 @@ if sys.platform == "win32":
         bitness = 32
 
 if sys.platform == "darwin":
-    print("# Making a 96 bit build.")
-    CMAKE_GLOBAL_SWITCHES += ('-DCMAKE_OSX_ARCHITECTURES="x86_64;i386" '
-                              '-DCMAKE_OSX_DEPLOYMENT_TARGET="10.6" '
+    print("# Making a 64 bit build.")
+    CMAKE_GLOBAL_SWITCHES += ('-DCMAKE_OSX_ARCHITECTURES="x86_64" '
+                              '-DCMAKE_OSX_DEPLOYMENT_TARGET="10.9" '
                               '-DCMAKE_C_FLAGS="-O2" '
                               '-DCMAKE_CXX_FLAGS="-O2" ')
-    bitness = 96
+    bitness = 64
 
 if "linux" in sys.platform:
     if (os.environ.get("PYTHON_ARCH", "") == "32"
@@ -89,23 +92,22 @@ if "linux" in sys.platform:
 
 def shell(cmd, cwd=None):
     """Run a shell command specified by cmd string."""
-    try:  # Python2 compatibility wrapper.
-        subprocess.run(cmd, shell=True, check=True, cwd=cwd)
-    except AttributeError:
-        rv = subprocess.Popen(cmd, cwd=cwd, shell=True).wait()
-        if rv != 0:
-            sys.exit(rv)
+    subprocess.run(cmd, shell=True, check=True, cwd=cwd)
 
 
 def download(url, target_path):
     """Download url to target_path."""
-    try:  # Python2 compatibility wrapper.
-        from urllib.request import urlretrieve
-    except ImportError:
-        from urllib import urlretrieve
-
     print("Downloading {}...".format(url))
-    urlretrieve(url, target_path)
+    # Create a custom context and fill in certifi CAs because GitHub Action's macOS CI
+    # runners don't seem to have certificates installed, leading to a download 
+    # failure...
+    context = ssl.create_default_context(
+        ssl.Purpose.SERVER_AUTH, cafile=certifi.where()
+    )
+    with urllib.request.urlopen(url, context=context) as response, open(
+        target_path, "wb"
+    ) as f:
+        shutil.copyfileobj(response, f)
 
 
 def ensure_downloaded(url, sha256_sum):
