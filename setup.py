@@ -1,10 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #  FreeType high-level python API - copyright 2011 Nicolas P. Rougier
 #  Distributed under the terms of the new BSD license.
 # -----------------------------------------------------------------------------
-from __future__ import absolute_import, print_function
 
 import distutils
 import distutils.dir_util
@@ -24,12 +21,9 @@ if os.environ.get("FREETYPEPY_BUNDLE_FT"):
     from setuptools.command.build_ext import build_ext
     from wheel.bdist_wheel import bdist_wheel
 
-    class UniversalBdistWheel(bdist_wheel):
+    class BdistWheel(bdist_wheel):
         def get_tag(self):
-            return (
-                'py2.py3',
-                'none',
-            ) + bdist_wheel.get_tag(self)[2:]
+            return ('py3', 'none') + bdist_wheel.get_tag(self)[2:]
 
     class SharedLibrary(Extension):
         """Object that describes the library (filename) and how to make it."""
@@ -93,7 +87,7 @@ if os.environ.get("FREETYPEPY_BUNDLE_FT"):
             output_dir="build/local/lib")
     ]
     cmdclass = {
-        'bdist_wheel': UniversalBdistWheel,
+        'bdist_wheel': BdistWheel,
         'build_ext': SharedLibBuildExt
     }
 
@@ -114,6 +108,7 @@ setup(
     author='Nicolas P. Rougier',
     author_email='Nicolas.Rougier@inria.fr',
     url='https://github.com/rougier/freetype-py',
+    python_requires=">=3.6",
     packages=['freetype', 'freetype.ft_enums'],
     ext_modules=ext_modules,
     zip_safe=False if ext_modules else True,
@@ -128,10 +123,9 @@ setup(
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX',
         'Operating System :: Unix',
-        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
         'Topic :: Multimedia :: Graphics',
     ],
     keywords=['freetype', 'font'],
-    setup_requires=['setuptools_scm'],
+    setup_requires=['setuptools_scm[toml]'],
 )
