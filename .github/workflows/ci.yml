@@ -45,7 +45,7 @@ jobs:
         # The packaged FreeType library is independent of the Python ABI so we only
         # need to build it once.
         CIBW_BUILD: "cp36-*x86_64 cp36-*amd64"
-        CIBW_ENVIRONMENT: "FREETYPEPY_BUNDLE_FT=yes"
+        CIBW_ENVIRONMENT: "FREETYPEPY_BUNDLE_FT=yes PYTHON_ARCH=64"
         CIBW_MANYLINUX_X86_64_IMAGE: manylinux1
         CIBW_TEST_COMMAND: "pytest {project}/tests"
         CIBW_TEST_REQUIRES: "pytest"
