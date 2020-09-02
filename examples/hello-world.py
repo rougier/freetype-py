@@ -13,23 +13,25 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
 
     face = Face('./Vera.ttf')
-    text = 'Hello World !'
+    text = 'Hello World, !'
     face.set_char_size( 48*64 )
     slot = face.glyph
 
     # First pass to compute bbox
-    width, height, baseline = 0, 0, 0
+    width = 0
+    top = -32768
+    bot = 32767
     previous = 0
     for i,c in enumerate(text):
         face.load_char(c)
         bitmap = slot.bitmap
-        height = max(height,
-                     bitmap.rows + max(0,-(slot.bitmap_top-bitmap.rows)))
-        baseline = max(baseline, max(0,-(slot.bitmap_top-bitmap.rows)))
+        top = max(top, slot.bitmap_top)
+        bot = min(bot, slot.bitmap_top - bitmap.rows)
         kerning = face.get_kerning(previous, c)
         width += (slot.advance.x >> 6) + (kerning.x >> 6)
         previous = c
 
+    height = top - bot
     Z = numpy.zeros((height,width), dtype=numpy.ubyte)
 
     # Second pass for actual rendering
@@ -38,10 +40,8 @@ if __name__ == '__main__':
     for c in text:
         face.load_char(c)
         bitmap = slot.bitmap
-        top = slot.bitmap_top
-        left = slot.bitmap_left
         w,h = bitmap.width, bitmap.rows
-        y = height-baseline-top
+        y = top - slot.bitmap_top
         kerning = face.get_kerning(previous, c)
         x += (kerning.x >> 6)
         Z[y:y+h,x:x+w] += numpy.array(bitmap.buffer, dtype='ubyte').reshape(h,w)
