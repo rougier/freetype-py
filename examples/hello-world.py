@@ -13,14 +13,15 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
 
     face = Face('./Vera.ttf')
-    text = 'Hello World, !'
-    face.set_char_size( 48*64 )
+    text = 'Hello World !'
+    fontsize = 48
+    face.set_char_size( fontsize*64 )
     slot = face.glyph
 
     # First pass to compute bbox
     width = 0
-    top = -32768
-    bot = 32767
+    top = -fontsize #The distance from baseline to the top row of the bbox
+    bot = fontsize #The distance from baseline to the bottom row of the bbox (may be negative)
     previous = 0
     for i,c in enumerate(text):
         face.load_char(c)
