@@ -26,7 +26,7 @@ jobs:
         fetch-depth: 0  # unshallow fetch for setuptools-scm
 
     - name: Use MSBuild (Windows)
-      uses: microsoft/setup-msbuild@v1.0.0
+      uses: microsoft/setup-msbuild@v1.0.2
       if: matrix.os == 'windows-latest'
 
     - uses: actions/setup-python@v1
