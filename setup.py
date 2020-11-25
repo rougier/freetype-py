@@ -127,5 +127,5 @@ setup(
         'Topic :: Multimedia :: Graphics',
     ],
     keywords=['freetype', 'font'],
-    setup_requires=['setuptools_scm[toml]'],
+    setup_requires=['setuptools_scm'],
 )
