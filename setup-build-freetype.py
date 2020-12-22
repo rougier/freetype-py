@@ -34,6 +34,16 @@ HARFBUZZ_HOST = "https://www.freedesktop.org/software/harfbuzz/release/"
 HARFBUZZ_TARBALL = "harfbuzz-2.6.7.tar.xz"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
 HARFBUZZ_SHA256 = "49e481d06cdff97bf68d99fa26bdf785331f411614485d892ea4c78eb479b218"
+BUILD_ZLIB = os.environ.get("FREETYPEPY_WITH_ZLIB", "")
+ZLIB_HOST = "https://zlib.net/"
+ZLIB_TARBALL = "zlib-1.2.11.tar.xz"
+ZLIB_URL = ZLIB_HOST + ZLIB_TARBALL
+ZLIB_SH256 = "4ff941449631ace0d4d203e3483be9dbc9da454084111f97ea0a2114e19bf066"
+BUILD_LIBPNG = os.environ.get("FREETYPEPY_WITH_LIBPNG", "")
+LIBPNG_HOST = "https://download.sourceforge.net/libpng/"
+LIBPNG_TARBALL = "libpng-1.6.37.tar.xz"
+LIBPNG_URL = LIBPNG_HOST + LIBPNG_TARBALL
+LIBPNG_SH256 = "505e70834d35383537b6491e7ae8641f1a4bed1876dbfe361201fc80868d88ca"
 
 root_dir = "."
 build_dir = path.join(root_dir, "build")
@@ -42,6 +52,8 @@ prefix_dir = path.abspath(path.join(build_dir, "local"))
 lib_dir = path.join(prefix_dir, "lib")
 build_dir_ft = path.join(build_dir, FREETYPE_TARBALL.split(".tar")[0], "build")
 build_dir_hb = path.join(build_dir, HARFBUZZ_TARBALL.split(".tar")[0], "build")
+build_dir_zl = path.join(build_dir, ZLIB_TARBALL.split(".tar")[0], "build")
+build_dir_lp = path.join(build_dir, LIBPNG_TARBALL.split(".tar")[0], "build")
 
 CMAKE_GLOBAL_SWITCHES = (
     "-DCMAKE_COLOR_MAKEFILE=false "
@@ -155,17 +167,25 @@ distutils.dir_util.mkpath(build_dir)
 distutils.dir_util.mkpath(prefix_dir)
 distutils.dir_util.mkpath(build_dir_ft)
 distutils.dir_util.mkpath(build_dir_hb)
+if BUILD_ZLIB or BUILD_LIBPNG:
+    distutils.dir_util.mkpath(build_dir_zl)
+if BUILD_LIBPNG:
+    distutils.dir_util.mkpath(build_dir_lp)
 
 ensure_downloaded(FREETYPE_URL, FREETYPE_SHA256)
 ensure_downloaded(HARFBUZZ_URL, HARFBUZZ_SHA256)
+if BUILD_ZLIB or BUILD_LIBPNG:
+    ensure_downloaded(ZLIB_URL, ZLIB_SH256)
+if BUILD_LIBPNG:
+    ensure_downloaded(LIBPNG_URL, LIBPNG_SH256)
 
-print("# First, build FreeType without Harfbuzz support")
+print("# First, build FreeType without additional libraries")
 shell(
     "cmake -DBUILD_SHARED_LIBS=OFF "
     "-DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE -DFT_WITH_HARFBUZZ=OFF "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE -DFT_WITH_PNG=OFF "
     "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE -DFT_WITH_ZLIB=OFF "
     "-DCMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE "
     "{} ..".format(CMAKE_GLOBAL_SWITCHES),
     cwd=build_dir_ft,
@@ -183,14 +203,36 @@ shell(
 )
 shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_hb)
 
-print("\n# Lastly, rebuild FreeType, this time with Harfbuzz support.")
+if BUILD_ZLIB or BUILD_LIBPNG:
+    print("\n# Next, build zlib.")
+    shell(
+        "cmake -DBUILD_SHARED_LIBS=OFF " +
+        # https://stackoverflow.com/questions/3961446
+        ("-DCMAKE_POSITION_INDEPENDENT_CODE=ON " if bitness > 32 else "") +
+        "{} ..".format(CMAKE_GLOBAL_SWITCHES),
+        cwd=build_dir_zl,
+    )
+    shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_zl)
+
+if BUILD_LIBPNG:
+    print("\n# Next, build libpng.")
+    shell(
+        "cmake -DBUILD_SHARED_LIBS=OFF " +
+        # https://stackoverflow.com/questions/3961446
+        ("-DCMAKE_POSITION_INDEPENDENT_CODE=ON " if bitness > 32 else "") +
+        "{} ..".format(CMAKE_GLOBAL_SWITCHES),
+        cwd=build_dir_lp,
+    )
+    shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_lp)
+
+print("\n# Lastly, rebuild FreeType, this time with additional libraries support.")
 harfbuzz_includes = path.join(prefix_dir, "include", "harfbuzz")
 shell(
     "cmake -DBUILD_SHARED_LIBS=ON "
     "-DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=FALSE -DFT_WITH_HARFBUZZ=ON "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=" + ("FALSE -DFT_WITH_PNG=ON " if BUILD_LIBPNG else "TRUE ") +
     "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE "
+    "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=" + ("FALSE -DFT_WITH_ZLIB=ON " if BUILD_ZLIB or BUILD_LIBPNG else "TRUE ") +
     "-DCMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE "
     '-DPKG_CONFIG_EXECUTABLE="" '  # Prevent finding system libraries
     '-DHARFBUZZ_INCLUDE_DIRS="{}" '
