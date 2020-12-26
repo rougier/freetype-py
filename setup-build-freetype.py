@@ -81,8 +81,10 @@ if sys.platform == "darwin":
 if "linux" in sys.platform:
     c_flags = cxx_flags = "-O2"
     ld_flags = ""
-    if ("arm" not in platform.machine() and 
-            platform.machine() != "aarch64"):
+    if (
+        platform.machine == "x86_64"
+        or platform.machine == "x86"
+    ):
         if (
             os.environ.get("PYTHON_ARCH", "") == "32"
             or platform.architecture() == "32bit"
@@ -101,7 +103,7 @@ if "linux" in sys.platform:
             ld_flags = "-m64"
             bitness = 64
     else:
-        print("# Making an {} build.".format(platform.machine()))
+        print("# Making a '{}' build.".format(platform.machine()))
         if platform.architecture() == "32bit":
             bitness = 32
         else:
