@@ -81,10 +81,7 @@ if sys.platform == "darwin":
 if "linux" in sys.platform:
     c_flags = cxx_flags = "-O2"
     ld_flags = ""
-    if (
-        platform.machine() == "x86_64"
-        or platform.machine() == "x86"
-    ):
+    if platform.machine() == "x86_64":
         if (
             os.environ.get("PYTHON_ARCH", "") == "32"
             or platform.architecture() == "32bit"
