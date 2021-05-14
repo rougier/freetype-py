@@ -108,7 +108,7 @@ brute force.
 
 .. image:: https://raw.githubusercontent.com/rougier/freetype-py/master/doc/_static/wordle.png
 
-Screenshots below comes from the glyph-vector.py and glyph-vectopr-2.py
+Screenshots below comes from the glyph-vector.py and glyph-vector-2.py
 examples showing how to access a glyph outline information and use it to draw
 the glyph. Rendering (with Bézier curves) is done using matplotlib.
 
