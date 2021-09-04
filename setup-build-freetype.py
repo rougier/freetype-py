@@ -21,6 +21,7 @@ import tarfile
 import urllib
 from os import path
 from urllib.request import urlopen
+import platform
 
 # Needed for the GitHub Actions macOS CI runner, which appears to come without CAs.
 import certifi
@@ -90,27 +91,37 @@ if sys.platform == "darwin":
     bitness = 64
 
 if "linux" in sys.platform:
-    if (
-        os.environ.get("PYTHON_ARCH", "") == "32"
-        or os.environ.get("PLAT", "") == "i686"
-    ):
-        print("# Making a 32 bit build.")
-        # On a 64 bit Debian/Ubuntu, this needs gcc-multilib and g++-multilib.
-        # On a 64 bit Fedora, install glibc-devel and libstdc++-devel.
-        CMAKE_GLOBAL_SWITCHES += (
-            '-DCMAKE_C_FLAGS="-m32 -O2" '
-            '-DCMAKE_CXX_FLAGS="-m32 -O2" '
-            '-DCMAKE_LD_FLAGS="-m32" '
-        )
-        bitness = 32
+    c_flags = cxx_flags = "-O2"
+    ld_flags = ""
+    if platform.machine() == "x86_64":
+        if (
+            os.environ.get("PYTHON_ARCH", "") == "32"
+            or platform.architecture() == "32bit"
+        ):
+            print("# Making a 32 bit build.")
+            # On a 64 bit Debian/Ubuntu, this needs gcc-multilib and g++-multilib.
+            # On a 64 bit Fedora, install glibc-devel and libstdc++-devel.
+            c_flags = "-m32 {}".format(c_flags)
+            cxx_flags = "-m32 {}".format(cxx_flags)
+            ld_flags = "-m32"
+            bitness = 32
+        else:
+            print("# Making a 64 bit build.")
+            c_flags = "-m64 {}".format(c_flags)
+            cxx_flags = "-m64 {}".format(cxx_flags)
+            ld_flags = "-m64"
+            bitness = 64
     else:
-        print("# Making a 64 bit build.")
-        CMAKE_GLOBAL_SWITCHES += (
-            '-DCMAKE_C_FLAGS="-m64 -O2" '
-            '-DCMAKE_CXX_FLAGS="-m64 -O2" '
-            '-DCMAKE_LD_FLAGS="-m64" '
-        )
-        bitness = 64
+        print("# Making a '{}' build.".format(platform.machine()))
+        if platform.architecture() == "32bit":
+            bitness = 32
+        else:
+            bitness = 64
+    CMAKE_GLOBAL_SWITCHES += (
+        '-DCMAKE_C_FLAGS="{}" '.format(c_flags) +
+        '-DCMAKE_CXX_FLAGS="{}" '.format(cxx_flags) +
+        '-DCMAKE_LD_FLAGS="{}" '.format(ld_flags)
+    )
 
 
 def shell(cmd, cwd=None):
