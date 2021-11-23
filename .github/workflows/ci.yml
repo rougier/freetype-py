@@ -13,21 +13,35 @@ on:
 
 jobs:
   build:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build wheels on ${{ matrix.os }} ${{ matrix.name }}
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+        - os: 'windows-latest'
+        - os: 'macos-latest'
+        - os: 'ubuntu-latest'
+          archs_linux: "auto64"
+        - os: 'ubuntu-latest'
+          name: '(manylinux aarch64)'
+          archs_linux: 'aarch64'
+          skip: '*musllinux*'
+        - os: 'ubuntu-latest'
+          name: '(musllinux aarch64)'
+          archs_linux: 'aarch64'
+          skip: '*manylinux*'
 
     steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0  # unshallow fetch for setuptools-scm
 
-    - name: Use MSBuild (Windows)
-      uses: microsoft/setup-msbuild@v1.0.2
-      if: matrix.os == 'windows-latest'
+    - name: Set up QEMU
+      if: matrix.os == 'ubuntu-latest'
+      uses: docker/setup-qemu-action@v1
+      with:
+        platforms: all
 
     - name: Build wheels
       uses: pypa/cibuildwheel@v2.2.2
@@ -35,8 +49,10 @@ jobs:
         # The packaged FreeType library is independent of the Python ABI so we only
         # need to build it once.
         CIBW_BUILD: "cp39-*"
+        CIBW_SKIP: ${{ matrix.skip }}
         CIBW_ARCHS: "auto64"
         CIBW_ARCHS_MACOS: "auto64 universal2 arm64"
+        CIBW_ARCHS_LINUX: ${{ matrix.archs_linux }}
         CIBW_ENVIRONMENT: "FREETYPEPY_BUNDLE_FT=yes PYTHON_ARCH=64"
         CIBW_MANYLINUX_X86_64_IMAGE: manylinux1
         CIBW_TEST_COMMAND: "pytest {project}/tests"
@@ -53,6 +69,7 @@ jobs:
       name: Install Python
       with:
         python-version: '3.9'
+      if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
 
     # Build sdist on one platform, and only on tagged commits.
     - name: Build sdist
