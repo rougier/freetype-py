@@ -27,10 +27,12 @@ jobs:
           name: '(manylinux aarch64)'
           archs_linux: 'aarch64'
           skip: '*musllinux*'
+          qemu: true
         - os: 'ubuntu-latest'
           name: '(musllinux aarch64)'
           archs_linux: 'aarch64'
           skip: '*manylinux*'
+          qemu: true
 
     steps:
     - uses: actions/checkout@v2
@@ -38,7 +40,7 @@ jobs:
         fetch-depth: 0  # unshallow fetch for setuptools-scm
 
     - name: Set up QEMU
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.qemu
       uses: docker/setup-qemu-action@v1
       with:
         platforms: all
