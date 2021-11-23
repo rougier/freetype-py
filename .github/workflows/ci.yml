@@ -67,9 +67,9 @@ jobs:
 
     - uses: actions/setup-python@v1
       name: Install Python
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
       with:
         python-version: '3.9'
-      if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
 
     # Build sdist on one platform, and only on tagged commits.
     - name: Build sdist
