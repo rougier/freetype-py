@@ -25,10 +25,6 @@ jobs:
       with:
         fetch-depth: 0  # unshallow fetch for setuptools-scm
 
-    - name: Use MSBuild (Windows)
-      uses: microsoft/setup-msbuild@v1.0.2
-      if: matrix.os == 'windows-latest'
-
     - name: Build wheels
       uses: pypa/cibuildwheel@v2.2.2
       env:
@@ -51,6 +47,7 @@ jobs:
 
     - uses: actions/setup-python@v1
       name: Install Python
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
       with:
         python-version: '3.9'
 
