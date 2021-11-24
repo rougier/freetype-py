@@ -277,6 +277,7 @@ FT_Outline_Reverse             = _lib.FT_Outline_Reverse
 FT_Outline_Transform           = _lib.FT_Outline_Transform
 FT_Outline_Translate           = _lib.FT_Outline_Translate
 FT_Remove_Module               = _lib.FT_Remove_Module
+FT_Render_Glyph                = _lib.FT_Render_Glyph
 FT_RoundFix                    = _lib.FT_RoundFix
 FT_Set_Debug_Hook              = _lib.FT_Set_Debug_Hook
 FT_Set_MM_Blend_Coordinates    = _lib.FT_Set_MM_Blend_Coordinates

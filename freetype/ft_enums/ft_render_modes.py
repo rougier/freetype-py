@@ -47,10 +47,20 @@ FT_RENDER_MODE_LCD_V
   screens, rotated LCD displays, etc.). It produces 8-bit bitmaps that are 3
   times the height of the original glyph outline in pixels and use the
   FT_PIXEL_MODE_LCD_V mode.
+  
+FT_RENDER_MODE_SDF
+
+  This mode corresponds to 8-bit, single-channel signed distance field (SDF)
+  bitmaps. Each pixel in the SDF grid is the value from the pixel's position to
+  the nearest glyph's outline. The distances are calculated from the center of
+  the pixel and are positive if they are filled by the outline (i.e., inside
+  the outline) and negative otherwise. Check the note below on how to convert
+  the output values to usable data.
 """
 FT_RENDER_MODES = { 'FT_RENDER_MODE_NORMAL' : 0,
                     'FT_RENDER_MODE_LIGHT'  : 1,
                     'FT_RENDER_MODE_MONO'   : 2,
                     'FT_RENDER_MODE_LCD'    : 3,
-                    'FT_RENDER_MODE_LCD_V'  : 4 }
+                    'FT_RENDER_MODE_LCD_V'  : 4,
+                    'FT_RENDER_MODE_SDF'    : 5 }
 globals().update(FT_RENDER_MODES)

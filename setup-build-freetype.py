@@ -27,9 +27,9 @@ import platform
 import certifi
 
 FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
-FREETYPE_TARBALL = "freetype-2.10.2.tar.xz"
+FREETYPE_TARBALL = "freetype-2.11.0.tar.xz"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
-FREETYPE_SHA256 = "1543d61025d2e6312e0a1c563652555f17378a204a61e99928c9fcef030a2d8b"
+FREETYPE_SHA256 = "8bee39bd3968c4804b70614a0a3ad597299ad0e824bc8aad5ce8aaf48067bde7"
 HARFBUZZ_HOST = "https://www.freedesktop.org/software/harfbuzz/release/"
 HARFBUZZ_TARBALL = "harfbuzz-2.6.7.tar.xz"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
