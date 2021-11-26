@@ -62,6 +62,8 @@ jobs:
     if: success() && github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # unshallow fetch for setuptools-scm
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
