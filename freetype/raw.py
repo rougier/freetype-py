@@ -269,6 +269,7 @@ FT_Outline_Copy                = _lib.FT_Outline_Copy
 FT_Outline_Decompose           = _lib.FT_Outline_Decompose
 FT_Outline_Done                = _lib.FT_Outline_Done
 FT_Outline_Embolden            = _lib.FT_Outline_Embolden
+FT_Outline_EmboldenXY          = _lib.FT_Outline_EmboldenXY
 FT_Outline_Get_Bitmap          = _lib.FT_Outline_Get_Bitmap
 FT_Outline_Get_Orientation     = _lib.FT_Outline_Get_Orientation
 FT_Outline_New                 = _lib.FT_Outline_New
