@@ -654,7 +654,7 @@ class Outline( object ):
         :return: The border index. FT_STROKER_BORDER_RIGHT for empty or invalid
                  outlines.
         '''
-        return FT_Outline_GetInsideBorder( self._FT_Outline )
+        return FT_Outline_GetOutsideBorder( self._FT_Outline )
 
     def get_bbox(self):
         '''
