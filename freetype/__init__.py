@@ -2181,7 +2181,7 @@ class Stroker( object ):
 
           This function calls 'rewind' automatically.
         '''
-        error = FT_Stroker_ParseOutline( self._FT_Stroker, outline, opened)
+        error = FT_Stroker_ParseOutline( self._FT_Stroker, byref(outline._FT_Outline), opened)
         if error: raise FT_Exception( error )
 
 
