@@ -666,7 +666,7 @@ class Outline( object ):
         bbox = FT_BBox()
         error = FT_Outline_Get_BBox(byref(self._FT_Outline), byref(bbox))
         if error: raise FT_Exception(error)
-        return bbox
+        return BBox(bbox)
 
     def get_cbox(self):
         '''
