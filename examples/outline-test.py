@@ -21,7 +21,7 @@ def new_outline(n_points, n_contours):
         library, FT_UInt(n_points), FT_Int(n_contours),
         ctypes.byref(raw_ft_outline)
     )
-    if err: raise FT_Exception(error)
+    if err: raise FT_Exception(err)
     try:
         raw_ft_outline.n_points   = 0
         raw_ft_outline.n_contours = 0
