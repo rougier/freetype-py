@@ -644,7 +644,7 @@ class Outline( object ):
         :return: The border index. FT_STROKER_BORDER_RIGHT for empty or invalid
                  outlines.
         '''
-        return FT_Outline_GetInsideBorder( self._FT_Outline )
+        return FT_Outline_GetInsideBorder( byref(self._FT_Outline) )
 
     def get_outside_border( self ):
         '''
@@ -654,7 +654,7 @@ class Outline( object ):
         :return: The border index. FT_STROKER_BORDER_RIGHT for empty or invalid
                  outlines.
         '''
-        return FT_Outline_GetInsideBorder( self._FT_Outline )
+        return FT_Outline_GetOutsideBorder( byref(self._FT_Outline) )
 
     def get_bbox(self):
         '''
@@ -666,7 +666,7 @@ class Outline( object ):
         bbox = FT_BBox()
         error = FT_Outline_Get_BBox(byref(self._FT_Outline), byref(bbox))
         if error: raise FT_Exception(error)
-        return bbox
+        return BBox(bbox)
 
     def get_cbox(self):
         '''
@@ -2181,7 +2181,7 @@ class Stroker( object ):
 
           This function calls 'rewind' automatically.
         '''
-        error = FT_Stroker_ParseOutline( self._FT_Stroker, outline, opened)
+        error = FT_Stroker_ParseOutline( self._FT_Stroker, byref(outline._FT_Outline), opened)
         if error: raise FT_Exception( error )
 
 
@@ -2317,7 +2317,7 @@ class Stroker( object ):
           Use the function export instead if you want to retrieve all borders
           at once.
         '''
-        FT_Stroker_ExportBorder( self._FT_Stroker, border, outline._FT_Outline )
+        FT_Stroker_ExportBorder( self._FT_Stroker, border, byref(outline._FT_Outline) )
 
 
     def get_counts( self ):
@@ -2347,7 +2347,7 @@ class Stroker( object ):
 
         :param outline: The target outline.
         '''
-        FT_Stroker_Export( self._FT_Stroker, outline._FT_Outline )
+        FT_Stroker_Export( self._FT_Stroker, byref(outline._FT_Outline) )
 
 
 # -----------------------------------------------------------------------------
