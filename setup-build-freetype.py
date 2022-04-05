@@ -27,13 +27,13 @@ import platform
 import certifi
 
 FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
-FREETYPE_TARBALL = "freetype-2.11.0.tar.xz"
+FREETYPE_TARBALL = "freetype-2.12.0.tar.xz"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
-FREETYPE_SHA256 = "8bee39bd3968c4804b70614a0a3ad597299ad0e824bc8aad5ce8aaf48067bde7"
-HARFBUZZ_HOST = "https://www.freedesktop.org/software/harfbuzz/release/"
-HARFBUZZ_TARBALL = "harfbuzz-2.6.7.tar.xz"
+FREETYPE_SHA256 = "ef5c336aacc1a079ff9262d6308d6c2a066dd4d2a905301c4adda9b354399033"
+HARFBUZZ_HOST = "https://github.com/harfbuzz/harfbuzz/releases/download/4.2.0/"
+HARFBUZZ_TARBALL = "harfbuzz-4.2.0.tar.xz"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
-HARFBUZZ_SHA256 = "49e481d06cdff97bf68d99fa26bdf785331f411614485d892ea4c78eb479b218"
+HARFBUZZ_SHA256 = "f2200f177768bdc21445aa09703326f3bbe8114ac083d081fe1a79d305c7ae73"
 
 root_dir = "."
 build_dir = path.join(root_dir, "build")
