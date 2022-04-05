@@ -20,15 +20,15 @@ jobs:
       matrix:
         include:
         - os: ubuntu-latest
-          cibw_build: "cp36-*"
+          cibw_build: "cp37-*"
           cibw_archs_linux: "auto64"
           cibw_archs_macos: "auto64"
         - os: windows-latest
-          cibw_build: "cp36-*"
+          cibw_build: "cp37-*"
           cibw_archs_linux: "auto64"
           cibw_archs_macos: "auto64"
         - os: macos-latest
-          cibw_build: "cp36-*"
+          cibw_build: "cp37-*"
           cibw_archs_linux: "auto64"
           cibw_archs_macos: "auto64"
         - os: macos-latest
@@ -42,13 +42,13 @@ jobs:
           cibw_archs_macos: "universal2"
           name: '(universal2)'
         - os: 'ubuntu-latest'
-          cibw_build: "cp36-manylinux*"
+          cibw_build: "cp37-manylinux*"
           cibw_archs_linux: 'aarch64'
           cibw_archs_macos: "auto64"
           name: '(manylinux aarch64)'
           qemu: true
         - os: 'ubuntu-latest'
-          cibw_build: "cp36-musllinux*"
+          cibw_build: "cp37-musllinux*"
           cibw_archs_linux: 'aarch64'
           cibw_archs_macos: "auto64"
           name: '(musllinux aarch64)'
