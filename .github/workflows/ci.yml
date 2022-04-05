@@ -65,14 +65,14 @@ jobs:
         platforms: all
 
     - name: Build wheels
-      uses: pypa/cibuildwheel@v2.2.2
+      uses: pypa/cibuildwheel@v2.4.0
       env:
         CIBW_BUILD: ${{ matrix.cibw_build }}
         CIBW_ARCHS: "auto64"
         CIBW_ARCHS_MACOS: ${{ matrix.cibw_archs_macos }}
         CIBW_ARCHS_LINUX: ${{ matrix.cibw_archs_linux }}
         CIBW_ENVIRONMENT: "FREETYPEPY_BUNDLE_FT=yes PYTHON_ARCH=64"
-        CIBW_MANYLINUX_X86_64_IMAGE: manylinux1
+        CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010
         CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
         CIBW_TEST_COMMAND: "pytest {project}/tests"
         CIBW_TEST_REQUIRES: "pytest"
