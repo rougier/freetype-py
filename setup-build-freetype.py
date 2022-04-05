@@ -70,8 +70,8 @@ if sys.platform == "win32":
 if sys.platform == "darwin":
     print("# Making a 64 bit build.")
     CMAKE_GLOBAL_SWITCHES += (
-        '-DCMAKE_OSX_ARCHITECTURES="x86_64" '
-        '-DCMAKE_OSX_DEPLOYMENT_TARGET="11.0" '
+        '-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" '
+        '-DCMAKE_OSX_DEPLOYMENT_TARGET="10.9" '
         '-DCMAKE_C_FLAGS="-O2" '
         '-DCMAKE_CXX_FLAGS="-O2" '
     )
