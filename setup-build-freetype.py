@@ -18,9 +18,8 @@ import ssl
 import subprocess
 import sys
 import tarfile
-import urllib
+import urllib.request
 from os import path
-from urllib.request import urlopen
 import platform
 
 # Needed for the GitHub Actions macOS CI runner, which appears to come without CAs.
