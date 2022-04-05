@@ -32,11 +32,6 @@ jobs:
           cibw_archs_linux: "auto64"
           cibw_archs_macos: "auto64"
         - os: macos-latest
-          cibw_build: "cp38-macosx_arm64"
-          cibw_archs_linux: "auto64"
-          cibw_archs_macos: "arm64"
-          name: '(arm64)'
-        - os: macos-latest
           cibw_build: "cp38-macosx_universal2"
           cibw_archs_linux: "auto64"
           cibw_archs_macos: "universal2"
