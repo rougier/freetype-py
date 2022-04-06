@@ -227,6 +227,8 @@ if BUILD_LIBPNG:
 
 print("\n# Lastly, rebuild FreeType, this time with additional libraries support.")
 harfbuzz_includes = path.join(prefix_dir, "include", "harfbuzz")
+libpng_includes = path.join(prefix_dir, "include", "libpng16")
+zlib_includes = path.join(prefix_dir, "include")
 shell(
     "cmake -DBUILD_SHARED_LIBS=ON "
     "-DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=FALSE -DFT_WITH_HARFBUZZ=ON "
@@ -236,8 +238,10 @@ shell(
     "-DCMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE "
     '-DPKG_CONFIG_EXECUTABLE="" '  # Prevent finding system libraries
     '-DHARFBUZZ_INCLUDE_DIRS="{}" '
+    '-DPNG_INCLUDE_DIRS="{}" '
+    '-DZLIB_INCLUDE_DIRS="{}" '
     "-DSKIP_INSTALL_HEADERS=ON "
-    "{} ..".format(harfbuzz_includes, CMAKE_GLOBAL_SWITCHES),
+    "{} ..".format(harfbuzz_includes, libpng_includes, zlib_includes, CMAKE_GLOBAL_SWITCHES),
     cwd=build_dir_ft,
 )
 shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_ft)
