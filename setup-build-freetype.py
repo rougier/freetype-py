@@ -217,7 +217,7 @@ if BUILD_ZLIB or BUILD_LIBPNG:
 if BUILD_LIBPNG:
     print("\n# Next, build libpng.")
     shell(
-        "cmake -DBUILD_SHARED_LIBS=OFF " +
+        "cmake -DPNG_SHARED=OFF " +
         # https://stackoverflow.com/questions/3961446
         ("-DCMAKE_POSITION_INDEPENDENT_CODE=ON " if bitness > 32 else "") +
         "{} ..".format(CMAKE_GLOBAL_SWITCHES),
