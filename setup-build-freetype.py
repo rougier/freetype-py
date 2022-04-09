@@ -61,6 +61,7 @@ CMAKE_GLOBAL_SWITCHES = (
     '-DCMAKE_PREFIX_PATH="{}" '
     '-DCMAKE_INSTALL_PREFIX="{}" '
 ).format(prefix_dir, prefix_dir)
+CMAKE_PREVENT_REEXPORT = ""
 
 # Try to use Ninja to build things if it's available. Much faster.
 # On Windows, I first need to figure out how to make it aware of VC, bitness,
@@ -81,6 +82,12 @@ if sys.platform == "win32":
         print("# Making a 32 bit build.")
         bitness = 32
 
+    CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libharfbuzz "
+    if BUILD_ZLIB or BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libz "
+    if BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libpng "
+
 if sys.platform == "darwin":
     print("# Making a 64 bit build.")
     CMAKE_GLOBAL_SWITCHES += (
@@ -90,6 +97,14 @@ if sys.platform == "darwin":
         '-DCMAKE_CXX_FLAGS="-O2" '
     )
     bitness = 64
+
+    # the library path is needed for the '-hidden-lx' option to work
+    CMAKE_PREVENT_REEXPORT += "-Wl,-L{} ".format(lib_dir)
+    CMAKE_PREVENT_REEXPORT += "-Wl,-hidden-lharfbuzz "
+    if BUILD_ZLIB or BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,-hidden-lz "
+    if BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,-hidden-lpng "
 
 if "linux" in sys.platform:
     c_flags = cxx_flags = "-O2"
@@ -123,6 +138,12 @@ if "linux" in sys.platform:
         '-DCMAKE_CXX_FLAGS="{}" '.format(cxx_flags) +
         '-DCMAKE_LD_FLAGS="{}" '.format(ld_flags)
     )
+
+    CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libharfbuzz "
+    if BUILD_ZLIB or BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libz "
+    if BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libpng "
 
 
 def shell(cmd, cwd=None):
@@ -249,8 +270,10 @@ shell(
     '-DHarfBuzz_INCLUDE_DIRS="{}" '
     '-DPNG_INCLUDE_DIRS="{}" '
     '-DZLIB_INCLUDE_DIRS="{}" '
+    # prevent re-export of symbols from harfbuzz, libpng and zlib
+    '-DCMAKE_SHARED_LINKER_FLAGS="{}" '
     "-DSKIP_INSTALL_HEADERS=ON "
-    "{} ..".format(harfbuzz_includes, libpng_includes, zlib_includes, CMAKE_GLOBAL_SWITCHES),
+    "{} ..".format(harfbuzz_includes, libpng_includes, zlib_includes, CMAKE_PREVENT_REEXPORT, CMAKE_GLOBAL_SWITCHES),
     cwd=build_dir_ft,
 )
 shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_ft)
