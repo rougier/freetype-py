@@ -22,6 +22,7 @@ import urllib
 from os import path
 from urllib.request import urlopen
 import platform
+import fileinput
 
 # Needed for the GitHub Actions macOS CI runner, which appears to come without CAs.
 import certifi
@@ -205,8 +206,16 @@ shell("cmake --build . --config Release --target install --parallel", cwd=build_
 
 if BUILD_ZLIB or BUILD_LIBPNG:
     print("\n# Next, build zlib.")
+    # workaround to only build the static library of zlib
+    # see https://github.com/madler/zlib/issues/359
+    with fileinput.input(path.join(path.dirname(build_dir_zl), "CMakeLists.txt"), inplace=True) as f:
+        for line in f:
+            if "install(TARGETS zlib zlibstatic" in line:
+                line = line.replace("    install(TARGETS zlib zlibstatic", "    install(TARGETS zlibstatic")
+            print(line, end='')
+
     shell(
-        "cmake -DBUILD_SHARED_LIBS=OFF " +
+        "cmake " +
         # https://stackoverflow.com/questions/3961446
         ("-DCMAKE_POSITION_INDEPENDENT_CODE=ON " if bitness > 32 else "") +
         "{} ..".format(CMAKE_GLOBAL_SWITCHES),
