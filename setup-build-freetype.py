@@ -246,7 +246,7 @@ shell(
     "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=" + ("FALSE -DFT_WITH_ZLIB=ON " if BUILD_ZLIB or BUILD_LIBPNG else "TRUE ") +
     "-DCMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE "
     '-DPKG_CONFIG_EXECUTABLE="" '  # Prevent finding system libraries
-    '-DHARFBUZZ_INCLUDE_DIRS="{}" '
+    '-DHarfBuzz_INCLUDE_DIRS="{}" '
     '-DPNG_INCLUDE_DIRS="{}" '
     '-DZLIB_INCLUDE_DIRS="{}" '
     "-DSKIP_INSTALL_HEADERS=ON "
