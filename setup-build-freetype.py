@@ -30,9 +30,9 @@ FREETYPE_TARBALL = "freetype-2.12.0.tar.xz"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
 FREETYPE_SHA256 = "ef5c336aacc1a079ff9262d6308d6c2a066dd4d2a905301c4adda9b354399033"
 HARFBUZZ_HOST = "https://github.com/harfbuzz/harfbuzz/releases/download/4.2.0/"
-HARFBUZZ_TARBALL = "harfbuzz-4.2.0.tar.xz"
+HARFBUZZ_TARBALL = "harfbuzz-4.2.1.tar.xz"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
-HARFBUZZ_SHA256 = "f2200f177768bdc21445aa09703326f3bbe8114ac083d081fe1a79d305c7ae73"
+HARFBUZZ_SHA256 = "bd17916513829aeff961359a5ccebba6de2f4bf37a91faee3ac29c120e3d7ee1"
 
 root_dir = "."
 build_dir = path.join(root_dir, "build")
@@ -71,7 +71,7 @@ if sys.platform == "darwin":
     print("# Making a 64 bit build.")
     CMAKE_GLOBAL_SWITCHES += (
         '-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" '
-        '-DCMAKE_OSX_DEPLOYMENT_TARGET="11.0" '
+        '-DCMAKE_OSX_DEPLOYMENT_TARGET="10.9" '
         '-DCMAKE_C_FLAGS="-O2" '
         '-DCMAKE_CXX_FLAGS="-O2" '
     )
