@@ -20,35 +20,26 @@ jobs:
       matrix:
         include:
         - os: ubuntu-latest
-          cibw_build: "cp36-*"
+          cibw_build: "cp37-*"
           cibw_archs_linux: "auto64"
           cibw_archs_macos: "auto64"
         - os: windows-latest
-          cibw_build: "cp36-*"
+          cibw_build: "cp37-*"
           cibw_archs_linux: "auto64"
           cibw_archs_macos: "auto64"
-        - os: macos-latest
-          cibw_build: "cp36-*"
-          cibw_archs_linux: "auto64"
-          cibw_archs_macos: "auto64"
-        - os: macos-latest
-          cibw_build: "cp38-macosx_arm64"
-          cibw_archs_linux: "auto64"
-          cibw_archs_macos: "arm64"
-          name: '(arm64)'
         - os: macos-latest
           cibw_build: "cp38-macosx_universal2"
           cibw_archs_linux: "auto64"
           cibw_archs_macos: "universal2"
           name: '(universal2)'
         - os: 'ubuntu-latest'
-          cibw_build: "cp36-manylinux*"
+          cibw_build: "cp37-manylinux*"
           cibw_archs_linux: 'aarch64'
           cibw_archs_macos: "auto64"
           name: '(manylinux aarch64)'
           qemu: true
         - os: 'ubuntu-latest'
-          cibw_build: "cp36-musllinux*"
+          cibw_build: "cp37-musllinux*"
           cibw_archs_linux: 'aarch64'
           cibw_archs_macos: "auto64"
           name: '(musllinux aarch64)'
@@ -65,14 +56,14 @@ jobs:
         platforms: all
 
     - name: Build wheels
-      uses: pypa/cibuildwheel@v2.2.2
+      uses: pypa/cibuildwheel@v2.4.0
       env:
         CIBW_BUILD: ${{ matrix.cibw_build }}
         CIBW_ARCHS: "auto64"
         CIBW_ARCHS_MACOS: ${{ matrix.cibw_archs_macos }}
         CIBW_ARCHS_LINUX: ${{ matrix.cibw_archs_linux }}
         CIBW_ENVIRONMENT: "FREETYPEPY_BUNDLE_FT=yes PYTHON_ARCH=64"
-        CIBW_MANYLINUX_X86_64_IMAGE: manylinux1
+        CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010
         CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
         CIBW_TEST_COMMAND: "pytest {project}/tests"
         CIBW_TEST_REQUIRES: "pytest"
