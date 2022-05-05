@@ -13,7 +13,6 @@ Freetype-py lives at https://github.com/rougier/freetype-py/, see the installati
    usage.rst
    screenshots.rst
    api.rst
-   notes.rst
    license.rst
 
 
