@@ -18,9 +18,8 @@ import ssl
 import subprocess
 import sys
 import tarfile
-import urllib
+import urllib.request
 from os import path
-from urllib.request import urlopen
 import platform
 import fileinput
 
@@ -28,13 +27,13 @@ import fileinput
 import certifi
 
 FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
-FREETYPE_TARBALL = "freetype-2.11.0.tar.xz"
+FREETYPE_TARBALL = "freetype-2.12.0.tar.xz"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
-FREETYPE_SHA256 = "8bee39bd3968c4804b70614a0a3ad597299ad0e824bc8aad5ce8aaf48067bde7"
-HARFBUZZ_HOST = "https://www.freedesktop.org/software/harfbuzz/release/"
-HARFBUZZ_TARBALL = "harfbuzz-2.6.7.tar.xz"
+FREETYPE_SHA256 = "ef5c336aacc1a079ff9262d6308d6c2a066dd4d2a905301c4adda9b354399033"
+HARFBUZZ_HOST = "https://github.com/harfbuzz/harfbuzz/releases/download/4.2.1/"
+HARFBUZZ_TARBALL = "harfbuzz-4.2.1.tar.xz"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
-HARFBUZZ_SHA256 = "49e481d06cdff97bf68d99fa26bdf785331f411614485d892ea4c78eb479b218"
+HARFBUZZ_SHA256 = "bd17916513829aeff961359a5ccebba6de2f4bf37a91faee3ac29c120e3d7ee1"
 BUILD_ZLIB = os.environ.get("FREETYPEPY_WITH_ZLIB", "")
 ZLIB_HOST = "https://download.sourceforge.net/libpng/"
 ZLIB_TARBALL = "zlib-1.2.11.tar.xz"
@@ -91,7 +90,7 @@ if sys.platform == "win32":
 if sys.platform == "darwin":
     print("# Making a 64 bit build.")
     CMAKE_GLOBAL_SWITCHES += (
-        '-DCMAKE_OSX_ARCHITECTURES="x86_64" '
+        '-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" '
         '-DCMAKE_OSX_DEPLOYMENT_TARGET="10.9" '
         '-DCMAKE_C_FLAGS="-O2" '
         '-DCMAKE_CXX_FLAGS="-O2" '
