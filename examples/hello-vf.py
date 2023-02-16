@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
+#  Variable Font example - Copyright 2020 Josh Hadley, based on hello-world.py
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
