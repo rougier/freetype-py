@@ -103,3 +103,18 @@ jobs:
       env:
         TWINE_USERNAME: ${{ secrets.pypi_username }}
         TWINE_PASSWORD: ${{ secrets.pypi_password }}
+
+  test-pyinstaller:
+    name: Test pyinstaller hook
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    - name: Test pyinstaller hook
+      run: |
+        pip install pytest psutil pyinstaller>=4
+        FREETYPEPY_BUNDLE_FT=yes PYTHON_ARCH=64 pip install -e .
+        pytest -v freetype/__pyinstaller
