@@ -128,4 +128,10 @@ setup(
     ],
     keywords=['freetype', 'font'],
     setup_requires=['setuptools_scm'],
+    entry_points={
+        "pyinstaller40": [
+            "hook-dirs = freetype.__pyinstaller:get_hook_dirs",
+            "tests = freetype.__pyinstaller:get_test_dirs",
+        ],
+    },
 )
