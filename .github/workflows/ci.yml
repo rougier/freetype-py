@@ -45,18 +45,18 @@ jobs:
           name: '(musllinux aarch64)'
           qemu: true
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0  # unshallow fetch for setuptools-scm
 
     - name: Set up QEMU
       if: matrix.qemu
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v2
       with:
         platforms: all
 
     - name: Build wheels
-      uses: pypa/cibuildwheel@v2.4.0
+      uses: pypa/cibuildwheel@v2.12.3
       env:
         CIBW_BUILD: ${{ matrix.cibw_build }}
         CIBW_ARCHS: "auto64"
@@ -71,7 +71,7 @@ jobs:
         output-dir: dist
 
     - name: Upload distributions
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: dist
         name: dist
@@ -82,15 +82,15 @@ jobs:
     needs: [build]
     if: success() && github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0  # unshallow fetch for setuptools-scm
     - name: Set up Python 3.9
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.9'
     - name: Download assets
-      uses: actions/download-artifact@v1.0.0
+      uses: actions/download-artifact@v3
       with:
         name: dist
     - name: Build sdist
