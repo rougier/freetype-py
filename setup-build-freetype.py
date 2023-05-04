@@ -25,14 +25,14 @@ import platform
 # Needed for the GitHub Actions macOS CI runner, which appears to come without CAs.
 import certifi
 
-FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
-FREETYPE_TARBALL = "freetype-2.12.0.tar.xz"
+FREETYPE_HOST = "https://mirrors.sarata.com/non-gnu/freetype/"
+FREETYPE_TARBALL = "freetype-2.13.0.tar.xz"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
-FREETYPE_SHA256 = "ef5c336aacc1a079ff9262d6308d6c2a066dd4d2a905301c4adda9b354399033"
-HARFBUZZ_HOST = "https://github.com/harfbuzz/harfbuzz/releases/download/4.2.1/"
-HARFBUZZ_TARBALL = "harfbuzz-4.2.1.tar.xz"
+FREETYPE_SHA256 = "5ee23abd047636c24b2d43c6625dcafc66661d1aca64dec9e0d05df29592624c"
+HARFBUZZ_HOST = "https://github.com/harfbuzz/harfbuzz/releases/download/7.2.0/"
+HARFBUZZ_TARBALL = "harfbuzz-7.2.0.tar.xz"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
-HARFBUZZ_SHA256 = "bd17916513829aeff961359a5ccebba6de2f4bf37a91faee3ac29c120e3d7ee1"
+HARFBUZZ_SHA256 = "fc5560c807eae0efd5f95b5aa4c65800c7a8eed6642008a6b1e7e3ffff7873cc"
 
 root_dir = "."
 build_dir = path.join(root_dir, "build")
