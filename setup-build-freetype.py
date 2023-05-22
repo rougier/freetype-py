@@ -26,24 +26,28 @@ import fileinput
 # Needed for the GitHub Actions macOS CI runner, which appears to come without CAs.
 import certifi
 
-FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
-FREETYPE_TARBALL = "freetype-2.12.0.tar.xz"
+FREETYPE_HOST = "https://mirrors.sarata.com/non-gnu/freetype/"
+FREETYPE_TARBALL = "freetype-2.13.0.tar.xz"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
-FREETYPE_SHA256 = "ef5c336aacc1a079ff9262d6308d6c2a066dd4d2a905301c4adda9b354399033"
-HARFBUZZ_HOST = "https://github.com/harfbuzz/harfbuzz/releases/download/4.2.1/"
-HARFBUZZ_TARBALL = "harfbuzz-4.2.1.tar.xz"
+FREETYPE_SHA256 = "5ee23abd047636c24b2d43c6625dcafc66661d1aca64dec9e0d05df29592624c"
+
+HARFBUZZ_HOST = "https://github.com/harfbuzz/harfbuzz/releases/download/7.2.0/"
+HARFBUZZ_TARBALL = "harfbuzz-7.2.0.tar.xz"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
-HARFBUZZ_SHA256 = "bd17916513829aeff961359a5ccebba6de2f4bf37a91faee3ac29c120e3d7ee1"
-BUILD_ZLIB = os.environ.get("FREETYPEPY_WITH_ZLIB", "")
+HARFBUZZ_SHA256 = "fc5560c807eae0efd5f95b5aa4c65800c7a8eed6642008a6b1e7e3ffff7873cc"
+
 ZLIB_HOST = "https://download.sourceforge.net/libpng/"
 ZLIB_TARBALL = "zlib-1.2.11.tar.xz"
 ZLIB_URL = ZLIB_HOST + ZLIB_TARBALL
 ZLIB_SH256 = "4ff941449631ace0d4d203e3483be9dbc9da454084111f97ea0a2114e19bf066"
-BUILD_LIBPNG = os.environ.get("FREETYPEPY_WITH_LIBPNG", "")
+
 LIBPNG_HOST = "https://download.sourceforge.net/libpng/"
 LIBPNG_TARBALL = "libpng-1.6.37.tar.xz"
 LIBPNG_URL = LIBPNG_HOST + LIBPNG_TARBALL
 LIBPNG_SH256 = "505e70834d35383537b6491e7ae8641f1a4bed1876dbfe361201fc80868d88ca"
+
+BUILD_ZLIB = os.environ.get("FREETYPEPY_WITH_ZLIB", "")
+BUILD_LIBPNG = os.environ.get("FREETYPEPY_WITH_LIBPNG", "")
 
 root_dir = "."
 build_dir = path.join(root_dir, "build")

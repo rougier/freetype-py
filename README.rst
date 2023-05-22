@@ -134,3 +134,10 @@ Maxim Shemarev.
 
 .. image:: https://raw.githubusercontent.com/rougier/freetype-py/master/doc/_static/agg-trick.png
 
+
+Freezing apps
+=============
+
+Freetype implements a hook for PyInstaller to help simplify the freezing process
+(it e.g. ensures that the freetype DLL is included). This hook requires
+PyInstaller version 4+.

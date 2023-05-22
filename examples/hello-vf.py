@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
-#  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
+#  Variable Font example - Copyright 2020 Josh Hadley, based on hello-world.py
 #  Distributed under the terms of the new BSD license.
 #
 # -----------------------------------------------------------------------------
@@ -50,7 +50,7 @@ if __name__ == '__main__':
             y = (height - baseline - top) - (i * 48)
             kerning = face.get_kerning(previous, c)
             x += (kerning.x >> 6)
-            Z[y:y+h,x:x+w] += numpy.array(bitmap.buffer, dtype='ubyte').reshape(h,w)
+            Z[y:y+h,x+left:x+left+w] += numpy.array(bitmap.buffer, dtype='ubyte').reshape(h,w)
             x += (slot.advance.x >> 6)
             previous = c
 

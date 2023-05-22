@@ -52,7 +52,7 @@ if __name__ == '__main__':
         # cairo does not like zero-width bitmap from the space character!
         if (bitmap.width > 0):
             glyph_surface = make_image_surface(face.glyph.bitmap)
-            ctx.set_source_surface(glyph_surface, x, y)
+            ctx.set_source_surface(glyph_surface, x+left, y)
             ctx.paint()
         x += (slot.advance.x >> 6)
         previous = c
