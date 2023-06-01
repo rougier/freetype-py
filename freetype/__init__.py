@@ -1227,7 +1227,9 @@ class Face( object ):
         '''
         Discard  face object, as well as all of its child slots and sizes.
         '''
-        if self._FT_Face is not None:
+        # We check FT_Done_Face because by the time we're called it
+        # may already be gone (see #44 and discussion in #169)
+        if FT_Done_Face is not None and self._FT_Face is not None:
             FT_Done_Face( self._FT_Face )
 
 
