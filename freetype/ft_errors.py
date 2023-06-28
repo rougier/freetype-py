@@ -95,6 +95,7 @@ class FT_Exception(Exception):
         0x9B: "invalid PostScript (post, table" ,
         0x9C: "found FDEF or IDEF opcode in glyf bytecode" ,
         0x9D: "missing bitmap in strike" ,
+        0x9E: "SVG hooks have not been set",
         0xA0: "opcode syntax error" ,
         0xA1: "argument stack underflow" ,
         0xA2: "ignore" ,
