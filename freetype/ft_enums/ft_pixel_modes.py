@@ -57,6 +57,15 @@ FT_PIXEL_MODE_LCD_V
   display on rotated LCD displays; the bitmap is three times taller than the
   original glyph image. See also FT_RENDER_MODE_LCD_V.
 
+
+FT_PIXEL_MODE_BGRA
+  [Since 2.5] An image with four 8-bit channels per pixel,
+  representing a color image (such as emoticons) with alpha channel.
+  For each pixel, the format is BGRA, which means, the blue channel
+  comes first in memory.  The color channels are pre-multiplied and in
+  the sRGB colorspace.  For example, full red at half-translucent
+  opacity will be represented as '00,00,80,80', not '00,00,FF,80'.
+  See also @FT_LOAD_COLOR.
 """
 
 FT_PIXEL_MODES = {'FT_PIXEL_MODE_NONE' : 0,
@@ -66,7 +75,8 @@ FT_PIXEL_MODES = {'FT_PIXEL_MODE_NONE' : 0,
                   'FT_PIXEL_MODE_GRAY4': 4,
                   'FT_PIXEL_MODE_LCD'  : 5,
                   'FT_PIXEL_MODE_LCD_V': 6,
-                  'FT_PIXEL_MODE_MAX'  : 7}
+                  'FT_PIXEL_MODE_BGRA' : 7,
+                  'FT_PIXEL_MODE_MAX'  : 8}
 globals().update(FT_PIXEL_MODES)
 ft_pixel_mode_none  = FT_PIXEL_MODE_NONE
 ft_pixel_mode_mono  = FT_PIXEL_MODE_MONO
