@@ -113,3 +113,5 @@ class FT_Exception(Exception):
         0xB9: "Font header corrupted or missing fields" ,
         0xBA: "Font glyphs corrupted or missing fields" ,
     }
+
+FT_Err_Ok=0x00
