@@ -1031,10 +1031,10 @@ class FT_MM_Var(Structure):
 # -----------------------------------------------------------------------------
 # Structures related to OT-SVG support. See "freetype/otsvg.h".
 #
-SVG_Lib_Init_Func        = CFUNCTYPE(c_int, POINTER(FT_Pointer))
-SVG_Lib_Free_Func        = CFUNCTYPE(None, POINTER(FT_Pointer))
-SVG_Lib_Render_Func      = CFUNCTYPE(c_int, FT_GlyphSlot, POINTER(FT_Pointer))
-SVG_Lib_Preset_Slot_Func = CFUNCTYPE(c_int, FT_GlyphSlot, FT_Bool, POINTER(FT_Pointer))
+SVG_Lib_Init_Func        = CFUNCTYPE(c_int, POINTER(py_object))
+SVG_Lib_Free_Func        = CFUNCTYPE(None, POINTER(py_object))
+SVG_Lib_Render_Func      = CFUNCTYPE(c_int, FT_GlyphSlot, POINTER(py_object))
+SVG_Lib_Preset_Slot_Func = CFUNCTYPE(c_int, FT_GlyphSlot, FT_Bool, POINTER(py_object))
 
 class SVG_RendererHooks(Structure):
     _fields_ = [('svg_init',        SVG_Lib_Init_Func),

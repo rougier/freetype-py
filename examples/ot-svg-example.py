@@ -7,6 +7,10 @@
 #  Distributed under the terms of the new BSD license.
 
 # This is largely a python re-write of freetype2-demos:src/rsvg-port.c .
+#
+# Limitation: it is necessary to have "_state" as a module-level global
+# partially (in svg_init/svg_free, not in svg_render/svg_preset_slot)
+# to stop python destroying it when execution is in the c-side.
 
 import gi
 gi.require_version('Rsvg', '2.0')
@@ -18,21 +22,25 @@ from cairo import * # cairo.Matrix shadows freetype.Matrix
 
 from math import ceil
 
-state = {}
+_state = None
 
-def svg_init(state):
-    # "state = {}" alone is probably fine!
-    state = {'rec_surface' : None,
-           'x' : 0,
-           'y' : 0}
+def svg_init(ctx):
+    global _state
+    _state = {}
+    ctx.contents.value = _state
     return FT_Err_Ok
 
-def svg_free(state):
-    state = None
+def svg_free(ctx):
+    global _state
+    _state = None
+    # "None" is strictly speaking a special pyobject,
+    # this line does not do what it should, i.e. setting the
+    # pointer to NULL.
+    ctx.contents = None
     return # void
 
 def svg_render(slot, ctx):
-    global state
+    state = ctx.contents.value
     #pythonapi is imported from ctypes
     pythonapi.PyMemoryView_FromMemory.argtypes = (c_char_p, c_ssize_t, c_int)
     pythonapi.PyMemoryView_FromMemory.restype = py_object
@@ -57,7 +65,7 @@ def svg_render(slot, ctx):
     return FT_Err_Ok
 
 def svg_preset_slot(slot, cached, ctx):
-    global state
+    state = ctx.contents.value
 
     document = ctypes.cast(slot.contents.other, FT_SVG_Document)
 
