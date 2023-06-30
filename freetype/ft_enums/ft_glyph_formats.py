@@ -38,6 +38,10 @@ FT_GLYPH_FORMAT_PLOTTER
   Type 1 fonts, like those in the Hershey family, contain glyphs in this
   format. These are described as FT_Outline, but FreeType isn't currently
   capable of rendering them correctly.
+
+FT_GLYPH_FORMAT_SVG
+
+  [Since 2.12] The glyph is represented by an SVG document in the 'SVG~' table.
 """
 
 def _FT_IMAGE_TAG(a,b,c,d):
@@ -48,10 +52,12 @@ FT_GLYPH_FORMATS = {
     'FT_GLYPH_FORMAT_COMPOSITE' : _FT_IMAGE_TAG( 'c','o','m','p' ),
     'FT_GLYPH_FORMAT_BITMAP'    : _FT_IMAGE_TAG( 'b','i','t','s' ),
     'FT_GLYPH_FORMAT_OUTLINE'   : _FT_IMAGE_TAG( 'o','u','t','l' ),
-    'FT_GLYPH_FORMAT_PLOTTER'   : _FT_IMAGE_TAG( 'p','l','o','t' )}
+    'FT_GLYPH_FORMAT_PLOTTER'   : _FT_IMAGE_TAG( 'p','l','o','t' ),
+    'FT_GLYPH_FORMAT_SVG'       : _FT_IMAGE_TAG( 'S','V','G',' ' )}
 globals().update(FT_GLYPH_FORMATS)
 ft_glyph_format_none      = FT_GLYPH_FORMAT_NONE
 ft_glyph_format_composite = FT_GLYPH_FORMAT_COMPOSITE
 ft_glyph_format_bitmap    = FT_GLYPH_FORMAT_BITMAP
 ft_glyph_format_outline   = FT_GLYPH_FORMAT_OUTLINE
 ft_glyph_format_plotter   = FT_GLYPH_FORMAT_PLOTTER
+ft_glyph_format_svg       = FT_GLYPH_FORMAT_SVG
