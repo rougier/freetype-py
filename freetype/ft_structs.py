@@ -600,7 +600,7 @@ class FT_GlyphSlotRec(Structure):
         ('library',           FT_Library),
         ('face',              c_void_p),
         ('next',              c_void_p),
-        ('reserved',          c_uint),
+        ('glyph_index',       c_uint),   # new in FreeType 2.10; was reserved previously and retained for binary compatibility
         ('generic',           FT_Generic),
 
         ('metrics',           FT_Glyph_Metrics),

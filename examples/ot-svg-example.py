@@ -111,15 +111,15 @@ def svg_preset_slot(slot, cached, ctx):
         dimension_svg.height = out_viewbox.height
     else:
         # "out_has_width" and "out_has_height" are True always
-        dimension_svg.width  = units_per_EM;
-        dimension_svg.height = units_per_EM;
+        dimension_svg.width  = units_per_EM.value
+        dimension_svg.height = units_per_EM.value
 
         if (( out_width.length  != 1) or (out_height.length != 1 )):
             dimension_svg.width  = out_width.length
             dimension_svg.height = out_height.length
 
-    x_svg_to_out = metrics.x_ppem / dimension_svg.width;
-    y_svg_to_out = metrics.y_ppem / dimension_svg.height;
+    x_svg_to_out = metrics.x_ppem / dimension_svg.width
+    y_svg_to_out = metrics.y_ppem / dimension_svg.height
 
     state['rec_surface'] = RecordingSurface( Content.COLOR_ALPHA, None )
 
@@ -131,7 +131,7 @@ def svg_preset_slot(slot, cached, ctx):
     yy =  document.contents.transform.yy / ( 1 << 16 )
 
     x0 =  document.contents.delta.x / 64 * dimension_svg.width / metrics.x_ppem
-    y0 = -document.contents.delta.y / 64 * dimension_svg.height / metrics.y_ppem;
+    y0 = -document.contents.delta.y / 64 * dimension_svg.height / metrics.y_ppem
 
     transform_matrix = Matrix(xx, yx, xy, yy, x0, y0) # cairo.Matrix
 
@@ -163,8 +163,8 @@ def svg_preset_slot(slot, cached, ctx):
 
     slot.contents.bitmap.pixel_mode = FT_PIXEL_MODE_BGRA
 
-    metrics_width  = width;
-    metrics_height = height;
+    metrics_width  = width
+    metrics_height = height
 
     horiBearingX =  state['x']
     horiBearingY = -state['y']

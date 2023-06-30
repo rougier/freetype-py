@@ -33,10 +33,10 @@ Works with cairocffi too. (Replace "from cairo ..." with "from cairocffi ...")
 
 Limitation: Surface.create_for_data is not in the "python 3, pycairo < 1.11" combo.
 '''
-from freetype import FT_PIXEL_MODE_MONO, FT_PIXEL_MODE_GRAY, FT_Pointer, FT_Bitmap
+from freetype import FT_PIXEL_MODE_MONO, FT_PIXEL_MODE_GRAY, FT_PIXEL_MODE_BGRA, FT_Pointer, FT_Bitmap
 
-from cairo import ImageSurface, FORMAT_A1, FORMAT_A8
-#from cairocffi import ImageSurface, FORMAT_A1, FORMAT_A8
+from cairo import ImageSurface, FORMAT_A1, FORMAT_A8, FORMAT_ARGB32
+#from cairocffi import ImageSurface, FORMAT_A1, FORMAT_A8, FORMAT_ARGB32
 
 from array import array
 from ctypes import cast, memmove, CDLL, c_void_p, c_int
@@ -54,6 +54,8 @@ def make_image_surface(bitmap, copy = True) :
         cairo_format = FORMAT_A1
     elif content.pixel_mode == FT_PIXEL_MODE_GRAY :
         cairo_format = FORMAT_A8
+    elif content.pixel_mode == FT_PIXEL_MODE_BGRA : # small-endian
+        cairo_format = FORMAT_ARGB32 # platform native
     else :
         raise NotImplementedError("unsupported bitmap format %d" % content.pixel_mode)
     src_pitch = content.pitch
