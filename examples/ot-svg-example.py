@@ -197,7 +197,6 @@ hooks = SVG_RendererHooks(svg_init=SVG_Lib_Init_Func(svg_init),
 
 if __name__ == '__main__':
     import sys
-    import numpy as np
     execname = sys.argv[0]
 
     if len(sys.argv) < 2:
@@ -217,20 +216,13 @@ if __name__ == '__main__':
 
     if ( face.glyph.bitmap.pitch != width * 4 ):
         raise RuntimeError('pitch != width * 4 for color bitmap: Please report this.')
-    bitmap = np.array(bitmap.buffer, dtype=np.uint8).reshape((bitmap.rows,bitmap.width,4))
 
-    I = ImageSurface(FORMAT_ARGB32, width, rows)
-    try:
-        ndI = np.ndarray(shape=(rows,width), buffer=I.get_data(),
-                         dtype=np.uint32, order='C',
-                         strides=[I.get_stride(), 4])
-    except NotImplementedError:
-        raise SystemExit("For python 3.x, you need pycairo >= 1.11+ (from https://github.com/pygobject/pycairo)")
-
-    ndI[:,:] = bitmap[:,:,3] * 2**24 + bitmap[:,:,2] * 2**16 + bitmap[:,:,1] * 2**8 + bitmap[:,:,0]
-
-    I.mark_dirty()
-
+    I = ImageSurface.create_for_data( pythonapi.PyMemoryView_FromMemory(cast(bitmap._FT_Bitmap.buffer, c_char_p),
+                                                                        bitmap.rows * bitmap.pitch,
+                                                                        0x200), # Read-Write
+                                      FORMAT_ARGB32,
+                                      width, rows,
+                                      bitmap.pitch )
     surface = ImageSurface(FORMAT_ARGB32, 2*width, rows)
     ctx = Context(surface)
 
