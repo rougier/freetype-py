@@ -111,8 +111,8 @@ def svg_preset_slot(slot, cached, ctx):
         dimension_svg.height = out_viewbox.height
     else:
         # "out_has_width" and "out_has_height" are True always
-        dimension_svg.width  = units_per_EM
-        dimension_svg.height = units_per_EM
+        dimension_svg.width  = units_per_EM.value
+        dimension_svg.height = units_per_EM.value
 
         if (( out_width.length  != 1) or (out_height.length != 1 )):
             dimension_svg.width  = out_width.length
