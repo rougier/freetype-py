@@ -39,6 +39,7 @@ class FT_Exception(Exception):
         0x15: "invalid composite glyph" ,
         0x16: "too many hints" ,
         0x17: "invalid pixel size" ,
+        0x18: "invalid SVG document" ,
         0x20: "invalid object handle" ,
         0x21: "invalid library handle" ,
         0x22: "invalid module handle" ,
