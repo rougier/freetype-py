@@ -7,6 +7,21 @@
 #  Distributed under the terms of the new BSD license.
 
 # This is largely a python re-write of freetype2-demos:src/rsvg-port.c .
+# It is designed to be embeddable as a module in another python script .
+#
+#     To use, rename this to, for example "otsvg.py", then insert
+#
+#     '''
+#         from otsvg import hooks
+#
+#         library = get_handle()
+#         FT_Property_Set( library, b"ot-svg", b"svg-hooks", byref(hooks)
+#     '''
+#
+#     in your script, and add "FT_LOAD_COLOR | FT_LOAD_RENDER"
+#     to load_glyph() or load_char() calls. As in "__main__" below,
+#     but also in the longer example of hb-view-ot-svg.py
+#     in https://github.com/HinTak/harfbuzz-python-demos/ .
 #
 # Limitation: it is necessary to have "_state" as a module-level global
 # partially (in svg_init/svg_free, not in svg_render/svg_preset_slot)
