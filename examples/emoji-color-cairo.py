@@ -6,6 +6,16 @@
 #
 #  This script demonstrates overlapping emojis.
 #
+#  There are 4 kinds. sbix (Apple's) and CBDT/CBLC (Google's) only work
+#  at specific sizes; OT-SVG (Adobe/Mozilla's) and COLR v0 (Microsoft's)
+#  work at arbitrary sizes, but need the FT_LOAD_RENDER flags (this has
+#  no effect on sbix and CBDT/CBLC, so can be added). It is added below
+#  so this would work as is for COLR v0 (Microsoft's). In addition,
+#  OT-SVG needs an external render. See ot-svg-example.py and comments
+#  inside. Basically you need 3 more lines (rename "ot-svg-example.py" as
+#  "otsvg.py", then add 3 lines "from otsvg import hooks",
+#  get library handle, set the "ot-svg" "svg-hooks" property, to load it)
+#
 #  Note: On Mac OS X before Sierra (10.12), change ttc->ttf;
 #        try Google's NotoColorEmoji.ttf at size 109 on Linux.
 #
@@ -25,7 +35,7 @@ face = freetype.Face("/System/Library/Fonts/Apple Color Emoji.ttc")
 # Not all char sizes are valid for emoji fonts;
 # Google's NotoColorEmoji only accept size 109 to get 136x128 bitmaps
 face.set_char_size( 160*64 )
-face.load_char('😀', freetype.FT_LOAD_COLOR)
+face.load_char('😀', freetype.FT_LOAD_COLOR | freetype.FT_LOAD_RENDER)
 
 bitmap = face.glyph.bitmap
 width = face.glyph.bitmap.width
