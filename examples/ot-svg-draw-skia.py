@@ -9,6 +9,8 @@
 # Limitation:
 #     Skia-python bundles with Skia m87 (at time of writing this).
 #
+#     Skia m88 is first version where SkSVG* is considered no longer experimental.
+#
 #     Skia m103 is the first Skia build which contains 9cbadcd9280dc139af2f4d41d25a6c9a750e0302.
 #     That introduces "SkSVGDOM::renderNode()" among other stuff,
 #     necessary for rendering "some" OT-SVG fonts. Guess what, that commit
@@ -17,6 +19,9 @@
 #     So the example below only works correctly for "some" glyphs in
 #     "some other" OT-SVG fonts, and also with very limited functionality
 #     beyond what is used below.
+#
+#     The missing functionality (and support for beyond Skia m103) is filed
+#     as skia-python issue #192.
 
 from freetype import *
 
