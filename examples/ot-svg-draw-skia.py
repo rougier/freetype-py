@@ -46,6 +46,8 @@ if __name__ == '__main__':
         doc = ctypes.string_at(document.contents.svg_document, # not terminated
                                size=document.contents.svg_document_length)
         d = skia.Data(doc)
+        # skia-python #194 - the raw c++ api actually has a (ptr, len, bool) method!
+        # Data() shouldn't be needed.
         m = skia.MemoryStream(d)
         h = skia.SVGDOM.MakeFromStream(m)
 
