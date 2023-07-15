@@ -1053,3 +1053,13 @@ class FT_SVG_DocumentRec(Structure):
                 ('delta',               FT_Vector)]
 
 FT_SVG_Document = POINTER(FT_SVG_DocumentRec)
+# -----------------------------------------------------------------------------
+# Structures related to color support. See "freetype/ftcolor.h".
+#
+class FT_OpaquePaint(Structure):
+    _fields_ = [('p',                     POINTER(FT_Byte)),
+                ('insert_root_transform', FT_Bool)]
+class FT_LayerIterator(Structure):
+    _fields_ = [('num_layers',            FT_UInt),
+                ('layer',                 FT_UInt),
+                ('p',                     POINTER(FT_Byte))]
