@@ -75,9 +75,9 @@ if __name__ == '__main__':
             canvas.translate(WIDTH/4,0)
             h.render(canvas)
             
-            surface.flushAndSubmit()
-            image = surface.makeImageSnapshot()
-            image.save("ot-svg-draw-skia.png", skia.kPNG)
+        surface.flushAndSubmit()
+        image = surface.makeImageSnapshot()
+        image.save("ot-svg-draw-skia.png", skia.kPNG)
 
         from PIL import Image
         Image.open("ot-svg-draw-skia.png").show()
