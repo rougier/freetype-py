@@ -8,6 +8,10 @@
 
 #  See also the other one, the rsvg-based OT-SVG example.
 
+# "ot-svg-draw-skia.py" was written based on skia m87.
+# This example requires m117, and also accelerated GL integration;
+# should work on any OT-SVG font, unlike "ot-svg-draw-skia.py".
+
 from freetype import *
 
 import skia
