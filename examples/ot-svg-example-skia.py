@@ -66,8 +66,8 @@ if __name__ == '__main__':
                 canvas.drawBitmap(glyphBitmap, 0, 0)
                 canvas.drawBitmap(glyphBitmap, width/2, 0)
                 canvas.drawBitmap(glyphBitmap, width, 0)
-                surface.flushAndSubmit()
-                glfw.swap_buffers(window)
+            surface.flushAndSubmit()
+            glfw.swap_buffers(window)
 
             while (glfw.get_key(window, glfw.KEY_ESCAPE) != glfw.PRESS
                    and not glfw.window_should_close(window)):
