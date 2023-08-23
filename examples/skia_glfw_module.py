@@ -1,3 +1,22 @@
+# skia_glfw_module
+# This file created by 2023 Hin-Tak Leung; but Copyright skia-python project:
+
+# Adapted from https://kyamagu.github.io/skia-python/tutorial/canvas.html#opengl-window
+
+# Typical usage:
+#
+#     from skia_glfw_module import glfw_window, skia_surface
+#     ....
+#     with glfw_window(WIDTH, HEIGHT) as window:
+#     ...
+#          with skia_surface(window) as surface:
+#              with surface as canvas:
+#                  canvas.drawStuff()
+#
+#              surface.flushAndSubmit()
+#              glfw.swap_buffers(window)
+#
+
 import contextlib, glfw
 import skia
 from OpenGL import GL
