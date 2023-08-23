@@ -1,7 +1,28 @@
-from freetype import *
+# skia_ot_svg_module
+# Copyright 2023 Hin-Tak Leung
+
+# Typical usage:
+#
+#     from freetype import get_handle, FT_Property_Set
+#     from skia_ot_svg_module import hooks
+#     ...
+#     library = get_handle()
+#     FT_Property_Set( library, b"ot-svg", b"svg-hooks", byref(hooks) )
+#
+# After these lines (or equivalent), COLOR OT-SVG font support is enabled.
+# You just use freetype-py as usual. Color bitmaps are returned for OT-SVG
+# fonts in FT_Load_Char()/FT_Load_Glyph().
+
+from freetype import FT_SVG_Document, FT_Err_Ok, SVG_RendererHooks, \
+    SVG_Lib_Init_Func, SVG_Lib_Free_Func, SVG_Lib_Render_Func, \
+    SVG_Lib_Preset_Slot_Func, SizeMetrics, FT_UShort, FT_PIXEL_MODE_BGRA, \
+    FT_GLYPH_FORMAT_BITMAP
+import ctypes
+from ctypes import py_object, pythonapi, cast, c_char_p
 
 import skia
-from skia import Size, ImageInfo, ColorType, AlphaType, Canvas, PictureRecorder, Rect, ScalarNegativeInfinity, ScalarInfinity, RTreeFactory
+from skia import Size, ImageInfo, ColorType, AlphaType, Canvas, \
+    PictureRecorder, Rect, ScalarNegativeInfinity, ScalarInfinity, RTreeFactory
 
 from packaging import version
 assert(version.parse(skia.__version__) > version.parse("116.0b2")), "Needs Skia-Python 116.0b2+"
