@@ -1182,9 +1182,20 @@ class Face( object ):
         if hasattr(path_or_stream, "read"):
             error = self._init_from_memory(library, face, index, path_or_stream.read())
         else:
+            open_from_memory = False
             try:
                 error = self._init_from_file(library, face, index, path_or_stream)
+
+                # FreeType cannot load fonts with non-ASCII characters on Windows.
+                # So if the file exist and freetype cannot open the file, we try to open it with memory.
+                #   See: https://gitlab.freedesktop.org/freetype/freetype/-/issues/1098
+                # The error code 0x01 correspond to FT_Err_Cannot_Open_Resource
+                if error == 0x01 and os.path.isfile(path_or_stream):
+                    open_from_memory = True
             except UnicodeError:
+                open_from_memory = True
+
+            if open_from_memory:
                 with open(path_or_stream, mode="rb") as f:
                     filebody = f.read()
                 error = self._init_from_memory(library, face, index, filebody)
