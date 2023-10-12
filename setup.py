@@ -109,7 +109,7 @@ setup(
     author_email='Nicolas.Rougier@inria.fr',
     url='https://github.com/rougier/freetype-py',
     python_requires=">=3.7",
-    packages=['freetype', 'freetype.ft_enums'],
+    packages=['freetype', 'freetype.ft_enums','freetype.__pyinstaller'],
     ext_modules=ext_modules,
     zip_safe=False if ext_modules else True,
     cmdclass=cmdclass,
