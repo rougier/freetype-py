@@ -207,11 +207,11 @@ if BUILD_LIBPNG:
 print("# First, build FreeType without additional libraries")
 shell(
     "cmake -DBUILD_SHARED_LIBS=OFF "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE -DFT_WITH_HARFBUZZ=OFF "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE -DFT_WITH_PNG=OFF "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE -DFT_WITH_ZLIB=OFF "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE "
+    "-DFT_DISABLE_HARFBUZZ=TRUE "
+    "-DFT_DISABLE_PNG=TRUE "
+    "-DFT_DISABLE_BZIP2=TRUE "
+    "-DFT_DISABLE_ZLIB=TRUE "
+    "-DFT_DISABLE_BROTLI=TRUE "
     "{} ..".format(CMAKE_GLOBAL_SWITCHES),
     cwd=build_dir_ft,
 )
@@ -264,11 +264,11 @@ libpng_includes = path.join(prefix_dir, "include", "libpng16")
 zlib_includes = path.join(prefix_dir, "include")
 shell(
     "cmake -DBUILD_SHARED_LIBS=ON "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=FALSE -DFT_WITH_HARFBUZZ=ON "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=" + ("FALSE -DFT_WITH_PNG=ON " if BUILD_LIBPNG else "TRUE ") +
-    "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=" + ("FALSE -DFT_WITH_ZLIB=ON " if BUILD_ZLIB or BUILD_LIBPNG else "TRUE ") +
-    "-DCMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE "
+    "-DFT_REQUIRE_HARFBUZZ=TRUE "
+    "-DFT_REQUIRE_PNG=" + ("TRUE " if BUILD_LIBPNG else "FALSE ") +
+    "-DFT_DISABLE_BZIP2=TRUE "
+    "-DFT_REQUIRE_ZLIB=" + ("TRUE " if BUILD_ZLIB or BUILD_LIBPNG else "FALSE ") +
+    "-DFT_DISABLE_BROTLI=TRUE "
     '-DPKG_CONFIG_EXECUTABLE="" '  # Prevent finding system libraries
     '-DHarfBuzz_INCLUDE_DIRS="{}" '
     '-DPNG_INCLUDE_DIRS="{}" '
