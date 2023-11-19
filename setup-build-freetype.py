@@ -259,6 +259,9 @@ if BUILD_LIBPNG:
     shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_lp)
 
 print("\n# Lastly, rebuild FreeType, this time with additional libraries support.")
+# clean cmake build dir for a clean build
+distutils.dir_util.remove_tree(build_dir_ft)
+distutils.dir_util.mkpath(build_dir_ft)
 harfbuzz_includes = path.join(prefix_dir, "include", "harfbuzz")
 libpng_includes = path.join(prefix_dir, "include", "libpng16")
 zlib_includes = path.join(prefix_dir, "include")
