@@ -267,10 +267,10 @@ libpng_includes = path.join(prefix_dir, "include", "libpng16")
 zlib_includes = path.join(prefix_dir, "include")
 shell(
     "cmake -DBUILD_SHARED_LIBS=ON "
-    "-DFT_REQUIRE_HARFBUZZ=TRUE "
-    "-DFT_REQUIRE_PNG=" + ("TRUE " if BUILD_LIBPNG else "FALSE ") +
-    "-DFT_DISABLE_BZIP2=TRUE "
-    "-DFT_REQUIRE_ZLIB=" + ("TRUE " if BUILD_ZLIB or BUILD_LIBPNG else "FALSE ") +
+    "-DFT_REQUIRE_HARFBUZZ=TRUE " +
+    ("-DFT_REQUIRE_PNG=TRUE " if BUILD_LIBPNG else "-DFT_DISABLE_PNG=TRUE ") +
+    "-DFT_DISABLE_BZIP2=TRUE " +
+    ("-DFT_REQUIRE_ZLIB=TRUE " if BUILD_ZLIB or BUILD_LIBPNG else "-DFT_DISABLE_ZLIB=TRUE ") +
     "-DFT_DISABLE_BROTLI=TRUE "
     '-DPKG_CONFIG_EXECUTABLE="" '  # Prevent finding system libraries
     '-DHarfBuzz_INCLUDE_DIRS="{}" '
