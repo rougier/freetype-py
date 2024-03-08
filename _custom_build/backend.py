@@ -23,3 +23,8 @@ def get_requires_for_build_wheel(config_settings=None):
         build_wheel_deps += ["certifi", "cmake"]
 
     return build_wheel_deps
+
+
+def get_requires_for_build_editable(config_settings=None):
+    # ensure pip install -e . uses same build deps as regular pip install/wheel
+    return get_requires_for_build_wheel(config_settings)
