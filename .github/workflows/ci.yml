@@ -117,5 +117,5 @@ jobs:
     - name: Test pyinstaller hook
       run: |
         pip install pytest psutil pyinstaller>=4
-        FREETYPEPY_BUNDLE_FT=yes PYTHON_ARCH=64 pip install -e .
-        pytest -v freetype/__pyinstaller
+        FREETYPEPY_BUNDLE_FT=yes PYTHON_ARCH=64 pip install .
+        pytest -v freetype/__pyinstaller/tests
