@@ -115,7 +115,10 @@ jobs:
       with:
         python-version: '3.9'
     - name: Test pyinstaller hook
+      env:
+        FREETYPEPY_BUNDLE_FT: yes
+        PYTHON_ARCH: 64
       run: |
         pip install pytest psutil pyinstaller>=4
-        FREETYPEPY_BUNDLE_FT=yes PYTHON_ARCH=64 pip install .
-        pytest -v freetype/__pyinstaller/tests
+        pip install .
+        pytest -v --pyargs freetype.__pyinstaller.tests
