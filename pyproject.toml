@@ -1,3 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4", "certifi", "cmake"]
-build-backend = "setuptools.build_meta"
+requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
+# https://setuptools.pypa.io/en/latest/build_meta.html#dynamic-build-dependencies-and-other-build-meta-tweaks
+build-backend = "backend"
+backend-path = ["_custom_build"]
