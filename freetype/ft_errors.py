@@ -39,6 +39,7 @@ class FT_Exception(Exception):
         0x15: "invalid composite glyph" ,
         0x16: "too many hints" ,
         0x17: "invalid pixel size" ,
+        0x18: "invalid SVG document" ,
         0x20: "invalid object handle" ,
         0x21: "invalid library handle" ,
         0x22: "invalid module handle" ,
@@ -95,6 +96,7 @@ class FT_Exception(Exception):
         0x9B: "invalid PostScript (post, table" ,
         0x9C: "found FDEF or IDEF opcode in glyf bytecode" ,
         0x9D: "missing bitmap in strike" ,
+        0x9E: "SVG hooks have not been set",
         0xA0: "opcode syntax error" ,
         0xA1: "argument stack underflow" ,
         0xA2: "ignore" ,
@@ -112,3 +114,5 @@ class FT_Exception(Exception):
         0xB9: "Font header corrupted or missing fields" ,
         0xBA: "Font glyphs corrupted or missing fields" ,
     }
+
+FT_Err_Ok=0x00

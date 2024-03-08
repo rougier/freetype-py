@@ -97,6 +97,7 @@ TT_NAME_IDS: Possible values of the `name' identifier field in the name
              records of the TTF `name' table.  These values are platform
              independent.
 '''
+from freetype.ft_enums.ft_color_root_transform import *
 from freetype.ft_enums.ft_curve_tags import *
 from freetype.ft_enums.ft_fstypes import *
 from freetype.ft_enums.ft_face_flags import *

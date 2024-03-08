@@ -1,18 +1,32 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  pycairo/cairocffi-based emoji-color example - Copyright 2017 Hin-Tak Leung
+#  pycairo/cairocffi-based emoji-color example - Copyright 2017-2023 Hin-Tak Leung
 #  Distributed under the terms of the new BSD license.
 #
 #  This script demonstrates overlapping emojis.
 #
+#  There are 4 kinds. sbix (Apple's) and CBDT/CBLC (Google's) only work
+#  at specific sizes; OT-SVG (Adobe/Mozilla's) and COLR v0 (Microsoft's)
+#  work at arbitrary sizes, but need the FT_LOAD_RENDER flags (this has
+#  no effect on sbix and CBDT/CBLC, so can be added). It is added below
+#  so this would work as is for COLR v0 (Microsoft's). In addition,
+#  OT-SVG needs an external render. See ot-svg-example.py and comments
+#  inside. Basically you need 3 more lines (rename "ot-svg-example.py" as
+#  "otsvg.py", then add 3 lines "from otsvg import hooks",
+#  get library handle, set the "ot-svg" "svg-hooks" property, to load it)
+#
 #  Note: On Mac OS X before Sierra (10.12), change ttc->ttf;
 #        try Google's NotoColorEmoji.ttf at size 109 on Linux.
 #
+#  Updated 2023, now somewhat specific to pycairo and CPython 3.3+,
+#  and also small-endian (from FORMAT_ARGB32 vs FT_PIXEL_MODE_BGRA),
+#  but no longer needs numpy.
+#
+#  Older 2017 version (depends on numpy):
 #  Limitation: Suface.get_data() is not in the "python 3, pycairo < 1.11" combo.
 
 import freetype
-import numpy as np
 from PIL import Image
 
 from cairo import ImageSurface, FORMAT_ARGB32, Context
@@ -21,33 +35,25 @@ face = freetype.Face("/System/Library/Fonts/Apple Color Emoji.ttc")
 # Not all char sizes are valid for emoji fonts;
 # Google's NotoColorEmoji only accept size 109 to get 136x128 bitmaps
 face.set_char_size( 160*64 )
-face.load_char('😀', freetype.FT_LOAD_COLOR)
+face.load_char('😀', freetype.FT_LOAD_COLOR | freetype.FT_LOAD_RENDER)
 
 bitmap = face.glyph.bitmap
 width = face.glyph.bitmap.width
 rows = face.glyph.bitmap.rows
 
-# The line below depends on this assumption. Check.
 if ( face.glyph.bitmap.pitch != width * 4 ):
     raise RuntimeError('pitch != width * 4 for color bitmap: Please report this.')
-bitmap = np.array(bitmap.buffer, dtype=np.uint8).reshape((bitmap.rows,bitmap.width,4))
 
-I = ImageSurface(FORMAT_ARGB32, width, rows)
-try:
-    ndI = np.ndarray(shape=(rows,width), buffer=I.get_data(),
-                     dtype=np.uint32, order='C',
-                     strides=[I.get_stride(), 4])
-except NotImplementedError:
-    raise SystemExit("For python 3.x, you need pycairo >= 1.11+ (from https://github.com/pygobject/pycairo)")
-
-# Although both are 32-bit, cairo is host-order while
-# freetype is small endian.
-ndI[:,:] = bitmap[:,:,3] * 2**24 + bitmap[:,:,2] * 2**16 + bitmap[:,:,1] * 2**8 + bitmap[:,:,0]
-# ndI[...] = (bitmap*(1,2**8,2**16,2**24)).sum(axis=-1)
-
-
-I.mark_dirty()
-
+# See https://stackoverflow.com/questions/59574816/obtaining-a-memoryview-object-from-a-ctypes-c-void-p-object
+from ctypes import pythonapi, c_char_p, c_ssize_t, c_int, py_object, cast
+pythonapi.PyMemoryView_FromMemory.argtypes = (c_char_p, c_ssize_t, c_int)
+pythonapi.PyMemoryView_FromMemory.restype = py_object
+I = ImageSurface.create_for_data( pythonapi.PyMemoryView_FromMemory(cast(bitmap._FT_Bitmap.buffer, c_char_p),
+                                                                    bitmap.rows * bitmap.pitch,
+                                                                    0x200), # Read-Write
+                                        FORMAT_ARGB32,
+                                        width, rows,
+                                        bitmap.pitch )
 surface = ImageSurface(FORMAT_ARGB32, 2*width, rows)
 ctx = Context(surface)
 

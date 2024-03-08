@@ -56,7 +56,7 @@ jobs:
         platforms: all
 
     - name: Build wheels
-      uses: pypa/cibuildwheel@v2.12.3
+      uses: pypa/cibuildwheel@v2.16.5
       env:
         CIBW_BUILD: ${{ matrix.cibw_build }}
         CIBW_ARCHS: "auto64"
@@ -115,7 +115,10 @@ jobs:
       with:
         python-version: '3.9'
     - name: Test pyinstaller hook
+      env:
+        FREETYPEPY_BUNDLE_FT: yes
+        PYTHON_ARCH: 64
       run: |
         pip install pytest psutil pyinstaller>=4
-        FREETYPEPY_BUNDLE_FT=yes PYTHON_ARCH=64 pip install -e .
-        pytest -v freetype/__pyinstaller
+        pip install .
+        pytest -v --pyargs freetype.__pyinstaller.tests

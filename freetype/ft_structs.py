@@ -600,7 +600,7 @@ class FT_GlyphSlotRec(Structure):
         ('library',           FT_Library),
         ('face',              c_void_p),
         ('next',              c_void_p),
-        ('reserved',          c_uint),
+        ('glyph_index',       c_uint),   # new in FreeType 2.10; was reserved previously and retained for binary compatibility
         ('generic',           FT_Generic),
 
         ('metrics',           FT_Glyph_Metrics),
@@ -1028,3 +1028,38 @@ class FT_MM_Var(Structure):
         ('axis', POINTER(FT_Var_Axis)),
         ('namedstyle', POINTER(FT_Var_Named_Style))
     ]
+# -----------------------------------------------------------------------------
+# Structures related to OT-SVG support. See "freetype/otsvg.h".
+#
+SVG_Lib_Init_Func        = CFUNCTYPE(c_int, POINTER(py_object))
+SVG_Lib_Free_Func        = CFUNCTYPE(None, POINTER(py_object))
+SVG_Lib_Render_Func      = CFUNCTYPE(c_int, FT_GlyphSlot, POINTER(py_object))
+SVG_Lib_Preset_Slot_Func = CFUNCTYPE(c_int, FT_GlyphSlot, FT_Bool, POINTER(py_object))
+
+class SVG_RendererHooks(Structure):
+    _fields_ = [('svg_init',        SVG_Lib_Init_Func),
+                ('svg_free',        SVG_Lib_Free_Func),
+                ('svg_render',      SVG_Lib_Render_Func),
+                ('svg_preset_slot', SVG_Lib_Preset_Slot_Func)]
+
+class FT_SVG_DocumentRec(Structure):
+    _fields_ = [('svg_document',        POINTER(FT_Byte)),
+                ('svg_document_length', FT_ULong),
+                ('metrics',             FT_Size_Metrics),
+                ('units_per_EM',        FT_UShort),
+                ('start_glyph_id',      FT_UShort),
+                ('end_glyph_id',        FT_UShort),
+                ('transform',           FT_Matrix),
+                ('delta',               FT_Vector)]
+
+FT_SVG_Document = POINTER(FT_SVG_DocumentRec)
+# -----------------------------------------------------------------------------
+# Structures related to color support. See "freetype/ftcolor.h".
+#
+class FT_OpaquePaint(Structure):
+    _fields_ = [('p',                     POINTER(FT_Byte)),
+                ('insert_root_transform', FT_Bool)]
+class FT_LayerIterator(Structure):
+    _fields_ = [('num_layers',            FT_UInt),
+                ('layer',                 FT_UInt),
+                ('p',                     POINTER(FT_Byte))]

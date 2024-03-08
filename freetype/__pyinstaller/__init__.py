@@ -1,7 +1,7 @@
-from os.path import dirname
+import os
 
 
-HERE = dirname(__file__)
+HERE = os.path.dirname(__file__)
 
 
 def get_hook_dirs():
@@ -9,4 +9,4 @@ def get_hook_dirs():
 
 
 def get_test_dirs():
-    return [HERE]
+    return [os.path.join(HERE, 'tests')]

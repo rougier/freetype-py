@@ -236,6 +236,17 @@ try:
     FT_Get_BDF_Property            = _lib.FT_Get_BDF_Property
 except AttributeError:
     pass
+try:
+    FT_Get_Color_Glyph_Layer           = _lib.FT_Get_Color_Glyph_Layer # 2.10
+    FT_Get_Color_Glyph_Layer.restype   = FT_Bool
+    FT_Get_Color_Glyph_Layer.argtypes  = [FT_Face, FT_UInt, POINTER(FT_UInt), POINTER(FT_UInt), POINTER(FT_LayerIterator)]
+    FT_Get_Color_Glyph_Paint           = _lib.FT_Get_Color_Glyph_Paint # 2.13
+    FT_Get_Color_Glyph_Paint.restrype  = FT_Bool
+    FT_Get_Color_Glyph_Paint.argtypes  = [FT_Face, FT_UInt,
+                                          FT_UInt, # FT_Color_Root_Transform enums
+                                          POINTER(FT_OpaquePaint)]
+except AttributeError:
+    pass
 FT_Get_Module                  = _lib.FT_Get_Module
 FT_Get_Multi_Master            = _lib.FT_Get_Multi_Master
 FT_Get_PFR_Advance             = _lib.FT_Get_PFR_Advance
