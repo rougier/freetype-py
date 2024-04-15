@@ -40,3 +40,18 @@ def test_bundle_version():
         assert freetype.version() == version
     else:
         pytest.skip("Not using a bundled FreeType library.")
+
+
+def test_get_ft_face_properties():
+    p = os.path.join(test_folder, "..", "examples", "Vera.ttf")
+    f = freetype.Face(p)
+    assert f.family_name == b"Bitstream Vera Sans"
+    assert f.get_format() == b"TrueType"
+    assert f.get_glyph_name(20) == b"one"
+    assert f.get_fstype() == ("FT_FSTYPE_PREVIEW_AND_PRINT_EMBEDDING", 4)
+    assert f.get_first_char() == (32, 3)
+    assert f.is_sfnt
+    assert f.ascender == 1901
+    assert f.descender == -483
+    assert f.num_glyphs == 268
+    assert f.style_name == b"Roman"
