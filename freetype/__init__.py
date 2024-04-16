@@ -1619,7 +1619,7 @@ class Face( object ):
         '''
 
         flag = FT_Get_FSType_Flags( self._FT_Face )
-        for k, v in FT_FSTYPE_XXX.items():
+        for k, v in FT_FSTYPES.items():
             if v == flag:
                 return k, v
 
