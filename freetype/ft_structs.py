@@ -244,7 +244,7 @@ class FT_Data(Structure):
     length: The length of the data in bytes.
     '''
     _fields_ = [('pointer', POINTER(FT_Byte)),
-                ('y',       FT_Int)]
+                ('length',  FT_UInt)]
 
 
 
