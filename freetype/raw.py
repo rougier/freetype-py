@@ -241,7 +241,7 @@ try:
     FT_Get_Color_Glyph_Layer.restype   = FT_Bool
     FT_Get_Color_Glyph_Layer.argtypes  = [FT_Face, FT_UInt, POINTER(FT_UInt), POINTER(FT_UInt), POINTER(FT_LayerIterator)]
     FT_Get_Color_Glyph_Paint           = _lib.FT_Get_Color_Glyph_Paint # 2.13
-    FT_Get_Color_Glyph_Paint.restrype  = FT_Bool
+    FT_Get_Color_Glyph_Paint.restype   = FT_Bool
     FT_Get_Color_Glyph_Paint.argtypes  = [FT_Face, FT_UInt,
                                           FT_UInt, # FT_Color_Root_Transform enums
                                           POINTER(FT_OpaquePaint)]
