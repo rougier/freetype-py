@@ -236,6 +236,12 @@ class FT_Bitmap(Structure):
 
 # -----------------------------------------------------------------------------
 # Read-only binary data represented as a pointer and a length.
+# - While it is used internally within FreeType, the only public
+#   references to this structure are in include/freetype/ftincrem.h
+#   where it is used as glyph data bytes returned by incremental loading APIs.
+#   This is a specialist usage, and the only known use-case is
+#   by ghostscript, in ghostscript/base/fapi_ft.c .
+#   Hence there are no python examples for this.
 class FT_Data(Structure):
     '''
     Read-only binary data represented as a pointer and a length.
