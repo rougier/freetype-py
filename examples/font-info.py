@@ -23,7 +23,8 @@ if __name__ == '__main__':
     print ('')
     print ('Face number:         {}'.format(face.num_faces))
     print ('Glyph number:        {}'.format(face.num_glyphs))
-    print ('Available sizes:     {}'.format(face.available_sizes))
+    # FT_Bitmap_Size.size is in F26.6. Need to divide by 64:
+    print ('Available sizes:     {}'.format([bitmap_size.size/64 for bitmap_size in face.available_sizes]))
     print ('')
     print ('units per em:        {}'.format(face.units_per_EM))
     print ('ascender:            {}'.format(face.ascender))
