@@ -21,10 +21,10 @@ charmaps and name entries.
   Corresponds to SJIS Japanese encoding. See FT_ENCODING_SJIS.
 
 
-.. data:: TT_MS_ID_GB2312	
+.. data:: TT_MS_ID_PRC
 
   Corresponds to Simplified Chinese as used in Mainland China. See
-  FT_ENCODING_GB2312.
+  FT_ENCODING_PRC.
 
 
 .. data:: TT_MS_ID_BIG_5	

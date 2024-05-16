@@ -26,10 +26,11 @@ TT_MS_ID_SJIS
   Corresponds to SJIS Japanese encoding. See FT_ENCODING_SJIS.
 
 
-TT_MS_ID_GB2312
+TT_MS_ID_PRC
 
-  Corresponds to Simplified Chinese as used in Mainland China. See
-  FT_ENCODING_GB2312.
+  Chinese encodings as used in the People's Republic of China (PRC).
+  This means the encodings GB~2312 and its supersets GBK and
+  GB~18030.  See FT_ENCODING_PRC.
 
 
 TT_MS_ID_BIG_5
@@ -57,7 +58,7 @@ TT_MS_IDS = {
     'TT_MS_ID_SYMBOL_CS'  :  0,
     'TT_MS_ID_UNICODE_CS' :  1,
     'TT_MS_ID_SJIS'       :  2,
-    'TT_MS_ID_GB2312'     :  3,
+    'TT_MS_ID_PRC'        :  3,
     'TT_MS_ID_BIG_5'      :  4,
     'TT_MS_ID_WANSUNG'    :  5,
     'TT_MS_ID_JOHAB'      :  6,
