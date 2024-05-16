@@ -29,10 +29,10 @@ def usage( execname ):
 
 def Print_Name( face ):
     print( "font name entries" );
-    print( "   family:     %s" % face.family_name )
-    print( "   style:      %s" % face.style_name )
+    print( "   family:     %s" % face.family_name.decode("ascii", errors='ignore') )
+    print( "   style:      %s" % face.style_name.decode("ascii", errors='ignore') )
     ps_name = face.postscript_name or "UNAVAILABLE"
-    print( "   postscript: %s" % ps_name )
+    print( "   postscript: %s" % ps_name.decode("ascii", errors='ignore') )
 
 
 def Print_Type( face ):
