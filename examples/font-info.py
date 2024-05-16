@@ -17,8 +17,8 @@ if __name__ == '__main__':
 
     face = Face(sys.argv[1])
 
-    print ('Family name:         {}'.format(face.family_name))
-    print ('Style name:          {}'.format(face.style_name))
+    print ('Family name:         {}'.format(face.family_name.decode("ascii", errors='ignore')))
+    print ('Style name:          {}'.format(face.style_name.decode("ascii", errors='ignore')))
     print ('Charmaps:            {}'.format([charmap.encoding_name for charmap in face.charmaps]))
     print ('')
     print ('Face number:         {}'.format(face.num_faces))
