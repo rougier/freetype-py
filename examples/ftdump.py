@@ -214,11 +214,11 @@ def Print_Fixed( face ):
 
     # available size
     for i,bsize in enumerate(face.available_sizes):
-        print( "   %3d: height %d, width %d\n",
-               i, bsize.height, bsize.width )
-        print( "        size %.3f, x_ppem %.3f, y_ppem %.3f\n",
-               bsize.size / 64.0,
-               bsize.x_ppem / 64.0, bsize.y_ppem / 64.0 )
+        print( "   %3d: height %d, width %d" %
+               ( i, bsize.height, bsize.width ) )
+        print( "        size %.3f, x_ppem %.3f, y_ppem %.3f" %
+               ( bsize.size / 64.0,
+               bsize.x_ppem / 64.0, bsize.y_ppem / 64.0 ) )
 
 
 def Print_Charmaps( face ):
