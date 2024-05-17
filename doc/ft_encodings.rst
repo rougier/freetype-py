@@ -29,7 +29,7 @@ the FT_Select_Charmap API function.
   'http://langsupport.japanreference.com/encoding.shtml'. See note on
   multi-byte encodings below.
 
-.. data:: FT_ENCODING_GB2312	
+.. data:: FT_ENCODING_PRC
 
   Corresponds to an encoding system for Simplified Chinese as used used in
   mainland China.

@@ -29,10 +29,10 @@ def usage( execname ):
 
 def Print_Name( face ):
     print( "font name entries" );
-    print( "   family:     %s" % face.family_name )
-    print( "   style:      %s" % face.style_name )
+    print( "   family:     %s" % face.family_name.decode("ascii", errors='ignore') )
+    print( "   style:      %s" % face.style_name.decode("ascii", errors='ignore') )
     ps_name = face.postscript_name or "UNAVAILABLE"
-    print( "   postscript: %s" % ps_name )
+    print( "   postscript: %s" % ps_name.decode("ascii", errors='ignore') )
 
 
 def Print_Type( face ):
@@ -214,11 +214,11 @@ def Print_Fixed( face ):
 
     # available size
     for i,bsize in enumerate(face.available_sizes):
-        print( "   %3d: height %d, width %d\n",
-               i, bsize.height, bsize.width )
-        print( "        size %.3f, x_ppem %.3f, y_ppem %.3f\n",
-               bsize.size / 64.0,
-               bsize.x_ppem / 64.0, bsize.y_ppem / 64.0 )
+        print( "   %3d: height %d, width %d" %
+               ( i, bsize.height, bsize.width ) )
+        print( "        size %.3f, x_ppem %.3f, y_ppem %.3f" %
+               ( bsize.size / 64.0,
+               bsize.x_ppem / 64.0, bsize.y_ppem / 64.0 ) )
 
 
 def Print_Charmaps( face ):

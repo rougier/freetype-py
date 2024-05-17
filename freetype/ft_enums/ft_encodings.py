@@ -34,10 +34,11 @@ FT_ENCODING_SJIS
   'http://langsupport.japanreference.com/encoding.shtml'. See note on
   multi-byte encodings below.
 
-FT_ENCODING_GB2312
+FT_ENCODING_PRC
 
-  Corresponds to an encoding system for Simplified Chinese as used used in
-  mainland China.
+  Corresponds to encoding systems mainly for Simplified Chinese as
+  used in People's Republic of China (PRC).  The encoding layout
+  is based on GB~2312 and its supersets GBK and GB~18030.
 
 FT_ENCODING_BIG5
 
@@ -94,7 +95,7 @@ FT_ENCODINGS = {'FT_ENCODING_NONE'           : _FT_ENC_TAG('\0','\0','\0','\0'),
                 'FT_ENCODING_MS_SYMBOL'      : _FT_ENC_TAG( 's','y','m','b' ),
                 'FT_ENCODING_UNICODE'        : _FT_ENC_TAG( 'u','n','i','c' ),
                 'FT_ENCODING_SJIS'           : _FT_ENC_TAG( 's','j','i','s' ),
-                'FT_ENCODING_GB2312'         : _FT_ENC_TAG( 'g','b',' ',' ' ),
+                'FT_ENCODING_PRC'            : _FT_ENC_TAG( 'g','b',' ',' ' ),
                 'FT_ENCODING_BIG5'           : _FT_ENC_TAG( 'b','i','g','5' ),
                 'FT_ENCODING_WANSUNG'        : _FT_ENC_TAG( 'w','a','n','s' ),
                 'FT_ENCODING_JOHAB'          : _FT_ENC_TAG( 'j','o','h','a' ),
