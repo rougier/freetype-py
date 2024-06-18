@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+# The test file used and known to work is v2.004 of https://github.com/adobe-fonts/source-han-sans/blob/release/OTF/Japanese/SourceHanSans-Regular.otf
+
 import io
 import os
 import traceback
@@ -249,7 +252,7 @@ def convert_string_to_hex(text: str):
 
 if __name__ == "__main__":
     directory   = os.path.dirname(__file__)
-    font_path   = os.path.join(directory, 'SourceHanSans-Regular.ttc')
+    font_path   = os.path.join(directory, 'SourceHanSans-Regular.otf')
     memory_file = io.BytesIO()
     with open(font_path, 'rb') as fontfile:
         memory_file.write(fontfile.read())
@@ -257,7 +260,7 @@ if __name__ == "__main__":
     
     fonttools_font = TTFont(memory_file, 0, allowVID=0,
                             ignoreDecompileErrors=True,
-                            fontNumber=0)
+                            fontNumber=-1)
 
     library = FT_Library()
     error   = FT_Init_FreeType(byref(library))
