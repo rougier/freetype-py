@@ -14,22 +14,25 @@ if __name__ == '__main__':
 
     face = Face('./Vera.ttf')
     text = 'Hello World !'
-    face.set_char_size( 48*64 )
+    fontsize = 48
+    face.set_char_size( fontsize*64 )
     slot = face.glyph
 
     # First pass to compute bbox
-    width, height, baseline = 0, 0, 0
+    width = 0
+    top = -fontsize #The distance from baseline to the top row of the bbox
+    bot = fontsize #The distance from baseline to the bottom row of the bbox (may be negative)
     previous = 0
     for i,c in enumerate(text):
         face.load_char(c)
         bitmap = slot.bitmap
-        height = max(height,
-                     bitmap.rows + max(0,-(slot.bitmap_top-bitmap.rows)))
-        baseline = max(baseline, max(0,-(slot.bitmap_top-bitmap.rows)))
+        top = max(top, slot.bitmap_top)
+        bot = min(bot, slot.bitmap_top - bitmap.rows)
         kerning = face.get_kerning(previous, c)
         width += (slot.advance.x >> 6) + (kerning.x >> 6)
         previous = c
 
+    height = top - bot
     Z = numpy.zeros((height,width), dtype=numpy.ubyte)
 
     # Second pass for actual rendering
@@ -38,10 +41,8 @@ if __name__ == '__main__':
     for c in text:
         face.load_char(c)
         bitmap = slot.bitmap
-        top = slot.bitmap_top
-        left = slot.bitmap_left
         w,h = bitmap.width, bitmap.rows
-        y = height-baseline-top
+        y = top - slot.bitmap_top
         kerning = face.get_kerning(previous, c)
         x += (kerning.x >> 6)
         Z[y:y+h,x+left:x+left+w] += numpy.array(bitmap.buffer, dtype='ubyte').reshape(h,w)
