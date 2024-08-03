@@ -21,6 +21,7 @@ import tarfile
 import urllib.request
 from os import path
 import platform
+import fileinput
 
 # Needed for the GitHub Actions macOS CI runner, which appears to come without CAs.
 import certifi
@@ -34,6 +35,19 @@ HARFBUZZ_TARBALL = "harfbuzz-8.3.0.tar.xz"
 HARFBUZZ_URL = HARFBUZZ_HOST + HARFBUZZ_TARBALL
 HARFBUZZ_SHA256 = "109501eaeb8bde3eadb25fab4164e993fbace29c3d775bcaa1c1e58e2f15f847"
 
+ZLIB_HOST = "https://download.sourceforge.net/libpng/"
+ZLIB_TARBALL = "zlib-1.2.11.tar.xz"
+ZLIB_URL = ZLIB_HOST + ZLIB_TARBALL
+ZLIB_SH256 = "4ff941449631ace0d4d203e3483be9dbc9da454084111f97ea0a2114e19bf066"
+
+LIBPNG_HOST = "https://download.sourceforge.net/libpng/"
+LIBPNG_TARBALL = "libpng-1.6.40.tar.xz"
+LIBPNG_URL = LIBPNG_HOST + LIBPNG_TARBALL
+LIBPNG_SH256 = "535b479b2467ff231a3ec6d92a525906fb8ef27978be4f66dbe05d3f3a01b3a1"
+
+BUILD_ZLIB = os.environ.get("FREETYPEPY_WITH_ZLIB", "")
+BUILD_LIBPNG = os.environ.get("FREETYPEPY_WITH_LIBPNG", "")
+
 root_dir = "."
 build_dir = path.join(root_dir, "build")
 # CMake requires an absolute path to a prefix.
@@ -41,12 +55,15 @@ prefix_dir = path.abspath(path.join(build_dir, "local"))
 lib_dir = path.join(prefix_dir, "lib")
 build_dir_ft = path.join(build_dir, FREETYPE_TARBALL.split(".tar")[0], "build")
 build_dir_hb = path.join(build_dir, HARFBUZZ_TARBALL.split(".tar")[0], "build")
+build_dir_zl = path.join(build_dir, ZLIB_TARBALL.split(".tar")[0], "build")
+build_dir_lp = path.join(build_dir, LIBPNG_TARBALL.split(".tar")[0], "build")
 
 CMAKE_GLOBAL_SWITCHES = (
     "-DCMAKE_COLOR_MAKEFILE=false "
     '-DCMAKE_PREFIX_PATH="{}" '
     '-DCMAKE_INSTALL_PREFIX="{}" '
 ).format(prefix_dir, prefix_dir)
+CMAKE_PREVENT_REEXPORT = ""
 
 # Try to use Ninja to build things if it's available. Much faster.
 # On Windows, I first need to figure out how to make it aware of VC, bitness,
@@ -67,6 +84,12 @@ if sys.platform == "win32":
         print("# Making a 32 bit build.")
         bitness = 32
 
+    CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libharfbuzz "
+    if BUILD_ZLIB or BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libz "
+    if BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libpng "
+
 if sys.platform == "darwin":
     print("# Making a 64 bit build.")
     CMAKE_GLOBAL_SWITCHES += (
@@ -76,6 +99,14 @@ if sys.platform == "darwin":
         '-DCMAKE_CXX_FLAGS="-O2" '
     )
     bitness = 64
+
+    # the library path is needed for the '-hidden-lx' option to work
+    CMAKE_PREVENT_REEXPORT += "-Wl,-L{} ".format(lib_dir)
+    CMAKE_PREVENT_REEXPORT += "-Wl,-hidden-lharfbuzz "
+    if BUILD_ZLIB or BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,-hidden-lz "
+    if BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,-hidden-lpng "
 
 if "linux" in sys.platform:
     c_flags = cxx_flags = "-O2"
@@ -109,6 +140,12 @@ if "linux" in sys.platform:
         '-DCMAKE_CXX_FLAGS="{}" '.format(cxx_flags) +
         '-DCMAKE_LD_FLAGS="{}" '.format(ld_flags)
     )
+
+    CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libharfbuzz "
+    if BUILD_ZLIB or BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libz "
+    if BUILD_LIBPNG:
+        CMAKE_PREVENT_REEXPORT += "-Wl,--exclude-libs,libpng "
 
 
 def shell(cmd, cwd=None):
@@ -154,18 +191,26 @@ distutils.dir_util.mkpath(build_dir)
 distutils.dir_util.mkpath(prefix_dir)
 distutils.dir_util.mkpath(build_dir_ft)
 distutils.dir_util.mkpath(build_dir_hb)
+if BUILD_ZLIB or BUILD_LIBPNG:
+    distutils.dir_util.mkpath(build_dir_zl)
+if BUILD_LIBPNG:
+    distutils.dir_util.mkpath(build_dir_lp)
 
 ensure_downloaded(FREETYPE_URL, FREETYPE_SHA256)
 ensure_downloaded(HARFBUZZ_URL, HARFBUZZ_SHA256)
+if BUILD_ZLIB or BUILD_LIBPNG:
+    ensure_downloaded(ZLIB_URL, ZLIB_SH256)
+if BUILD_LIBPNG:
+    ensure_downloaded(LIBPNG_URL, LIBPNG_SH256)
 
-print("# First, build FreeType without Harfbuzz support")
+print("# First, build FreeType without additional libraries")
 shell(
     "cmake -DBUILD_SHARED_LIBS=OFF "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE -DFT_WITH_HARFBUZZ=OFF "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE "
+    "-DFT_DISABLE_HARFBUZZ=TRUE "
+    "-DFT_DISABLE_PNG=TRUE "
+    "-DFT_DISABLE_BZIP2=TRUE "
+    "-DFT_DISABLE_ZLIB=TRUE "
+    "-DFT_DISABLE_BROTLI=TRUE "
     "{} ..".format(CMAKE_GLOBAL_SWITCHES),
     cwd=build_dir_ft,
 )
@@ -182,19 +227,58 @@ shell(
 )
 shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_hb)
 
-print("\n# Lastly, rebuild FreeType, this time with Harfbuzz support.")
+if BUILD_ZLIB or BUILD_LIBPNG:
+    print("\n# Next, build zlib.")
+    # workaround to only build the static library of zlib
+    # see https://github.com/madler/zlib/issues/359
+    with fileinput.input(path.join(path.dirname(build_dir_zl), "CMakeLists.txt"), inplace=True) as f:
+        for line in f:
+            if "install(TARGETS zlib zlibstatic" in line:
+                line = line.replace("    install(TARGETS zlib zlibstatic", "    install(TARGETS zlibstatic")
+            print(line, end='')
+
+    shell(
+        "cmake " +
+        # https://stackoverflow.com/questions/3961446
+        ("-DCMAKE_POSITION_INDEPENDENT_CODE=ON " if bitness > 32 else "") +
+        "{} ..".format(CMAKE_GLOBAL_SWITCHES),
+        cwd=build_dir_zl,
+    )
+    shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_zl)
+
+if BUILD_LIBPNG:
+    print("\n# Next, build libpng.")
+    shell(
+        "cmake -DPNG_SHARED=OFF " +
+        # https://stackoverflow.com/questions/3961446
+        ("-DCMAKE_POSITION_INDEPENDENT_CODE=ON " if bitness > 32 else "") +
+        "{} ..".format(CMAKE_GLOBAL_SWITCHES),
+        cwd=build_dir_lp,
+    )
+    shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_lp)
+
+print("\n# Lastly, rebuild FreeType, this time with additional libraries support.")
+# clean cmake build dir for a clean build
+distutils.dir_util.remove_tree(build_dir_ft)
+distutils.dir_util.mkpath(build_dir_ft)
 harfbuzz_includes = path.join(prefix_dir, "include", "harfbuzz")
+libpng_includes = path.join(prefix_dir, "include", "libpng16")
+zlib_includes = path.join(prefix_dir, "include")
 shell(
     "cmake -DBUILD_SHARED_LIBS=ON "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=FALSE -DFT_WITH_HARFBUZZ=ON "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE "
-    "-DCMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE "
+    "-DFT_REQUIRE_HARFBUZZ=TRUE " +
+    ("-DFT_REQUIRE_PNG=TRUE " if BUILD_LIBPNG else "-DFT_DISABLE_PNG=TRUE ") +
+    "-DFT_DISABLE_BZIP2=TRUE " +
+    ("-DFT_REQUIRE_ZLIB=TRUE " if BUILD_ZLIB or BUILD_LIBPNG else "-DFT_DISABLE_ZLIB=TRUE ") +
+    "-DFT_DISABLE_BROTLI=TRUE "
     '-DPKG_CONFIG_EXECUTABLE="" '  # Prevent finding system libraries
-    '-DHARFBUZZ_INCLUDE_DIRS="{}" '
+    '-DHarfBuzz_INCLUDE_DIRS="{}" '
+    '-DPNG_INCLUDE_DIRS="{}" '
+    '-DZLIB_INCLUDE_DIRS="{}" '
+    # prevent re-export of symbols from harfbuzz, libpng and zlib
+    '-DCMAKE_SHARED_LINKER_FLAGS="{}" '
     "-DSKIP_INSTALL_HEADERS=ON "
-    "{} ..".format(harfbuzz_includes, CMAKE_GLOBAL_SWITCHES),
+    "{} ..".format(harfbuzz_includes, libpng_includes, zlib_includes, CMAKE_PREVENT_REEXPORT, CMAKE_GLOBAL_SWITCHES),
     cwd=build_dir_ft,
 )
 shell("cmake --build . --config Release --target install --parallel", cwd=build_dir_ft)
