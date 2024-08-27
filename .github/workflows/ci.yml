@@ -71,7 +71,7 @@ jobs:
         output-dir: dist
 
     - name: Upload distributions
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         path: dist
         name: dist
