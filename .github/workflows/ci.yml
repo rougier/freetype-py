@@ -22,26 +22,20 @@ jobs:
         - os: ubuntu-latest
           cibw_build: "cp37-*"
           cibw_archs_linux: "auto64"
-          cibw_archs_macos: "auto64"
         - os: windows-latest
           cibw_build: "cp37-*"
-          cibw_archs_linux: "auto64"
-          cibw_archs_macos: "auto64"
         - os: macos-latest
           cibw_build: "cp38-macosx_universal2"
-          cibw_archs_linux: "auto64"
           cibw_archs_macos: "universal2"
           name: '(universal2)'
         - os: 'ubuntu-latest'
           cibw_build: "cp37-manylinux*"
           cibw_archs_linux: 'aarch64'
-          cibw_archs_macos: "auto64"
           name: '(manylinux aarch64)'
           qemu: true
         - os: 'ubuntu-latest'
           cibw_build: "cp37-musllinux*"
           cibw_archs_linux: 'aarch64'
-          cibw_archs_macos: "auto64"
           name: '(musllinux aarch64)'
           qemu: true
     steps:
@@ -74,7 +68,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         path: dist
-        name: dist-${{ matrix.os }}-${{ matrix.arch }}
+        name: dist-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.build }}
 
   publish:
     name: Publish release to Pypi
