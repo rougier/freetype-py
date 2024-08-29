@@ -68,7 +68,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         path: dist
-        name: dist-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.build }}
+        name: dist-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.build }}-${{ matrix.name }}
 
   publish:
     name: Publish release to Pypi
