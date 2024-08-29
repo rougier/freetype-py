@@ -74,7 +74,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         path: dist
-        name: dist
+        name: dist-${{ matrix.os }}
 
   publish:
     name: Publish release to Pypi
@@ -99,6 +99,7 @@ jobs:
       with:
         merge-multiple: true
         path: dist
+        pattern: dist-*
     - name: Build sdist
       run: |
         python setup.py sdist
