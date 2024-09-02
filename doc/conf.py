@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Freetype python bindings'
-copyright = u'2011-2014, Nicolas P. Rougier'
+copyright = u'2011-2024, Nicolas P. Rougier'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
