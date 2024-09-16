@@ -1069,3 +1069,448 @@ class FT_LayerIterator(Structure):
     _fields_ = [('num_layers',            FT_UInt),
                 ('layer',                 FT_UInt),
                 ('p',                     POINTER(FT_Byte))]
+
+# -----------------------------------------------------------------------------
+# TrueType tables support. See "freetype/tttables.h"
+#
+class TT_Header(Structure):
+    """
+    A structure to model a TrueType font header table. All fields follow the
+    OpenType specification. The 64-bit timestamps are stored in two-element
+    arrays `Created` and `Modified`, first the upper then the lower 32 bits.
+    """
+    _fields_ = [
+        ("Table_Version", FT_Fixed),
+        ("Font_Revision", FT_Fixed),
+
+        ("CheckSum_Adjust", FT_Long),
+        ("Magic_Number", FT_Long),
+
+        ("Flags", FT_UShort),
+        ("Units_Per_EM", FT_UShort),
+
+        ("Created", FT_ULong * 2),
+        ("Modified", FT_ULong * 2),
+
+        ("xMin", FT_Short),
+        ("yMin", FT_Short),
+        ("xMax", FT_Short),
+        ("yMax", FT_Short),
+
+        ("Mac_Style", FT_UShort),
+        ("Lowest_Rec_PPEM", FT_UShort),
+
+        ("Font_Direction", FT_Short),
+        ("Index_To_Loc_Format", FT_Short),
+        ("Glyph_Data_Format", FT_Short),
+    ]
+
+
+class TT_HoriHeader(Structure):
+    """
+    A structure to model a TrueType horizontal header, the ‘hhea’ table, as
+    well as the corresponding horizontal metrics table, ‘hmtx’.
+
+    Version: The table version.
+
+    Ascender: The font's ascender, i.e., the distance from the baseline to the
+    top-most of all glyph points found in the font.
+
+    This value is invalid in many fonts, as it is usually set by the font
+    designer, and often reflects only a portion of the glyphs found in the font
+    (maybe ASCII).
+
+    You should use the `sTypoAscender` field of the ‘OS/2’ table instead if you
+    want the correct one.
+
+    Descender: The font's descender, i.e., the distance from the baseline to
+    the bottom-most of all glyph points found in the font. It is negative.
+
+    This value is invalid in many fonts, as it is usually set by the font
+    designer, and often reflects only a portion of the glyphs found in the font
+    (maybe ASCII).
+
+    You should use the `sTypoDescender` field of the ‘OS/2’ table instead if
+    you want the correct one.
+
+    Line_Gap: The font's line gap, i.e., the distance to add to the ascender
+    and descender to get the BTB, i.e., the baseline-to-baseline distance for
+    the font.
+
+    advance_Width_Max: This field is the maximum of all advance widths found
+    in the font. It can be used to compute the maximum width of an arbitrary
+    string of text.
+
+    min_Left_Side_Bearing: The minimum left side bearing of all glyphs within
+    the font.
+
+    min_Right_Side_Bearing: The minimum right side bearing of all glyphs within
+    the font.
+
+    xMax_Extent: The maximum horizontal extent (i.e., the ‘width’ of a glyph's
+    bounding box) for all glyphs in the font.
+
+    caret_Slope_Rise: The rise coefficient of the cursor's slope of the cursor
+    (slope=rise/run).
+
+    caret_Slope_Run: The run coefficient of the cursor's slope.
+
+    caret_Offset: The cursor's offset for slanted fonts.
+
+    Reserved: 8 reserved bytes.
+
+    metric_Data_Format: Always 0.
+
+    number_Of_HMetrics: Number of HMetrics entries in the ‘hmtx’ table – this
+    value can be smaller than the total number of glyphs in the font.
+
+    long_metrics: A pointer into the ‘hmtx’ table.
+
+    short_metrics: A pointer into the ‘hmtx’ table.
+
+    For an OpenType variation font, the values of the following fields can
+    change after a call to `FT_Set_Var_Design_Coordinates` (and friends) if the
+    font contains an ‘MVAR’ table:
+
+    - `caret_Slope_Rise`
+    - `caret_Slope_Run`
+    - `caret_Offset`
+    """
+    _fields_ = [
+        ("Version", FT_Fixed),
+        ("Ascender", FT_Short),
+        ("Descender", FT_Short),
+        ("Line_Gap", FT_Short),
+
+        ("advance_Width_Max", FT_UShort),       # advance width maximum
+
+        ("min_Left_Side_Bearing", FT_Short),    # minimum left-sb
+        ("min_Right_Side_Bearing", FT_Short),   # minimum right-sb
+        ("xMax_Extent", FT_Short),              # xmax extents
+        ("caret_Slope_Rise", FT_Short),
+        ("caret_Slope_Run", FT_Short),
+        ("caret_Offset", FT_Short),
+
+        ("Reserved", FT_Short * 4),
+
+        ("metric_Data_Format", FT_Short),
+        ("number_Of_HMetrics", FT_UShort),
+
+        # The following fields are not defined by the OpenType specification
+        # but they are used to connect the metrics header to the relevant
+        # 'hmtx' table.
+
+        ("long_metrics", c_void_p),
+        ("short_metrics", c_void_p),
+    ]
+
+
+class TT_VertHeader(Structure):
+    """
+    A structure used to model a TrueType vertical header, the ‘vhea’ table, as
+    well as the corresponding vertical metrics table, ‘vmtx’.
+
+    Version: The table version.
+
+    Ascender: The font's ascender, i.e., the distance from the baseline to the
+    top-most of all glyph points found in the font.
+
+    This value is invalid in many fonts, as it is usually set by the font
+    designer, and often reflects only a portion of the glyphs found in the font
+    (maybe ASCII).
+
+    You should use the `sTypoAscender` field of the ‘OS/2’ table instead if you
+    want the correct one.
+
+    Descender: The font's descender, i.e., the distance from the baseline to
+    the bottom-most of all glyph points found in the font. It is negative.
+
+    This value is invalid in many fonts, as it is usually set by the font
+    designer, and often reflects only a portion of the glyphs found in the font
+    (maybe ASCII).
+
+    You should use the `sTypoDescender` field of the ‘OS/2’ table instead if
+    you want the correct one.
+
+    Line_Gap: The font's line gap, i.e., the distance to add to the ascender
+    and descender to get the BTB, i.e., the baseline-to-baseline distance for
+    the font.
+
+    advance_Height_Max: This field is the maximum of all advance heights found
+    in the font. It can be used to compute the maximum height of an arbitrary
+    string of text.
+
+    min_Top_Side_Bearing: The minimum top side bearing of all glyphs within the
+    font.
+
+    min_Bottom_Side_Bearing: The minimum bottom side bearing of all glyphs
+    within the font.
+
+    yMax_Extent: The maximum vertical extent (i.e., the ‘height’ of a glyph's
+    bounding box) for all glyphs in the font.
+
+    caret_Slope_Rise: The rise coefficient of the cursor's slope of the cursor
+    (slope=rise/run).
+
+    caret_Slope_Run: The run coefficient of the cursor's slope.
+
+    caret_Offset: The cursor's offset for slanted fonts.
+
+    Reserved: 8 reserved bytes.
+
+    metric_Data_Format: Always 0.
+
+    number_Of_VMetrics: Number of VMetrics entries in the ‘vmtx’ table – this
+    value can be smaller than the total number of glyphs in the font.
+
+    long_metrics: A pointer into the ‘vmtx’ table.
+
+    short_metrics: A pointer into the ‘vmtx’ table.
+
+    For an OpenType variation font, the values of the following fields can
+    change after a call to `FT_Set_Var_Design_Coordinates` (and friends) if the
+    font contains an ‘MVAR’ table:
+
+    - `Ascender`
+    - `Descender`
+    - `Line_Gap`
+    - `caret_Slope_Rise`
+    - `caret_Slope_Run`
+    - `caret_Offset`
+    """
+    _fields_ = [
+        ("Version", FT_Fixed),
+        ("Ascender", FT_Short),
+        ("Descender", FT_Short),
+        ("Line_Gap", FT_Short),
+
+        ("advance_Height_Max", FT_UShort),      # advance height maximum
+
+        ("min_Top_Side_Bearing", FT_Short),     # minimum top-sb
+        ("min_Bottom_Side_Bearing", FT_Short),  # minimum bottom-sb
+        ("yMax_Extent", FT_Short),              # ymax extents
+        ("caret_Slope_Rise", FT_Short),
+        ("caret_Slope_Run", FT_Short),
+        ("caret_Offset", FT_Short),
+
+        ("Reserved", FT_Short * 4),
+
+        ("metric_Data_Format", FT_Short),
+        ("number_Of_VMetrics", FT_UShort),
+
+        # The following fields are not defined by the OpenType specification
+        # but they are used to connect the metrics header to the relevant
+        # 'vmtx' table.
+
+        ("long_metrics", c_void_p),
+        ("short_metrics", c_void_p),
+    ]
+
+
+class TT_OS2(Structure):
+    """
+    A structure to model a TrueType ‘OS/2’ table. All fields comply to the
+    OpenType specification.
+
+    Note that we now support old Mac fonts that do not include an ‘OS/2’ table.
+    In this case, the `version` field is always set to 0xFFFF.
+
+    For an OpenType variation font, the values of the following fields can
+    change after a call to `FT_Set_Var_Design_Coordinates` (and friends) if the
+    font contains an ‘MVAR’ table:
+
+    - `sCapHeight`
+    - `sTypoAscender`
+    - `sTypoDescender`
+    - `sTypoLineGap`
+    - `sxHeight`
+    - `usWinAscent`
+    - `usWinDescent`
+    - `yStrikeoutPosition`
+    - `yStrikeoutSize`
+    - `ySubscriptXOffset`
+    - `ySubScriptXSize`
+    - `ySubscriptYOffset`
+    - `ySubscriptYSize`
+    - `ySuperscriptXOffset`
+    - `ySuperscriptXSize`
+    - `ySuperscriptYOffset`
+    - `ySuperscriptYSize`
+
+    Possible values for bits in the `ulUnicodeRangeX` fields are given by the
+    `TT_UCR_XXX` macros.
+    """
+    _fields_ = [
+        ("version", FT_UShort),                 # 0x0001 - more or 0xFFFF
+        ("xAvgCharWidth", FT_Short),
+        ("usWeightClass", FT_UShort),
+        ("usWidthClass", FT_UShort),
+        ("fsType", FT_UShort),
+        ("ySubscriptXSize", FT_Short),
+        ("ySubscriptYSize", FT_Short),
+        ("ySubscriptXOffset", FT_Short),
+        ("ySubscriptYOffset", FT_Short),
+        ("ySuperscriptXSize", FT_Short),
+        ("ySuperscriptYSize", FT_Short),
+        ("ySuperscriptXOffset", FT_Short),
+        ("ySuperscriptYOffset", FT_Short),
+        ("yStrikeoutSize", FT_Short),
+        ("yStrikeoutPosition", FT_Short),
+        ("sFamilyClass", FT_Short),
+
+        ("panose", FT_Byte * 10),
+
+        ("ulUnicodeRange1", FT_ULong),          # Bits 0-31
+        ("ulUnicodeRange2", FT_ULong),          # Bits 32-63
+        ("ulUnicodeRange3", FT_ULong),          # Bits 64-95
+        ("ulUnicodeRange4", FT_ULong),          # Bits 96-127
+
+        ("achVendID", FT_Char * 4),
+
+        ("fsSelection", FT_UShort),
+        ("usFirstCharIndex", FT_UShort),
+        ("usLastCharIndex", FT_UShort),
+        ("sTypoAscender", FT_Short),
+        ("sTypoDescender", FT_Short),
+        ("sTypoLineGap", FT_Short),
+        ("usWinAscent", FT_UShort),
+        ("usWinDescent", FT_UShort),
+
+        # only version 1 and higher:
+
+        ("ulCodePageRange1", FT_ULong),         # Bits 0-31
+        ("ulCodePageRange2", FT_ULong),         # Bits 32-63
+
+        # only version 2 and higher:
+
+        ("sxHeight", FT_Short),
+        ("sCapHeight", FT_Short),
+        ("usDefaultChar", FT_UShort),
+        ("usBreakChar", FT_UShort),
+        ("usMaxContext", FT_UShort),
+
+        # only version 5 and higher:
+
+        ("usLowerOpticalPointSize", FT_UShort), # in twips (1/20 points)
+        ("usUpperOpticalPointSize", FT_UShort), # in twips (1/20 points)
+    ]
+
+
+class TT_Postscript(Structure):
+    """
+    A structure to model a TrueType ‘post’ table. All fields comply to the
+    OpenType specification. This structure does not reference a font's
+    PostScript glyph names; use `FT_Get_Glyph_Name` to retrieve them.
+
+    For an OpenType variation font, the values of the following fields can
+    change after a call to `FT_Set_Var_Design_Coordinates` (and friends) if the
+    font contains an ‘MVAR’ table:
+    
+    - `underlinePosition`
+    - `underlineThickness`
+    """
+    _fields_ = [
+        ("FormatType", FT_Fixed),
+        ("italicAngle", FT_Fixed),
+        ("underlinePosition", FT_Short),
+        ("underlineThickness", FT_Short),
+        ("isFixedPitch", FT_ULong),
+        ("minMemType42", FT_ULong),
+        ("maxMemType42", FT_ULong),
+        ("minMemType1", FT_ULong),
+        ("maxMemType1", FT_ULong),
+
+        # Glyph names follow in the 'post' table, but we don't
+        # load them by default.
+    ]
+
+
+class TT_PCLT(Structure):
+    """
+    A structure to model a TrueType ‘PCLT’ table. All fields comply to the
+    OpenType specification.
+    """
+    _fields_ = [
+        ("Version", FT_Fixed),
+        ("FontNumber", FT_ULong),
+        ("Pitch", FT_UShort),
+        ("xHeight", FT_UShort),
+        ("Style", FT_UShort),
+        ("TypeFamily", FT_UShort),
+        ("CapHeight", FT_UShort),
+        ("SymbolSet", FT_UShort),
+        ("TypeFace", FT_Char * 16),
+        ("CharacterComplement", FT_Char * 8),
+        ("FileName", FT_Char * 6),
+        ("StrokeWeight", FT_Char),
+        ("WidthType", FT_Char),
+        ("SerifStyle", FT_Byte),
+        ("Reserved", FT_Byte),
+    ]
+
+
+class TT_MaxProfile(Structure):
+    """
+    The maximum profile (‘maxp’) table contains many max values, which can be
+    used to pre-allocate arrays for speeding up glyph loading and hinting.
+
+    version: The version number.
+
+    numGlyphs: The number of glyphs in this TrueType font.
+
+    maxPoints: The maximum number of points in a non-composite TrueType glyph.
+    See also maxCompositePoints.
+
+    maxContours: The maximum number of contours in a non-composite TrueType
+    glyph. See also maxCompositeContours.
+
+    maxCompositePoints: The maximum number of points in a composite TrueType
+    glyph. See also maxPoints.
+
+    maxCompositeContours: The maximum number of contours in a composite
+    TrueType glyph. See also maxContours.
+
+    maxZones: The maximum number of zones used for glyph hinting.
+
+    maxTwilightPoints: The maximum number of points in the twilight zone used
+    for glyph hinting.
+
+    maxStorage: The maximum number of elements in the storage area used for
+    glyph hinting.
+
+    maxFunctionDefs: The maximum number of function definitions in the TrueType
+    bytecode for this font.
+
+    maxInstructionDefs: The maximum number of instruction definitions in the
+    TrueType bytecode for this font.
+
+    maxStackElements: The maximum number of stack elements used during bytecode
+    interpretation.
+
+    maxSizeOfInstructions: The maximum number of TrueType opcodes used for
+    glyph hinting.
+
+    maxComponentElements: The maximum number of simple (i.e., non-composite)
+    glyphs in a composite glyph.
+
+    maxComponentDepth: The maximum nesting depth of composite glyphs.
+
+    This structure is only used during font loading.
+    """
+    _fields_ = [
+        ("version", FT_Fixed),
+        ("numGlyphs", FT_UShort),
+        ("maxPoints", FT_UShort),
+        ("maxContours", FT_UShort),
+        ("maxCompositePoints", FT_UShort),
+        ("maxCompositeContours", FT_UShort),
+        ("maxZones", FT_UShort),
+        ("maxTwilightPoints", FT_UShort),
+        ("maxStorage", FT_UShort),
+        ("maxFunctionDefs", FT_UShort),
+        ("maxInstructionDefs", FT_UShort),
+        ("maxStackElements", FT_UShort),
+        ("maxSizeOfInstructions", FT_UShort),
+        ("maxComponentElements", FT_UShort),
+        ("maxComponentDepth", FT_UShort),
+    ]
