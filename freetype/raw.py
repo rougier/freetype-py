@@ -278,6 +278,7 @@ FT_Get_PS_Font_Info            = _lib.FT_Get_PS_Font_Info
 FT_Get_PS_Font_Private         = _lib.FT_Get_PS_Font_Private
 FT_Get_Renderer                = _lib.FT_Get_Renderer
 FT_Get_Sfnt_Table              = _lib.FT_Get_Sfnt_Table
+FT_Get_Sfnt_Table.restype = c_void_p
 FT_Get_TrueType_Engine_Type    = _lib.FT_Get_TrueType_Engine_Type
 FT_Get_WinFNT_Header           = _lib.FT_Get_WinFNT_Header
 FT_Glyph_Copy                  = _lib.FT_Glyph_Copy
