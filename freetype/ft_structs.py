@@ -1074,11 +1074,11 @@ class FT_LayerIterator(Structure):
 # TrueType tables support. See "freetype/tttables.h"
 #
 class TT_Header(Structure):
-    """
+    '''
     A structure to model a TrueType font header table. All fields follow the
     OpenType specification. The 64-bit timestamps are stored in two-element
     arrays `Created` and `Modified`, first the upper then the lower 32 bits.
-    """
+    '''
     _fields_ = [
         ("Table_Version", FT_Fixed),
         ("Font_Revision", FT_Fixed),
@@ -1107,7 +1107,7 @@ class TT_Header(Structure):
 
 
 class TT_HoriHeader(Structure):
-    """
+    '''
     A structure to model a TrueType horizontal header, the ‘hhea’ table, as
     well as the corresponding horizontal metrics table, ‘hmtx’.
 
@@ -1175,7 +1175,7 @@ class TT_HoriHeader(Structure):
     - `caret_Slope_Rise`
     - `caret_Slope_Run`
     - `caret_Offset`
-    """
+    '''
     _fields_ = [
         ("Version", FT_Fixed),
         ("Ascender", FT_Short),
@@ -1206,7 +1206,7 @@ class TT_HoriHeader(Structure):
 
 
 class TT_VertHeader(Structure):
-    """
+    '''
     A structure used to model a TrueType vertical header, the ‘vhea’ table, as
     well as the corresponding vertical metrics table, ‘vmtx’.
 
@@ -1277,7 +1277,7 @@ class TT_VertHeader(Structure):
     - `caret_Slope_Rise`
     - `caret_Slope_Run`
     - `caret_Offset`
-    """
+    '''
     _fields_ = [
         ("Version", FT_Fixed),
         ("Ascender", FT_Short),
@@ -1308,7 +1308,7 @@ class TT_VertHeader(Structure):
 
 
 class TT_OS2(Structure):
-    """
+    '''
     A structure to model a TrueType ‘OS/2’ table. All fields comply to the
     OpenType specification.
 
@@ -1339,7 +1339,7 @@ class TT_OS2(Structure):
 
     Possible values for bits in the `ulUnicodeRangeX` fields are given by the
     `TT_UCR_XXX` macros.
-    """
+    '''
     _fields_ = [
         ("version", FT_UShort),                 # 0x0001 - more or 0xFFFF
         ("xAvgCharWidth", FT_Short),
@@ -1397,7 +1397,7 @@ class TT_OS2(Structure):
 
 
 class TT_Postscript(Structure):
-    """
+    '''
     A structure to model a TrueType ‘post’ table. All fields comply to the
     OpenType specification. This structure does not reference a font's
     PostScript glyph names; use `FT_Get_Glyph_Name` to retrieve them.
@@ -1408,7 +1408,7 @@ class TT_Postscript(Structure):
     
     - `underlinePosition`
     - `underlineThickness`
-    """
+    '''
     _fields_ = [
         ("FormatType", FT_Fixed),
         ("italicAngle", FT_Fixed),
@@ -1426,10 +1426,10 @@ class TT_Postscript(Structure):
 
 
 class TT_PCLT(Structure):
-    """
+    '''
     A structure to model a TrueType ‘PCLT’ table. All fields comply to the
     OpenType specification.
-    """
+    '''
     _fields_ = [
         ("Version", FT_Fixed),
         ("FontNumber", FT_ULong),
@@ -1450,7 +1450,7 @@ class TT_PCLT(Structure):
 
 
 class TT_MaxProfile(Structure):
-    """
+    '''
     The maximum profile (‘maxp’) table contains many max values, which can be
     used to pre-allocate arrays for speeding up glyph loading and hinting.
 
@@ -1496,7 +1496,7 @@ class TT_MaxProfile(Structure):
     maxComponentDepth: The maximum nesting depth of composite glyphs.
 
     This structure is only used during font loading.
-    """
+    '''
     _fields_ = [
         ("version", FT_Fixed),
         ("numGlyphs", FT_UShort),
