@@ -1168,6 +1168,8 @@ class TT_HoriHeader(Structure):
 
     short_metrics: A pointer into the ‘hmtx’ table.
 
+    **Note**
+
     For an OpenType variation font, the values of the following fields can
     change after a call to `FT_Set_Var_Design_Coordinates` (and friends) if the
     font contains an ‘MVAR’ table:
@@ -1267,6 +1269,8 @@ class TT_VertHeader(Structure):
 
     short_metrics: A pointer into the ‘vmtx’ table.
 
+    **Note**
+
     For an OpenType variation font, the values of the following fields can
     change after a call to `FT_Set_Var_Design_Coordinates` (and friends) if the
     font contains an ‘MVAR’ table:
@@ -1311,6 +1315,8 @@ class TT_OS2(Structure):
     '''
     A structure to model a TrueType ‘OS/2’ table. All fields comply to the
     OpenType specification.
+
+    **Note**
 
     Note that we now support old Mac fonts that do not include an ‘OS/2’ table.
     In this case, the `version` field is always set to 0xFFFF.
@@ -1401,6 +1407,8 @@ class TT_Postscript(Structure):
     A structure to model a TrueType ‘post’ table. All fields comply to the
     OpenType specification. This structure does not reference a font's
     PostScript glyph names; use `FT_Get_Glyph_Name` to retrieve them.
+
+    **Note**
 
     For an OpenType variation font, the values of the following fields can
     change after a call to `FT_Set_Var_Design_Coordinates` (and friends) if the
@@ -1494,6 +1502,8 @@ class TT_MaxProfile(Structure):
     glyphs in a composite glyph.
 
     maxComponentDepth: The maximum nesting depth of composite glyphs.
+
+    **Note**
 
     This structure is only used during font loading.
     '''

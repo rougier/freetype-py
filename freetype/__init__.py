@@ -1816,6 +1816,10 @@ class Face( object ):
     def get_sfnt_table(self, tag: int):
         '''
         Get the SFNT table specified by the tag (see `ft_enums/ft_sfnt_tags.py`).
+
+        **Note**
+        
+        The return value will be invalid once the face has deleted.
         '''
         if tag < 0 or tag >= FT_SFNT_MAX:
             raise ValueError(f"SFNT tag out of range 0..{FT_SFNT_MAX - 1}.")
