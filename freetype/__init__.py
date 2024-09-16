@@ -1813,6 +1813,24 @@ class Face( object ):
 
         # named instance not found; do nothing
 
+    def get_sfnt_table(self, tag: int):
+        '''
+        Get the SFNT table specified by the tag (see `ft_enums/ft_sfnt_tags.py`).
+        '''
+        if tag < 0 or tag >= FT_SFNT_MAX:
+            raise ValueError(f"SFNT tag out of range 0..{FT_SFNT_MAX - 1}.")
+        res = FT_Get_Sfnt_Table(self._FT_Face, tag)
+        _sfnt_table_cast = {
+            ft_sfnt_head: TT_Header,
+            ft_sfnt_maxp: TT_MaxProfile,
+            ft_sfnt_os2: TT_OS2,
+            ft_sfnt_hhea: TT_HoriHeader,
+            ft_sfnt_vhea: TT_VertHeader,
+            ft_sfnt_post: TT_Postscript,
+            ft_sfnt_pclt: TT_PCLT,
+        }
+        return cast(c_void_p(res), POINTER(_sfnt_table_cast[tag])).contents
+
     def _get_postscript_name( self ):
         return FT_Get_Postscript_Name( self._FT_Face )
     postscript_name = property( _get_postscript_name,
