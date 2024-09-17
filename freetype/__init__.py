@@ -1823,7 +1823,11 @@ class Face( object ):
         '''
         if tag < 0 or tag >= FT_SFNT_MAX:
             raise ValueError(f"SFNT tag out of range 0..{FT_SFNT_MAX - 1}.")
+        if not self.is_sfnt:
+            raise RuntimeError("This font has no SFNT data.")
         res = FT_Get_Sfnt_Table(self._FT_Face, tag)
+        if res is None:
+            return None
         _sfnt_table_cast = {
             ft_sfnt_head: TT_Header,
             ft_sfnt_maxp: TT_MaxProfile,
