@@ -112,6 +112,7 @@ from freetype.ft_enums.ft_open_modes import *
 from freetype.ft_enums.ft_outline_flags import *
 from freetype.ft_enums.ft_pixel_modes import *
 from freetype.ft_enums.ft_render_modes import *
+from freetype.ft_enums.ft_sfnt_tags import *
 from freetype.ft_enums.ft_stroker_borders import *
 from freetype.ft_enums.ft_stroker_linecaps import *
 from freetype.ft_enums.ft_stroker_linejoins import *
