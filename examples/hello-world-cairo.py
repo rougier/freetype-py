@@ -30,7 +30,7 @@ if __name__ == '__main__':
         height = max(height,
                      bitmap.rows + max(0,-(slot.bitmap_top-bitmap.rows)))
         baseline = max(baseline, max(0,-(slot.bitmap_top-bitmap.rows)))
-        kerning = face.get_kerning(previous, c)
+        kerning = face.get_kerning(face.get_char_index(previous), face.get_char_index(c))
         width += (slot.advance.x >> 6) + (kerning.x >> 6)
         previous = c
 
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         left = slot.bitmap_left
         w,h = bitmap.width, bitmap.rows
         y = height-baseline-top
-        kerning = face.get_kerning(previous, c)
+        kerning = face.get_kerning(face.get_char_index(previous), face.get_char_index(c))
         x += (kerning.x >> 6)
         # cairo does not like zero-width bitmap from the space character!
         if (bitmap.width > 0):

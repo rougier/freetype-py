@@ -1591,11 +1591,9 @@ class Face( object ):
           of the scope of this API function -- they can be implemented through
           format-specific interfaces.
         '''
-        left_glyph = self.get_char_index( left )
-        right_glyph = self.get_char_index( right )
         kerning = FT_Vector(0,0)
         error = FT_Get_Kerning( self._FT_Face,
-                                left_glyph, right_glyph, mode, byref(kerning) )
+                                left, right, mode, byref(kerning) )
         if error: raise FT_Exception( error )
         return kerning
 

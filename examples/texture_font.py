@@ -359,10 +359,10 @@ class TextureFont:
             for g in self.glyphs.values():
                 # 64 * 64 because of 26.6 encoding AND the transform matrix used
                 # in texture_font_load_face (hres = 64)
-                kerning = face.get_kerning(g.charcode, charcode, mode=FT_KERNING_UNFITTED)
+                kerning = face.get_kerning(face.get_char_index(g.charcode), face.get_char_index(charcode), mode=FT_KERNING_UNFITTED)
                 if kerning.x != 0:
                     glyph.kerning[g.charcode] = kerning.x/(64.0*64.0)
-                kerning = face.get_kerning(charcode, g.charcode, mode=FT_KERNING_UNFITTED)
+                kerning = face.get_kerning(face.get_char_index(charcode), face.get_char_index(g.charcode), mode=FT_KERNING_UNFITTED)
                 if kerning.x != 0:
                     g.kerning[charcode] = kerning.x/(64.0*64.0)
 

@@ -28,7 +28,7 @@ if __name__ == '__main__':
         bitmap = slot.bitmap
         top = max(top, slot.bitmap_top)
         bot = min(bot, slot.bitmap_top - bitmap.rows)
-        kerning = face.get_kerning(previous, c)
+        kerning = face.get_kerning(face.get_char_index(previous), face.get_char_index(c))
         width += (slot.advance.x >> 6) + (kerning.x >> 6)
         previous = c
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':
         bitmap = slot.bitmap
         w,h = bitmap.width, bitmap.rows
         y = top - slot.bitmap_top
-        kerning = face.get_kerning(previous, c)
+        kerning = face.get_kerning(face.get_char_index(previous), face.get_char_index(c))
         x += (kerning.x >> 6)
         Z[y:y+h,x+left:x+left+w] += numpy.array(bitmap.buffer, dtype='ubyte').reshape(h,w)
         x += (slot.advance.x >> 6)

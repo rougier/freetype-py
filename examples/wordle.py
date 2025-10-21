@@ -40,7 +40,7 @@ def make_label(text, filename, size=12, angle=0):
     ymin, ymax = 0, 0
     for c in text:
         face.load_char(c, flags)
-        kerning = face.get_kerning(previous, c)
+        kerning = face.get_kerning(face.get_char_index(previous), face.get_char_index(c))
         previous = c
         bitmap = face.glyph.bitmap
         pitch  = face.glyph.bitmap.pitch
@@ -63,7 +63,7 @@ def make_label(text, filename, size=12, angle=0):
     pen.x, pen.y = 0, 0
     for c in text:
         face.load_char(c, flags)
-        kerning = face.get_kerning(previous, c)
+        kerning = face.get_kerning(face.get_char_index(previous), face.get_char_index(c))
         previous = c
         bitmap = face.glyph.bitmap
         pitch  = face.glyph.bitmap.pitch
