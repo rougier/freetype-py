@@ -1395,7 +1395,7 @@ class Face( object ):
         charcode, agindex = self.get_first_char()
         yield charcode, agindex
         while agindex != 0:
-            charcode, agindex = self.get_next_char(charcode, 0)
+            charcode, agindex = self.get_next_char(charcode)
             yield charcode, agindex
 
     def get_first_char( self ):
@@ -1419,7 +1419,7 @@ class Face( object ):
         charcode = FT_Get_First_Char( self._FT_Face, byref(agindex) )
         return charcode, agindex.value
 
-    def get_next_char( self, charcode, agindex ):
+    def get_next_char( self, charcode ):
         '''
         This function is used to return the next character code in the current
         charmap of a given face following the value 'charcode', as well as the
@@ -1427,7 +1427,7 @@ class Face( object ):
 
         :param charcode: The starting character code.
 
-        :param agindex: Glyph index of next character code. 0 if charmap is empty.
+        :return: next character code, glyph index of next character code or 0 if charmap is empty.
 
         **Note**:
 
@@ -1438,7 +1438,7 @@ class Face( object ):
           Note that 'agindex' is set to 0 when there are no more codes in the
           charmap.
         '''
-        agindex = FT_UInt( 0 ) #agindex )
+        agindex = FT_UInt()
         charcode = FT_Get_Next_Char( self._FT_Face, charcode, byref(agindex) )
         return charcode, agindex.value
 
