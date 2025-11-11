@@ -241,7 +241,7 @@ def Print_Charmaps( face ):
             charcode, gindex = face.get_first_char()
             while ( gindex ):
                 print( "      0x%04lx => %d" % (charcode, gindex) )
-                charcode, gindex = face.get_next_char( charcode, gindex )
+                charcode, gindex = face.get_next_char( charcode )
 
 
 
