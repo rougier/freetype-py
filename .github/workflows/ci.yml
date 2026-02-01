@@ -14,7 +14,6 @@ on:
 jobs:
   build:
     name: Build wheels on ${{ matrix.os }} ${{ matrix.name }}
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -39,7 +38,7 @@ jobs:
           name: '(musllinux aarch64)'
           qemu: true
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0  # unshallow fetch for setuptools-scm
 
@@ -65,47 +64,60 @@ jobs:
         output-dir: dist
 
     - name: Upload distributions
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         path: dist
         name: dist-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.build }}-${{ matrix.name }}
+        if-no-files-found: error
+        compression-level: 0  # files already compressed
+
+  sdist:
+    name: Build source distrubtion
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0  # unshallow fetch for setuptools-scm
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.9'
+    - name: Build sdist
+      run: python setup.py sdist
+    - name: Upload sdist
+      uses: actions/upload-artifact@v6
+      with:
+        path: dist
+        name: dist-source
+        if-no-files-found: error
+        compression-level: 0  # files already compressed
 
   publish:
     name: Publish release to Pypi
     runs-on: ubuntu-latest
-    needs: [build]
-    if: success() && github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    needs: [build, sdist]
+    if: github.event_name == 'push' && github.ref_type == 'tag'
     permissions:
-      id-token: write
+      id-token: write  # for attestation
     environment:
       name: pypi
-      url: https://pypi.org/p/freetype-py/
+      url: https://pypi.org/p/freetype-py/${{ github.ref }}/
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # unshallow fetch for setuptools-scm
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.9'
     - name: Download assets
       uses: actions/download-artifact@v4
       with:
         merge-multiple: true
         path: dist
         pattern: dist-*
-    - name: Build sdist
-      run: |
-        python setup.py sdist
     - uses: pypa/gh-action-pypi-publish@release/v1
 
   test-pyinstaller:
     name: Test pyinstaller hook
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Set up Python 3.9
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.9'
     - name: Test pyinstaller hook
