@@ -25,7 +25,7 @@ import platform
 # Needed for the GitHub Actions macOS CI runner, which appears to come without CAs.
 import certifi
 
-FREETYPE_HOST = "https://mirrors.sarata.com/non-gnu/freetype/"
+FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
 FREETYPE_TARBALL = "freetype-2.13.2.tar.xz"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
 FREETYPE_SHA256 = "12991c4e55c506dd7f9b765933e62fd2be2e06d421505d7950a132e4f1bb484d"
@@ -43,6 +43,7 @@ build_dir_ft = path.join(build_dir, FREETYPE_TARBALL.split(".tar")[0], "build")
 build_dir_hb = path.join(build_dir, HARFBUZZ_TARBALL.split(".tar")[0], "build")
 
 CMAKE_GLOBAL_SWITCHES = (
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5 " # FT==2.13.2 hack, remove after updating
     "-DCMAKE_COLOR_MAKEFILE=false "
     '-DCMAKE_PREFIX_PATH="{}" '
     '-DCMAKE_INSTALL_PREFIX="{}" '
@@ -146,7 +147,7 @@ def ensure_downloaded(url, sha256_sum):
             hasher.update(tb.read())
         assert hasher.hexdigest() == sha256_sum
 
-        with tarfile.open(tarball, "r:xz") as tb:
+        with tarfile.open(tarball, "r:*") as tb:
             tb.extractall(build_dir)
 
 

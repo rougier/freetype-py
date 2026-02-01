@@ -31,7 +31,7 @@ def test_bundle_version():
         import re
         p = os.path.join(test_folder, "..", "setup-build-freetype.py")
         with open(p) as f:
-            m = re.findall(r"freetype-(\d+)\.(\d+)\.?(\d+)?\.tar", f.read())
+            m = re.findall(r"freetype-(?:VER-)?(\d+)\D(\d+)\D?(\d+)?\.tar", f.read())
         version = m[0]
         if not version[2]:
             version = (int(version[0]), int(version[1]), 0)
