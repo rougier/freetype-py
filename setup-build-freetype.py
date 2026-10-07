@@ -1,7 +1,8 @@
 # This will build a FreeType binary for bundling with freetype-py on Windows,
-# Linux and macOS. The environment determines if it's a 32 or 64 bit build (on
-# Windows, set $env:PYTHON_ARCH="64" for a x64 build; on Linux, set it to "32"
-# to explicitly make a 32 bit build).
+# Linux and macOS. On Windows, the build targets the architecture of the
+# running Python (x86, x64 or ARM64), or VSCMD_ARG_TGT_ARCH if set;
+# $env:PYTHON_ARCH="32" or "64" forces an x86 or x64 build. On Linux, set
+# PYTHON_ARCH to "32" to explicitly make a 32 bit build.
 
 # It can be used stand-alone, in conjunction with setup.py and on CI services
 # like Travis and Appveyor. You need CMake and some C/C++ compiler suite (e.g.
@@ -17,6 +18,7 @@ import shutil
 import ssl
 import subprocess
 import sys
+import sysconfig
 import tarfile
 import urllib.request
 from os import path
@@ -25,7 +27,7 @@ import platform
 # Needed for the GitHub Actions macOS CI runner, which appears to come without CAs.
 import certifi
 
-FREETYPE_HOST = "https://mirrors.sarata.com/non-gnu/freetype/"
+FREETYPE_HOST = "https://download.savannah.gnu.org/releases/freetype/"
 FREETYPE_TARBALL = "freetype-2.13.2.tar.xz"
 FREETYPE_URL = FREETYPE_HOST + FREETYPE_TARBALL
 FREETYPE_SHA256 = "12991c4e55c506dd7f9b765933e62fd2be2e06d421505d7950a132e4f1bb484d"
@@ -44,6 +46,8 @@ build_dir_hb = path.join(build_dir, HARFBUZZ_TARBALL.split(".tar")[0], "build")
 
 CMAKE_GLOBAL_SWITCHES = (
     "-DCMAKE_COLOR_MAKEFILE=false "
+    # CMake 4 rejects FreeType's cmake_minimum_required(VERSION 3.0).
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5 "
     '-DCMAKE_PREFIX_PATH="{}" '
     '-DCMAKE_INSTALL_PREFIX="{}" '
 ).format(prefix_dir, prefix_dir)
@@ -56,16 +60,45 @@ if sys.platform != "win32" and distutils.spawn.find_executable("ninja"):
 
 bitness = None
 
-if sys.platform == "win32":
-    if os.environ.get("PYTHON_ARCH", "") == "64":
-        print("# Making a 64 bit build.")
-        bitness = 64
-        CMAKE_GLOBAL_SWITCHES += (
-            "-DCMAKE_GENERATOR_PLATFORM=x64 " '-DCMAKE_GENERATOR_TOOLSET="host=x64" '
+
+def windows_cmake_platform():
+    """Return the CMake generator platform (Win32, x64 or ARM64) to build for.
+
+    The DLL must match the Python that loads it. The target comes from
+    VSCMD_ARG_TGT_ARCH if set (Visual Studio developer prompts and
+    cross-compiling cibuildwheel set it), otherwise from the running Python.
+    PYTHON_ARCH=32 or 64 can switch an x86/x64 target between the two.
+    """
+    target = os.environ.get("VSCMD_ARG_TGT_ARCH", "").lower()
+    if not target:
+        target = {"win32": "x86", "win-amd64": "x64", "win-arm64": "arm64"}.get(
+            sysconfig.get_platform(), "x64"
         )
-    else:
-        print("# Making a 32 bit build.")
+    if target in ("x86", "x64"):
+        python_arch = os.environ.get("PYTHON_ARCH", "")
+        if python_arch == "32":
+            target = "x86"
+        elif python_arch == "64":
+            target = "x64"
+    platforms = {"x86": "Win32", "x64": "x64", "arm64": "ARM64"}
+    if target not in platforms:
+        sys.exit("Unsupported Windows target architecture: '{}'".format(target))
+    return platforms[target]
+
+
+if sys.platform == "win32":
+    cmake_platform = windows_cmake_platform()
+    print("# Building for Windows {}.".format(cmake_platform))
+    CMAKE_GLOBAL_SWITCHES += "-DCMAKE_GENERATOR_PLATFORM={} ".format(cmake_platform)
+    if cmake_platform == "Win32":
         bitness = 32
+    else:
+        bitness = 64
+        # Use 64 bit compilers that run natively on the build machine.
+        host_arch = "ARM64" if platform.machine() == "ARM64" else "x64"
+        CMAKE_GLOBAL_SWITCHES += '-DCMAKE_GENERATOR_TOOLSET="host={}" '.format(
+            host_arch
+        )
 
 if sys.platform == "darwin":
     print("# Making a 64 bit build.")

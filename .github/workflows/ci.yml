@@ -23,31 +23,28 @@ jobs:
           cibw_build: "cp37-*"
           cibw_archs_linux: "auto64"
         - os: windows-latest
-          cibw_build: "cp37-*"
+          # Needs CMake 4.2+ (Python 3.8+) to find VS 2026; the wheel is tagged py3.
+          cibw_build: "cp311-*"
+        - os: windows-11-arm
+          # Windows ARM64 CPython starts at 3.9; the wheel is tagged py3 anyway.
+          cibw_build: "cp311-win_arm64"
+          name: '(ARM64)'
         - os: macos-latest
           cibw_build: "cp38-macosx_universal2"
           cibw_archs_macos: "universal2"
           name: '(universal2)'
-        - os: 'ubuntu-latest'
+        - os: ubuntu-24.04-arm
           cibw_build: "cp37-manylinux*"
           cibw_archs_linux: 'aarch64'
           name: '(manylinux aarch64)'
-          qemu: true
-        - os: 'ubuntu-latest'
+        - os: ubuntu-24.04-arm
           cibw_build: "cp37-musllinux*"
           cibw_archs_linux: 'aarch64'
           name: '(musllinux aarch64)'
-          qemu: true
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0  # unshallow fetch for setuptools-scm
-
-    - name: Set up QEMU
-      if: matrix.qemu
-      uses: docker/setup-qemu-action@v3
-      with:
-        platforms: all
 
     - name: Build wheels
       uses: pypa/cibuildwheel@v2.16.5

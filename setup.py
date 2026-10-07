@@ -3,10 +3,9 @@
 #  Distributed under the terms of the new BSD license.
 # -----------------------------------------------------------------------------
 
-import distutils
-import distutils.dir_util
-import distutils.file_util
+import distutils.log
 import os
+import shutil
 import subprocess
 import sys
 from io import open
@@ -69,16 +68,10 @@ if os.environ.get("FREETYPEPY_BUNDLE_FT"):
             lib_fullpath = path.join(ext.output_dir, lib_name)
             dest_path = self.get_ext_fullpath(ext.name)
 
-            distutils.dir_util.mkpath(
-                path.dirname(dest_path),
-                verbose=self.verbose,
-                dry_run=self.dry_run)
-
-            distutils.file_util.copy_file(
-                lib_fullpath,
-                dest_path,
-                verbose=self.verbose,
-                dry_run=self.dry_run)
+            distutils.log.info("copying {} -> {}".format(lib_fullpath, dest_path))
+            if not self.dry_run:
+                os.makedirs(path.dirname(dest_path), exist_ok=True)
+                shutil.copyfile(lib_fullpath, dest_path)
 
     ext_modules = [
         SharedLibrary(

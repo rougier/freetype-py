@@ -26,10 +26,14 @@ yourself: `export FREETYPEPY_BUNDLE_FT=yesplease && pip install .`.
 This will download and compile FreeType with Harfbuzz support as specified in
 `setup-build-freetype.py`. Set the environment variable `PYTHON_ARCH` to 32 or
 64 to explicitly set an architecture, default is whatever your host machine
-uses. On macOS, we will always build a universal 32 and 64 bit Intel binary.
+uses. On Windows, the default is the architecture of the Python running the
+build (x86, x64 or ARM64), or `VSCMD_ARG_TGT_ARCH` if set by a Visual Studio
+developer prompt. On macOS, we will always build a universal 32 and 64 bit
+Intel binary.
 
 - Windows: You need CMake and a C and C++ compiler, e.g. the Visual Code
-  Community 2017 distribution with the desktop C++ workload.
+  Community 2017 distribution with the desktop C++ workload. For ARM64, also
+  install the MSVC ARM64 build tools component.
 - macOS: You need CMake and the XCode tools (full IDE not necessary)
 - Linux: You need CMake, gcc and g++. For building a 32 bit library on a
   64 bit machine, you need gcc-multilib and g++-multilib (Debian) or
